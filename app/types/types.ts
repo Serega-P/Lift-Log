@@ -8,17 +8,11 @@ export interface UserType {
   id: number;
   fullName: string;
   email: string;
-<<<<<<< HEAD
 	image?: string;
   password: string;
   role: UserRole;
   emailVerified?: string | null;
 	provider: string;
-=======
-  password: string;
-  role: UserRole;
-  verified?: string | null;
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
   workouts: WorkoutType[];
 }
 
@@ -85,11 +79,8 @@ export interface SubSetType {
   order: number;
 }
 
-<<<<<<< HEAD
 export interface DayWithColor {
 	date: object;
 	color: string;
 }
 
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4

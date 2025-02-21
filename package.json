@@ -42,10 +42,7 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@types/next-auth": "^3.13.0",
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

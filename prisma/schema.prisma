@@ -8,7 +8,6 @@ datasource db {
 }
 
 model User {
-<<<<<<< HEAD
   id            Int       @id @default(autoincrement())
   fullName      String
   email         String    @unique
@@ -18,15 +17,6 @@ model User {
   provider      String?   // Google или email
   emailVerified DateTime? // Подтверждение email (верификация)
   workouts      Workout[]
-=======
-  id       Int       @id @default(autoincrement())
-  fullName String
-  email    String    @unique
-  password String
-  role     UserRole  @default(USER)
-  verified DateTime?
-  workouts Workout[]
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,10 +24,7 @@ model User {
   @@map("users")
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 model Workout {
   id          Int          @id @default(autoincrement())
   title       String

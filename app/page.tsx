@@ -99,7 +99,6 @@ export default function Home() {
       </Container>
 
       <Container className="px-7 pt-10">
-<<<<<<< HEAD
         <Title 
 				text="Workouts" 
 				size="lg" 
@@ -121,26 +120,6 @@ export default function Home() {
 				  </p>
 				)}
 
-=======
-        <Title text="Workouts" size="lg" className="text-title font-bold mb-3" />
-
-        {isLoading ? (
-					<>
-          <Skeleton className="w-full h-20 mb-4" />
-          <Skeleton className="w-full h-20 mb-4" />
-          <Skeleton className="w-full h-20 mb-4" />
-					</>
-        ) : (
-          sortedWorkouts.map((workout) => {
-            return (
-              <WorkoutDay
-                key={workout.id}
-                workout={workout}
-              />
-            );
-          })
-        )}
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 
         <Button className={cn("w-full mb-6 mt-5")} onClick={handleAddWorkout}>
           <Plus strokeWidth={3} size={20} />

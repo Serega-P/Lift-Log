@@ -11,9 +11,5 @@ export { PopoverMenu } from './popover-menu'
 export { SetItem } from './set-item'
 export { TriSetItem } from './tri-set-item'
 export { CalendarDialog } from './calendar-dialog'
-<<<<<<< HEAD
 export { EditExerciseModal } from './edit-exercise-modal'
 export { Providers } from './providers'
-=======
-export { EditExerciseModal } from './edit-exercise-modal'
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4

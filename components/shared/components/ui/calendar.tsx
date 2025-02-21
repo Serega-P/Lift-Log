@@ -49,11 +49,7 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="home-calendar max-w-full mx-auto">
-=======
-    <div className="max-w-full mx-auto">
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       <Calendar
         onClickDay={handleDayClick} // Клик по дню
         tileContent={tileContent} // Добавляем кастомизацию ячеек

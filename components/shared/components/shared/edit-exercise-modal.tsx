@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 "use client";
 
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 import React, { useState } from "react";
 import { Button, Title, ScrollArea, SetControls } from "@/components/shared/components";
 import { SetType } from "@/app/types/types";

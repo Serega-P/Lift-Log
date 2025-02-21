@@ -2,11 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
 import { Container, Title, Exercise, Button} from "@/components/shared/components";
-=======
-import { Skeleton, Container, Title, Exercise, Button} from "@/components/shared/components";
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 import { MoreVertical, Calendar } from "lucide-react";
 import { WorkoutType, ExerciseType } from "@/app/types/types";
 
@@ -15,10 +11,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
   const [workout, setWorkout] = useState<WorkoutType | null>(null);
   const [exercises, setExercises] = useState<ExerciseType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-<<<<<<< HEAD
 	const [isSaving, setIsSaving] = useState(false);
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
   const router = useRouter();
 
   useEffect(() => {
@@ -46,11 +39,8 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
   }, [workoutId]);
 
 	const saveWorkout = async () => {
-<<<<<<< HEAD
 		setIsSaving(true); // Показываем загрузку
 	
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 		try {
 			const res = await fetch(`/api/workouts/${workoutId}`, {
 				method: "POST",
@@ -60,23 +50,11 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
 	
 			if (!res.ok) throw new Error("Failed to save workout");
 	
-<<<<<<< HEAD
 			router.push("/"); // ✅ Переход на главную страницу после сохранения
 		} catch (error) {
 			console.error("❌ Ошибка при сохранении тренировки:", error);
 		} finally {
 			setIsSaving(false); // Скрываем загрузку
-=======
-			const updatedWorkoutDay = await res.json();
-			setWorkout((prev) =>
-				prev ? { ...prev, days: [...prev.days, updatedWorkoutDay] } : prev
-			);
-			alert("Workout saved successfully!");
-		} catch (error) {
-			console.error("❌ Ошибка при сохранении тренировки:", error);
-			console.error("Ошибка сохранения:", error);
-			alert("Failed to save workout.");
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 		}
 	};
 
@@ -89,15 +67,11 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
   };
 
   if (isLoading) {
-<<<<<<< HEAD
     return (
 			<div className="w-full h-screen flex items-center justify-center">
 				<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-accentSoft"></div>
 			</div>
 		)
-=======
-    return <Skeleton className="w-full h-20" />;
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
   }
 
   if (!workout) {
@@ -105,11 +79,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
   }
 
   return (
-<<<<<<< HEAD
     <Container className="w-full px-6 py-20">
-=======
-    <Container className="w-full px-6 pt-20">
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       <div className="flex justify-between items-center mb-16">
         <button
           className="text-accentSoft text-base font-bold hover:underline"
@@ -155,7 +125,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
       </div>
 
 			<Button
-<<<<<<< HEAD
         className="mt-6 w-full font-bold uppercase text-base flex justify-center items-center gap-2"
         variant="accent"
         size="accent"
@@ -170,14 +139,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number; } 
         ) : (
           "Save Workout"
         )}
-=======
-        className="mt-6 w-full font-bold uppercase text-base" 
-				variant="accent"
-				size="accent"
-        onClick={saveWorkout}
-      >
-        Save Workout
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       </Button>
     </Container>
         );

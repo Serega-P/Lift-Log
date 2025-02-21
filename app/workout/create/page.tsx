@@ -4,17 +4,12 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Button, Container, Input, Title, MuscleGroupPopover } from "@/components/shared/components";
 import { Plus, Trash, Check } from "lucide-react";
-<<<<<<< HEAD
-=======
-// import { WorkoutType } from "@/app/types/types";
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 
 const COLORS = ['#34C759', '#FF9500', '#00C7BE', '#6750A4', '#007AFF', '#C00F0C', '#682D03', '#F19EDC'];
 
 export default function NewWorkout() {
   const [selectedGroups, setSelectedGroups] = React.useState<string>("");
   const [exercises, setExercises] = React.useState([{ id: Date.now(), name: "" }]);
-<<<<<<< HEAD
   const [selectedColor, setSelectedColor] = React.useState(COLORS[0]); 
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null); // ❗ Для ошибки
@@ -31,24 +26,6 @@ export default function NewWorkout() {
       return newGroups.join(" - ");
     });
   };
-=======
-  const [selectedColor, setSelectedColor] = React.useState(COLORS[0]); // по умолчанию первый цвет
-  const [loading, setLoading] = React.useState(false);
-
-  const router = useRouter();
-
-
-  const toggleGroup = (group: string) => {
-		setSelectedGroups((prev) => {
-			const groupsArray = prev ? prev.split(" - ") : [];
-			const newGroups = groupsArray.includes(group)
-				? groupsArray.filter((g) => g !== group)
-				: [...groupsArray, group];
-	
-			return newGroups.join(" - ");
-		});
-	};
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
 
   const handleAddExercise = () => {
     setExercises([...exercises, { id: Date.now(), name: "" }]);
@@ -65,17 +42,11 @@ export default function NewWorkout() {
       )
     );
   };
-<<<<<<< HEAD
 
   const handleSubmit = async () => {
     if (selectedGroups.length === 0 || exercises.some(e => !e.name.trim())) {
       setErrorMessage("Please fill in all fields"); // ❗ Показываем ошибку
       setTimeout(() => setErrorMessage(null), 3000); // ❗ Убираем через 3 секунды
-=======
-  const handleSubmit = async () => {
-    if (selectedGroups.length === 0 || exercises.some(e => !e.name.trim())) {
-      alert("Please fill in all fields.");
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       return;
     }
 
@@ -94,18 +65,11 @@ export default function NewWorkout() {
 
       if (!response.ok) throw new Error("Failed to create workout");
 
-<<<<<<< HEAD
       router.push("/"); // ✅ Переход на главную после успешного создания
     } catch (error) {
       console.error("Error creating workout:", error);
       setErrorMessage("Error creating workout"); // ❗ Ошибка запроса
       setTimeout(() => setErrorMessage(null), 3000);
-=======
-      router.push("/");
-    } catch (error) {
-      console.error("Error creating workout:", error);
-      alert("Error creating workout");
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
     } finally {
       setLoading(false);
     }
@@ -151,11 +115,7 @@ export default function NewWorkout() {
         Add exercise
       </Button>
 
-<<<<<<< HEAD
       <div className="w-full space-y-1 pb-10">
-=======
-			<div className="w-full space-y-1 pb-10">
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
         <label className="block font-medium text-base text-muted pl-3">Select Color</label>
         <div className="flex justify-between">
           {COLORS.map((color) => (
@@ -165,26 +125,18 @@ export default function NewWorkout() {
               style={{ backgroundColor: color }}
               onClick={() => setSelectedColor(color)}
             >
-<<<<<<< HEAD
               {selectedColor === color && <Check size={16} className="text-primary" />}
             </button>
-=======
-							{selectedColor === color && <Check size={16} className="text-primary" />}
-						</button>
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
           ))}
         </div>
       </div>
 
-<<<<<<< HEAD
       <div className="h-6 flex justify-center items-center">
         {errorMessage && (
           <p className="text-red-500 font-bold">{errorMessage}</p>
         )}
       </div>
 
-=======
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       <Button
         variant="accent"
         size="accent"
@@ -192,7 +144,6 @@ export default function NewWorkout() {
         onClick={handleSubmit}
         disabled={loading}
       >
-<<<<<<< HEAD
 				{loading ? (
         <>
           <div className="animate-spin rounded-full h-5 w-5 border-t-4 border-white"></div>
@@ -201,9 +152,6 @@ export default function NewWorkout() {
       ) : (
         "Create"
       )}
-=======
-        {loading ? "Saving..." : "Create"}
->>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
       </Button>
     </Container>
   );
