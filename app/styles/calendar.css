@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Базовая стилизация для react-calendar */
+<<<<<<< HEAD
+.home-calendar .react-calendar {
+	background: none !important;
+  box-shadow: none !important;
+	border: none  !important;
+  @apply w-full min-w-full bg-bgBase text-primary p-4 border-none;
+}
+
+.home-calendar .react-calendar .react-calendar__navigation {
+  @apply flex justify-between items-center mb-2 text-3xl;
+}
+
+.home-calendar .react-calendar .react-calendar__tile {
+  @apply flex justify-center items-center relative text-base transition duration-200 ease-in-out;
+}
+
+.home-calendar .react-calendar .react-calendar__tile--now{
+=======
+.react-calendar {
+  @apply w-full bg-bgBase text-primary p-4 border-none;
+}
+
+.react-calendar__navigation {
+  @apply flex justify-between items-center mb-2 text-3xl;
+}
+
+.react-calendar__tile {
+  @apply flex justify-center items-center relative text-base transition duration-200 ease-in-out;
+}
+
+.react-calendar .react-calendar__tile--now{
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+	background: none !important;
+  box-shadow: none !important;
+  @apply font-bold border-[1px] border-solid rounded-lg border-bgSoft;
+}
+<<<<<<< HEAD
+
+.home-calendar .react-calendar .react-calendar__tile--now:hover {
+  @apply border-transparent;
+}
+
+.home-calendar .react-calendar .react-calendar__tile--active {
+  @apply bg-accentSoft font-bold;
+}
+/* Дни недели */
+.home-calendar .react-calendar .react-calendar__month-view__days__day {
+=======
+.react-calendar__tile--now:hover {
+  @apply border-transparent;
+}
+
+.react-calendar__tile--active {
+  @apply bg-accentSoft font-bold;
+}
+/* Дни недели */
+.react-calendar__month-view__days__day {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+	background: none !important;
+  box-shadow: none !important;
+	@apply rounded-lg transition-all duration-200;
+}
+
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__month-view__days__day:hover {
+=======
+.react-calendar__month-view__days__day:hover {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+	@apply outline outline-2 outline-bgSoft;
+}
+abbr[title] {
+  @apply no-underline;
+}
+
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__month-view__weekdays {
+  @apply text-muted font-medium normal-case;
+}
+
+.home-calendar .react-calendar .react-calendar__month-view__weekdays__weekday {
+=======
+.react-calendar__month-view__weekdays {
+  @apply text-muted font-medium normal-case;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+  @apply flex justify-center items-center py-1;
+}
+
+/* Выходные дни */
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__month-view__days__day--weekend {
+  @apply text-primary;
+}
+
+.home-calendar .react-calendar .react-calendar__navigation__label:hover, 
+.home-calendar .react-calendar .react-calendar__navigation__arrow:hover {
+=======
+.react-calendar__month-view__days__day--weekend {
+  @apply text-primary;
+}
+
+
+
+.react-calendar__navigation__label:hover, 
+.react-calendar__navigation__arrow:hover {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+	background: none !important;
+  box-shadow: none !important;
+	@apply text-muted;
+}
+
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__navigation__arrow:hover {
+=======
+.react-calendar__navigation__arrow:hover {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+	@apply text-primary outline outline-2 outline-bgSoft;
+}
+
+/* Заголовок месяца */
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__navigation__label {
+  @apply font-bold text-lg rounded-2xl;
+}
+
+.home-calendar .react-calendar .react-calendar__navigation__arrow {
+=======
+.react-calendar__navigation__label {
+  @apply font-bold text-lg rounded-2xl;
+}
+
+.react-calendar__navigation__arrow {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+  @apply text-muted  h-12 w-12 text-center transition rounded-lg;
+}
+
+/* Ячейки с событиями */
+<<<<<<< HEAD
+.home-calendar .react-calendar .react-calendar__tile-content {
+=======
+.react-calendar__tile-content {
+>>>>>>> 95a5d6c282f7157bde0eaf63dd1b509c73ffbfe4
+  @apply flex flex-col items-center gap-1 mt-1;
+}
