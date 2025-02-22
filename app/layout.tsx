@@ -1,16 +1,15 @@
 import { Providers } from "@/components/shared/components";
 import type { Metadata } from "next";
-import {Rubik} from "next/font/google";
+import { Rubik } from "next/font/google";
 import "react-calendar/dist/Calendar.css";
 import "./globals.css";
 import "./styles/calendar.css";
 
 const rubik = Rubik({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-rubik',
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-rubik",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
-
 
 export const metadata: Metadata = {
   title: "LiftLog",
@@ -24,9 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${rubik.variable} antialiased`} >
-					<Providers>{children}</Providers>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" /> {/* Цвет темы, совпадающий с manifest.json */}
+      </head>
+      <body className={`${rubik.variable} antialiased`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
