@@ -1,10 +1,11 @@
-import NextAuth from "next-auth";
+// lib/auth.ts
+import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -59,7 +60,4 @@ const handler = NextAuth({
       return token;
     },
   },
-});
-
-// Экспортируем `handler` как `GET` и `POST` вместо `authOptions`
-export { handler as GET, handler as POST };
+};

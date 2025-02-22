@@ -1,9 +1,9 @@
 import React from "react";
 import {Skeleton } from "@/components/shared/components";
-import { SetType } from "@/app/types/types";
+import { SetType, SubSetType } from "@/app/types/types";
 
 
-export function Set({ set }: { set: SetType }) {
+export function Set({ set }: { set: SetType | SubSetType }) {
   if (!set) {
 		return <Skeleton className="w-full h-8 mb-4"/>
   }

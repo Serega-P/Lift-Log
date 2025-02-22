@@ -1,13 +1,15 @@
 import { prisma } from "@/prisma/prisma-client";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
+    console.log("🔹 GET session:", session);
+
+    if (!session?.user || !("id" in session.user)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -28,7 +30,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(workouts);
   } catch (error) {
-    console.error("Ошибка при получении тренировок:", error);
+    console.error("❌ Ошибка при получении тренировок:", error);
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }
@@ -37,7 +39,9 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
+    console.log("🔹 POST session:", session);
+
+    if (!session?.user || !("id" in session.user)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -80,7 +84,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Ошибка при создании тренировки:", error);
+    console.error("❌ Ошибка при создании тренировки:", error);
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }

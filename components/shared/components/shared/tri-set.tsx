@@ -1,12 +1,12 @@
 import React from "react";
 import { Set } from "@/components/shared/components";
-import { TrisetType } from "@/app/types/types";
+import { SetType } from "@/app/types/types";
 
-interface TriSetProps {
-	triSet: TrisetType;
+interface Props {
+	triSet: SetType;
 }
 
-export function TriSet({ triSet }: TriSetProps) {
+export function TriSet({ triSet }: Props) {
   return (
     <div className="space-y-4">
       {/* Отображаем сабсеты для каждого сета в трисете */}

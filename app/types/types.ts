@@ -18,7 +18,7 @@ export interface UserType {
 
 // Тренировка
 export interface WorkoutType {
-  id?: number;
+  id?: number | string;
   title: string;
   color: string;
   userId: number;
@@ -70,7 +70,7 @@ export interface SetType {
 export interface SubSetType {
   id?: number;
   setId: number;
-  set: SetType;
+  set: SetType[];
 	isAutoFilled: boolean;
   weight?: number | string;
   reps?: number | string;
