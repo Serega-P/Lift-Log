@@ -8,6 +8,7 @@ import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import Google from "@/public/assets/images/google.svg";
 import { cn } from "@/lib/utils";
+import { CornerRightDown } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -32,8 +33,9 @@ function LoginContent() {
   return (
     <Container className="h-screen flex flex-col justify-center items-center px-9 space-y-6">
       {/* Заголовок */}
-      <div className="text-center space-y-1 mb-12">
-        <Title text="Log in" size="lg" className="font-extrabold" />
+      <div className="flex items-center text-center mb-4">
+        <Title text="click here" size="sm" className="font-extrabold" />
+				<CornerRightDown className="mt-5 ml-2" />
       </div>
 
       {/* Кнопка Sign In */}
