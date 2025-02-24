@@ -61,5 +61,4 @@ const handler = NextAuth({
   },
 });
 
-// Экспортируем `handler` как `GET` и `POST` вместо `authOptions`
 export { handler as GET, handler as POST };
