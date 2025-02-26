@@ -19,6 +19,7 @@ export default function InstallPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [installing, setInstalling] = useState<boolean>(false);
+  const [isAndroid, setIsAndroid] = useState<boolean>(false); // Для проверки платформы Android
 
   useEffect(() => {
     // Проверяем, установлено ли приложение
@@ -28,6 +29,10 @@ export default function InstallPage() {
         Boolean((navigator as NavigatorWithStandalone).standalone)
       );
     };
+
+    // Проверяем, является ли устройство Android
+    const userAgent = navigator.userAgent.toLowerCase();
+    setIsAndroid(userAgent.includes("android"));
 
     // Устанавливаем состояние на основе того, установлено ли приложение
     setIsInstalled(checkPWAInstalled());
@@ -47,17 +52,22 @@ export default function InstallPage() {
 
   // Функция установки PWA
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (deferredPrompt) {
+      setInstalling(true);
 
-    setInstalling(true);
+      // Запрашиваем установку PWA
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
 
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setIsInstalled(true); // После установки приложение считается установленным
+      }
 
-    if (outcome === "accepted") {
-      setIsInstalled(true); // После установки приложение считается установленным
+      setInstalling(false);
+    } else {
+      // Если событие установки недоступно, то покажем сообщение
+      alert("Install option is not available on this device.");
     }
-    setInstalling(false);
   };
 
   return (
@@ -85,6 +95,15 @@ export default function InstallPage() {
               <Download />
               Install
             </Button>
+          )}
+
+          {/* Дополнительный текст для Android */}
+          {isAndroid && !deferredPrompt && (
+            <Title
+              text="To install, tap 'Add to Home Screen' from your browser's menu."
+              size="sm"
+              className="font-normal text-center mt-10"
+            />
           )}
         </>
       )}
