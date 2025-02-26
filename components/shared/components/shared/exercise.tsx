@@ -80,21 +80,23 @@ export function Exercise({ exercise, onUpdate }: Props) {
 
         {/* Кнопка открытия модального окна */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="mt-6 w-full font-bold uppercase text-base" variant="accent" onClick={() => setIsOpen(true)}>
-              SET A NEW RECORD
-            </Button>
-          </DialogTrigger>
-         
-          <DialogContent className="custom-dialog w-full h-full min-h-svh max-w-none flex items-center justify-center border-none p-0">
-            <DialogTitle className="sr-only">Edit Exercise</DialogTitle>
-            <DialogDescription className="sr-only">
-              Here you can edit your exercise details and set a new record.
-            </DialogDescription>
+         <DialogTrigger asChild>
+           <Button className="mt-6 w-full font-bold uppercase text-base" variant="accent" onClick={() => setIsOpen(true)}>
+             SET A NEW RECORD
+           </Button>
+         </DialogTrigger>
+       
+         {/* Оставляем только контент, без крестика */}
+         <DialogContent className="custom-dialog w-full h-full min-h-svh max-w-none flex items-center justify-center border-none p-0" forceMount>
+           <DialogTitle className="sr-only">Edit Exercise</DialogTitle>
+           <DialogDescription className="sr-only">
+             Here you can edit your exercise details and set a new record.
+           </DialogDescription>
+       
+           <EditExerciseModal name={exerciseData.name} sets={sets} onClose={() => setIsOpen(false)} onSave={handleUpdateExercise} />
+         </DialogContent>
+       </Dialog>
 
-            <EditExerciseModal name={exerciseData.name} sets={sets} onClose={() => setIsOpen(false)} onSave={handleUpdateExercise} />
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

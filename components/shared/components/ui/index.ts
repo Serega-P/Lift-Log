@@ -17,3 +17,4 @@ export {AlertDialog} from './alert-dialog';
 export {Skeleton} from './skeleton';
 export { MuscleGroupPopover } from '../ui/muscle-group-popover'
 export { SetControls } from './set-controls'
+export { InstallPWA } from './install-PWA'

@@ -116,7 +116,7 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate }) => {
                 variant="icons"
                 size="icons"
                 onClick={() => refreshSet(index)}
-                className="bg-none"
+                className="bg-non opacity-100 disabled:opacity-100"
                 disabled={isAutoFilled} // Отключаем кнопку, если уже обновлено
               >
                 {isAutoFilled ? <Check size={28} strokeWidth={3} className="text-accentSoft" /> : <RefreshCcw size={28} strokeWidth={2} />}

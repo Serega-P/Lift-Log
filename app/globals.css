@@ -72,7 +72,8 @@
 
   }
 
-	.custom-dialog [data-state="open"] button[data-dialog-close] {
-    display: none !important;
-	}
+}
+
+[data-state="open"] button.absolute {
+  display: none !important;
 }

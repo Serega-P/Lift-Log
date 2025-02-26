@@ -7,16 +7,14 @@ export default withAuth(
   },
   {
     pages: {
-      signIn: "/login", // Указываем страницу логина
+      signIn: "/login",
     },
   }
 );
 
-// Ограничиваем доступ ко всем страницам, кроме `/login` и API
-
+// ✅ Добавляем service-worker.js и install в исключения!
 export const config = {
   matcher: [
-    "/((?!login|api/auth|api|_next/static|_next/image|favicon.ico|manifest.json|icon-192x192.png|icon-512x512.png).*)",
+    "/((?!login|install|api/auth|api|_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|icon-192x192.png|icon-512x512.png).*)",
   ],
 };
-
