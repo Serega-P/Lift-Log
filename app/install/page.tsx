@@ -19,7 +19,7 @@ export default function InstallPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [installing, setInstalling] = useState<boolean>(false);
-  const [isAndroid, setIsAndroid] = useState<boolean>(false); // Для проверки платформы Android
+  const [isIOS, setIsIOS] = useState<boolean>(false); // Для проверки iOS устройства
 
   useEffect(() => {
     // Проверяем, установлено ли приложение
@@ -30,9 +30,9 @@ export default function InstallPage() {
       );
     };
 
-    // Проверяем, является ли устройство Android
+    // Проверяем, является ли устройство iOS
     const userAgent = navigator.userAgent.toLowerCase();
-    setIsAndroid(userAgent.includes("android"));
+    setIsIOS(userAgent.includes("iphone") || userAgent.includes("ipad"));
 
     // Устанавливаем состояние на основе того, установлено ли приложение
     setIsInstalled(checkPWAInstalled());
@@ -97,8 +97,8 @@ export default function InstallPage() {
             </Button>
           )}
 
-          {/* Дополнительный текст для Android */}
-          {isAndroid && !deferredPrompt && (
+          {/* Подсказка для iOS */}
+          {isIOS && !deferredPrompt && (
             <Title
               text="To install, tap 'Add to Home Screen' from your browser's menu."
               size="sm"
