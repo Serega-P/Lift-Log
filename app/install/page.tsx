@@ -10,11 +10,29 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 }
 
+// Расширяем `Navigator` для добавления свойства standalone
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
 export default function InstallPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState<boolean>(false);
+  const [installing, setInstalling] = useState<boolean>(false);
 
   useEffect(() => {
-    // Ловим событие установки PWA
+    // Проверяем, установлено ли приложение
+    const checkPWAInstalled = () => {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        Boolean((navigator as NavigatorWithStandalone).standalone)
+      );
+    };
+
+    // Устанавливаем состояние на основе того, установлено ли приложение
+    setIsInstalled(checkPWAInstalled());
+
+    // Ловим событие установки PWA (если оно доступно)
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
@@ -31,11 +49,15 @@ export default function InstallPage() {
   const handleInstall = async () => {
     if (!deferredPrompt) return;
 
+    setInstalling(true);
+
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
+
     if (outcome === "accepted") {
-      // Установка прошла успешно, можно обновить интерфейс, если необходимо
+      setIsInstalled(true); // После установки приложение считается установленным
     }
+    setInstalling(false);
   };
 
   return (
@@ -46,13 +68,25 @@ export default function InstallPage() {
         className="font-extrabold text-center leading-tight text-[42px]"
       />
       <Title text="Log workouts, monitor loads and improve results." size="sm" className="font-normal text-center" />
-      {deferredPrompt ? (
-        <Button onClick={handleInstall} className="bg-blue-500 rounded-lg mt-10" variant="accent" size="default">
-          <Download />
-          Install
-        </Button>
+      
+      {isInstalled ? (
+        <Title text="Installation complete!" size="sm" className="font-extrabold text-center mt-10" />
       ) : (
-        <Title text="Install option not available" size="sm" className="font-normal text-center mt-10" />
+        <>
+          {installing ? (
+            <Title text="Installing..." size="sm" className="font-extrabold text-center mt-10" />
+          ) : (
+            <Button
+              onClick={handleInstall}
+              className="bg-blue-500 rounded-lg mt-10"
+              variant="accent"
+              size="default"
+            >
+              <Download />
+              Install
+            </Button>
+          )}
+        </>
       )}
     </div>
   );
