@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, SetItem, TriSetItem } from "@/components/shared/components";
+import { Button, SetItem, TriSetItem } from "@/shared/components";
 import { SetType } from "@/app/types/types";
 
 interface Props {
@@ -54,7 +54,7 @@ export function SetControls({ sequence, setSequence }: Props) {
 	
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-5 w-full max-w-[430px]">
       {/* Отображение списка сетов и трисетов */}
       {sequence.length > 0 ? (
         sequence
@@ -72,10 +72,10 @@ export function SetControls({ sequence, setSequence }: Props) {
 
       {/* Кнопки добавления */}
       <div className="flex justify-between max-w-[430px] mx-auto">
-        <Button className="flex-1 bg-gray-800 border border-green-500 text-green-500 h-12 mr-3" onClick={addSet}>
+        <Button className="flex-1 w-full mb-6 h-12 mr-3" onClick={addSet}>
           + Set
         </Button>
-        <Button className="flex-1 bg-gray-800 border border-green-500 text-green-500 h-12 ml-3" onClick={addTriSet}>
+        <Button className="flex-1 w-full mb-6 h-12 ml-3" onClick={addTriSet}>
           + Tri-set
         </Button>
       </div>

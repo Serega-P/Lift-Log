@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Title, Input } from "@/components/shared/components";
+import { Button, Container, Title, Input } from "@/shared/components";
 import * as React from "react";
 import { useEffect } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";

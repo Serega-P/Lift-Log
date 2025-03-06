@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dumbbell, Settings2 } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import { ExerciseType, SetType } from "@/app/types/types";
 import { 
 	Button, 
@@ -14,7 +14,7 @@ import {
 	DialogTrigger, 
 	DialogTitle,
 	DialogDescription,
-} from "@/components/shared/components";
+} from "@/shared/components";
 
 interface Props {
   exercise: ExerciseType;
@@ -46,32 +46,34 @@ export function Exercise({ exercise, onUpdate }: Props) {
   };
 
   return (
-    <div className={`${done ? "border-none" : "border-accentSoft"} bg-bgBase rounded-[20px] text-primary mb-5 border-2`}>
+    <div className={`${done ? "border-none" : "border-accent"} bg-bgBase rounded-[10px] text-primary mb-5 border-2 overflow-hidden`}>
       {/* Верхняя часть */}
-      <div className="flex justify-between items-center border-b border-customBorder p-5">
+      <div className="flex justify-between items-center px-5 py-2.5 bg-bgSoft">
         <div className="flex items-center gap-2">
-          <Dumbbell size={26} className="text-accentSoft" />
-          <Title text={exerciseData.name} size="sm" className="font-bold" />
+          <Title text={exerciseData.name} className="font-medium text-[20px]" />
         </div>
-        <button className="text-muted">
+        <button 
+					className="text-muted"
+					onClick={() => console.log("Settings clicked")}
+					>
           <Settings2 size={26} />
         </button>
       </div>
 
       {/* Список сетов и трисетов */}
-      <div className="px-12 pb-5">
+      <div className="p-3">
         {sets.map((set) => (
-          <div key={set.order} className="py-2">
+          <div key={set.order} className="py-1">
             {set.type === "set" && (
               <>
-                <span className="font-base pb-2 text-muted">Set</span>
+                <span className="font-normal text-sm text-muted pl-6">Set</span>
                 <Set set={set} />
               </>
             )}
 
             {set.type === "triset" && (
               <>
-                <span className="font-base pb-2 text-muted">Tri-set</span>
+                <span className="font-normal text-sm text-muted pl-6">Tri-set</span>
                 <TriSet triSet={set} />
               </>
             )}

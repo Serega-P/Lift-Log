@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/shared/components/ui/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@/shared/components/ui/popover";
 
 export function PopoverMenu({ children, options }: { children: React.ReactNode; options: { label: string; action: () => void }[] }) {
   return (

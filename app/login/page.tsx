@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Title } from "@/components/shared/components";
+import { Button, Container, Title } from "@/shared/components";
 import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";

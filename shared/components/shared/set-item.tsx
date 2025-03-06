@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { SetType } from "@/app/types/types";
-import { Title, Button, Input } from "@/components/shared/components";
-import { RefreshCcw, Check } from "lucide-react";
+import { Title, Button, Input } from "@/shared/components";
+import { RefreshCcw, Check, Trash2 } from "lucide-react";
 
 interface Props {
   data: SetType;
@@ -43,42 +43,50 @@ export const SetItem: React.FC<Props> = ({ data, onUpdate }) => {
   };
 
   return (
-    <div className="w-full pb-4 border-b border-customBorder space-y-4">
-      {/* Заголовок */}
-      <div className="flex justify-start items-center space-x-5 mx-auto">
-        <Title text="Set" size="xs" />
+    <div className="w-full bg-bgBase rounded-[10px] text-primary mb-5 overflow-hidden">
+      {/* Верхняя часть */}
+      <div className="flex justify-between items-center px-5 py-2.5 bg-bgSoft">
+        <div className="flex items-center gap-2">
+          <Title text="Set" className="font-medium text-[20px]" />
+        </div>
+        <button 
+					className="text-muted"
+					onClick={() => console.log("Settings clicked")}
+					>
+          <Trash2 size={26} />
+        </button>
       </div>
 
       {/* Контейнер для ввода и кнопки */}
-      <div className="flex items-center justify-between space-x-4 max-w-[430px] mx-auto">
+      <div className="flex items-center justify-between space-x-4 max-w-[430px] mx-auto p-5">
         {/* Поле для веса */}
-        <div className="flex items-center space-x-2 w-[40%]">
+        <div className="flex items-center space-x-2 w-[45%]">
           <Input
             type="number"
             placeholder={data.weight === "" ? "" : String(data.weight)} // Placeholder из props
             value={weight === "" ? "" : String(weight)} // Значение импута
             onChange={(e) => handleInputChange("weight", e.target.value)} // Обработчик изменения
-            className={`w-full max-w-[100px] bg-bgSurface border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
-							${isAutoFilled ? "border-accentSoft" : "border-muted"}`}
+            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+							${isAutoFilled ? "border-accent" : "border-muted"}`}
           />
           <span className={`${isAutoFilled ? "text-primary" : "text-muted"} text-lg font-bold`}>kg</span>
         </div>
 
         {/* Поле для повторений */}
-        <div className="flex items-center space-x-2 w-[40%]">
+        <div className="flex items-center space-x-2 w-[45%]">
           <Input
             type="number"
             placeholder={data.reps === "" ? "" : String(data.reps)} // Placeholder из props
             value={reps === "" ? "" : String(reps)} // Значение импута
             onChange={(e) => handleInputChange("reps", e.target.value)} // Обработчик изменения
-            className={`w-full max-w-[100px] bg-bgSurface border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
-							${isAutoFilled ? "border-accentSoft" : "border-muted"}`}
+            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+							${isAutoFilled ? "border-accent" : "border-muted"}`}
           />
           <span className={`${isAutoFilled ? "text-primary" : "text-muted"} text-lg font-bold`}>reps</span>
         </div>
 
         {/* Кнопка Refresh/Check */}
-        <div className="flex items-center justify-center w-[20%]">
+        <div className="flex items-center justify-end w-[10%]">
           <Button
             variant="icons"
             size="icons"

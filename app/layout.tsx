@@ -1,6 +1,6 @@
 "use client";
 
-import { Providers } from "@/components/shared/components";
+import { Providers } from "@/shared/components";
 import { Rubik } from "next/font/google";
 import "react-calendar/dist/Calendar.css";
 import "./globals.css";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Title, Button } from "@/components/shared/components";
+import { Title, Button } from "@/shared/components";
 import { Download } from "lucide-react";
 
 // Интерфейсы для событий установки

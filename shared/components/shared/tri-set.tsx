@@ -1,5 +1,5 @@
 import React from "react";
-import { Set } from "@/components/shared/components";
+import { Set } from "@/shared/components";
 import { SetType } from "@/app/types/types";
 
 interface Props {
@@ -8,10 +8,10 @@ interface Props {
 
 export function TriSet({ triSet }: Props) {
   return (
-    <div className="space-y-4">
+    <div>
       {/* Отображаем сабсеты для каждого сета в трисете */}
       {triSet.subSets && triSet.subSets.length > 0 && (
-        <div className="space-y-2">
+        <div>
           {triSet.subSets.map((subSet, index) => (
             <div key={index}>
               <Set set={subSet} />

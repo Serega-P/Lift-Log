@@ -5,7 +5,7 @@ module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}", // Учитывать все файлы в папке app
     "./pages/**/*.{js,ts,jsx,tsx}", // Учитывать все файлы в папке pages
-    "./components/**/*.{js,ts,jsx,tsx}", // Учитывать файлы в components
+    "./shared/components/**/*.{js,ts,jsx,tsx}", // Учитывать файлы в components
     "./src/**/*.{html,js}", // Если у вас есть src или статичные HTML
   ],
   theme: {
@@ -23,17 +23,17 @@ module.exports = {
         rubik: ['"Rubik"', 'sans-serif'],
       },
 			colors: {
-        accent: '#34C759',
-        accentSoft: '#6FCF97',
+        accent: '#448BD4',
+        accentSoft: '#448BD4',
 
         primary: '#E8EAEE', // цвет текста
-        muted: '#707274',   // цвет текста 2
+        muted: '#8A94A0',   // цвет текста 2
 				
-        bgPrimary: '#1F2125',
-        bgBase: '#27292B',
+        bgPrimary: '#1B2026',
+        bgBase: '#222931',
         bgMuted: '#2C2E30',
-        bgSoft: '#3B4043',
-        bgSurface: '#252A34', // фон для светлых поверхностей, например, полей ввода
+        bgSoft: '#2B343F', // фон для светлых поверхностей, например, полей ввода
+        bgSurface: '#262E37',
 
 				DayOne: '#FF9500',
 				DayTwo: '#00C7BE',

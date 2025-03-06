@@ -1,6 +1,6 @@
 "use client";
 
-import { Title, Button } from "@/components/shared/components";
+import { Title, Button } from "@/shared/components";
 import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
 

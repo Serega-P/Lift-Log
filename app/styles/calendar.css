@@ -46,7 +46,7 @@ abbr[title] {
 }
 
 .home-calendar .react-calendar .react-calendar__month-view__weekdays {
-  @apply text-muted font-medium normal-case;
+  @apply text-muted font-bold normal-case;
 }
 
 .home-calendar .react-calendar .react-calendar__month-view__weekdays__weekday {

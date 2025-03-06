@@ -7,11 +7,9 @@ import {
   Title,
   WorkoutDay,
   Skeleton,
-} from "@/components/shared/components";
+} from "@/shared/components";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { WorkoutType, DayWithColor } from "@/app/types/types";
 
@@ -67,9 +65,8 @@ export default function Home() {
         ) : (
           <p className="text-center text-muted text-lg mt-4">No workouts yet, create your first one!</p>
         )}
-        <Button className={cn("w-full mb-6 mt-5")} onClick={handleAddWorkout}>
-          <Plus strokeWidth={3} size={20} />
-          Add Workout
+        <Button className="w-full mb-6 mt-2.5" onClick={handleAddWorkout}>
+         + Add Workout
         </Button>
       </Container>
     </>

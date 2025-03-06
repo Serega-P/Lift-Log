@@ -30,7 +30,7 @@ export const WorkoutDay: React.FC<Props> = ({ workout }) => {
   return (
     <Link
       href={days.length > 0 ? `/workout/${id}/day/${lastDayIndex}` : "#"}
-      className="flex items-center justify-between w-full bg-bgSurface py-5 px-8 rounded-[10px] mb-5"
+      className="flex items-center justify-between w-full bg-bgSoft py-5 px-8 rounded-[6px] mb-2.5"
     >
       <div className="flex flex-col space-y-0 flex-1 max-w-[80%]">
         <div className="flex items-center space-x-2">
