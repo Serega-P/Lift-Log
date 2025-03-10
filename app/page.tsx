@@ -7,6 +7,7 @@ import {
   Title,
   WorkoutDay,
   Skeleton,
+	BottomNavigation
 } from "@/shared/components";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export default function Home() {
   );
 
   return (
-    <>
+    <div className="pb-24">
       <Container className="bg-bgBase pb-2.5 pt-5 rounded-b-2xl drop-shadow-3xl">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>
@@ -68,7 +69,8 @@ export default function Home() {
         <Button className="w-full mb-6 mt-2.5" onClick={handleAddWorkout}>
          + Add Workout
         </Button>
+				<BottomNavigation />
       </Container>
-    </>
+    </div>
   );
 }

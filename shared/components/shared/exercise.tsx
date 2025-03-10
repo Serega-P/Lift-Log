@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Settings2 } from "lucide-react";
 import { ExerciseType, SetType } from "@/app/types/types";
 import { 
 	Button, 
@@ -14,6 +13,7 @@ import {
 	DialogTrigger, 
 	DialogTitle,
 	DialogDescription,
+	ExerciseSettingsPopover
 } from "@/shared/components";
 
 interface Props {
@@ -48,16 +48,11 @@ export function Exercise({ exercise, onUpdate }: Props) {
   return (
     <div className={`${done ? "border-none" : "border-accent"} bg-bgBase rounded-[10px] text-primary mb-5 border-2 overflow-hidden`}>
       {/* Верхняя часть */}
-      <div className="flex justify-between items-center px-5 py-2.5 bg-bgSoft">
+      <div className="flex justify-between items-center pl-5  py-2.5 bg-bgSoft">
         <div className="flex items-center gap-2">
           <Title text={exerciseData.name} className="font-medium text-[20px]" />
         </div>
-        <button 
-					className="text-muted"
-					onClick={() => console.log("Settings clicked")}
-					>
-          <Settings2 size={26} />
-        </button>
+        <ExerciseSettingsPopover />
       </div>
 
       {/* Список сетов и трисетов */}

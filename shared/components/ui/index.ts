@@ -13,7 +13,10 @@ export {InputOTP} from './input-otp';
 export {Select} from './select';
 export {ScrollArea} from './scroll-area';
 export {Popover} from './popover';
+export {PopoverTrigger} from './popover';
+export {PopoverContent} from './popover';
 export {AlertDialog} from './alert-dialog';
 export {Skeleton} from './skeleton';
 export { SetControls } from './set-controls'
 export { InstallPWA } from './install-PWA'
+export { BottomNavigation } from './bottom-navigation'

@@ -71,7 +71,7 @@ export default function InstallPage() {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col px-10 w-full max-w-[420px] h-screen bg-slate-5">
+    <div className="flex items-center justify-center flex-col px-10 w-full h-screen bg-blue-600">
       <Title
         text="Track progress effortlessly"
         size="xl"
@@ -88,9 +88,9 @@ export default function InstallPage() {
           ) : (
             <Button
               onClick={handleInstall}
-              className="bg-blue-500 rounded-lg mt-10"
+              className="bg-green-500 text-xl px-6 mt-10"
               variant="accent"
-              size="default"
+              size="accent"
             >
               <Download />
               Install
@@ -101,8 +101,8 @@ export default function InstallPage() {
           {isIOS && !deferredPrompt && (
             <Title
               text="To install, tap 'Add to Home Screen' from your browser's menu."
-              size="sm"
-              className="font-normal text-center mt-10"
+              size="xs"
+              className="font-light italic text-center mt-10"
             />
           )}
         </>
