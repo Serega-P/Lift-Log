@@ -54,7 +54,7 @@ export const EditExerciseModal: React.FC<Props> = ({ name, sets, onClose, onSave
             <Button
               variant="accent"
               size="default"
-              className="h-12 px-6 text-lg font-bold relative overflow-hidden"
+              className="bg-green-500 h-12 px-6 text-lg font-bold relative overflow-hidden"
               onClick={handleSave}
               disabled={isSaving}
             >

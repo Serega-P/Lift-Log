@@ -82,8 +82,7 @@ export function Exercise({ exercise, onUpdate }: Props) {
              SET A NEW RECORD
            </Button>
          </DialogTrigger>
-       
-         {/* Оставляем только контент, без крестика */}
+      
          <DialogContent className="custom-dialog w-full h-full min-h-svh max-w-none flex items-center justify-center border-none p-0" forceMount>
            <DialogTitle className="sr-only">Edit Exercise</DialogTitle>
            <DialogDescription className="sr-only">

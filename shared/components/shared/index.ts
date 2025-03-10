@@ -4,7 +4,6 @@ export { Container } from './container';
 export { Set } from './set'
 export { TriSet } from './tri-set'
 export { Exercise } from './exercise'
-export { PopoverMenu } from './popover-menu'
 export { SetItem } from './set-item'
 export { TriSetItem } from './tri-set-item'
 export { CalendarDialog } from './calendar-dialog'

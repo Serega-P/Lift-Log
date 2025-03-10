@@ -15,7 +15,7 @@ const buttonVariants = cva(
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground", // Контурная кнопка
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80", // Вторичная кнопка
+          "bg-bgSoft hover:bg-bgSoft/80", // Вторичная кнопка
         ghost: "hover:bg-accent hover:text-accent-foreground", // Прозрачная кнопка
         link: "text-primary underline-offset-4 hover:underline", // Ссылка
         accent: "bg-accent text-primary hover:bg-accent", // Кастомный стиль для кнопки Save

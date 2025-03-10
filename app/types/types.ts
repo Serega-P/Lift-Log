@@ -42,10 +42,12 @@ export interface ExerciseType {
   name: string;
   workoutId: number;
   dayExercises: number;
-	setGroup: SetGroupType[];
+  setGroup: SetGroupType[];
   workout: WorkoutType;
   dayExercise: WorkoutDayType;
 }
+
+export type ExerciseCreateType = Pick<ExerciseType, "name" | "setGroup">;
 
 // Группа сетов (может включать обычные сеты или трисеты)
 export interface SetGroupType {
