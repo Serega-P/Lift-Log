@@ -29,7 +29,7 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head><link rel="manifest" href="/manifest.json" /><meta name="theme-color" content="#000000" /></head>
       <body className={`${rubik.variable} antialiased`}>
         <Providers>{children}</Providers>

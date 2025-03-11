@@ -37,9 +37,9 @@ export function SetControls({ sequence, setSequence }: Props) {
         order: getNextOrder(),
         isTriSet: true,
         subSets: [
-          {weight: 0, reps: 0, order: 1 },
-          {weight: 0, reps: 0, order: 2 },
-          {weight: 0, reps: 0, order: 3 },
+          { weight: 0, reps: 0, order: 1 },
+          { weight: 0, reps: 0, order: 2 },
+          { weight: 0, reps: 0, order: 3 },
         ],
       } as SetType,
     ]);
@@ -47,11 +47,24 @@ export function SetControls({ sequence, setSequence }: Props) {
 
   // Обновление элемента (сет или трисет)
   const updateItem = (updatedItem: SetType) => {
-		setSequence((prev) =>
-			prev.map((s) => (s.order === updatedItem.order ? updatedItem : s))
-		);
-	};
-	
+    setSequence((prev) =>
+      prev.map((s) => (s.order === updatedItem.order ? updatedItem : s))
+    );
+  };
+
+  // Удаление элемента и пересчет order
+  const deleteItem = (order: number) => {
+    setSequence((prev) => {
+      // Фильтруем удаляемый элемент
+      const updatedSequence = prev.filter((s) => s.order !== order);
+
+      // Пересчитываем order у оставшихся элементов
+      return updatedSequence.map((s, index) => ({
+        ...s,
+        order: index + 1, // Новый порядок от 1 и далее
+      }));
+    });
+  };
 
   return (
     <div className="space-y-5 w-full max-w-[430px]">
@@ -61,9 +74,9 @@ export function SetControls({ sequence, setSequence }: Props) {
           .sort((a, b) => a.order - b.order) // Сортируем по order
           .map((item) =>
             item.isTriSet ? (
-              <TriSetItem key={item.order} data={item} onUpdate={updateItem} />
+              <TriSetItem key={item.order} data={item} onUpdate={updateItem} onDelete={deleteItem} />
             ) : (
-              <SetItem key={item.order} data={item} onUpdate={updateItem} />
+              <SetItem key={item.order} data={item} onUpdate={updateItem} onDelete={deleteItem} />
             )
           )
       ) : (

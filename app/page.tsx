@@ -59,7 +59,6 @@ export default function Home() {
           <>
             <Skeleton className="w-full h-20 mb-4" />
             <Skeleton className="w-full h-20 mb-4" />
-            <Skeleton className="w-full h-20 mb-4" />
           </>
         ) : workouts.length > 0 ? (
           workouts.map((workout) => <WorkoutDay key={workout.id} workout={workout} />)

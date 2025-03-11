@@ -8,9 +8,10 @@ import { RefreshCcw, Check, Trash2 } from "lucide-react";
 interface Props {
   data: SetType;
   onUpdate: (updatedTriSet: SetType) => void;
+	onDelete: (order: number) => void;
 }
 
-export const TriSetItem: React.FC<Props> = ({ data, onUpdate }) => {
+export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
   // Локальное состояние для каждого сета
   const [sets, setSets] = useState(
     data.subSets.map((set) => ({
@@ -81,8 +82,8 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate }) => {
           <Title text="Tri-set" className="font-medium text-[20px]" />
         </div>
         <button 
-					className="text-muted"
-					onClick={() => console.log("Settings clicked")}
+					className="text-red-400"
+					onClick={() => onDelete(data.order)}
 					>
           <Trash2 size={26} />
         </button>

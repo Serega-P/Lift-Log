@@ -8,10 +8,14 @@
   }
 }
 
+body {
+  @apply text-primary bg-bgPrimary;
+  font-family: var(--font-rubik), sans-serif; /* Убедимся, что шрифт применяется */
+}
 
 @layer base {
   :root {
-		--font-nunito: 'Rubik', sans-serif;
+    --font-rubik: "Rubik", sans-serif; /* Резервное значение на случай, если next/font не работает */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -65,13 +69,6 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-
-	body {
-    @apply text-primary bg-bgPrimary;
-		font-family: var(--font-rubik), sans-serif;
-
-  }
-
 }
 
 [data-state="open"] button.absolute {

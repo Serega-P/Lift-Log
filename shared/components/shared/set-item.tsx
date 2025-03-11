@@ -8,9 +8,10 @@ import { RefreshCcw, Check, Trash2 } from "lucide-react";
 interface Props {
   data: SetType;
   onUpdate: (updatedSet: SetType) => void;
+	onDelete: (id: number) => void;
 }
 
-export const SetItem: React.FC<Props> = ({ data, onUpdate }) => {
+export const SetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
   const [weight, setWeight] = useState<number | string>(""); // По умолчанию импут пустой
   const [reps, setReps] = useState<number | string>(""); // По умолчанию импут пустой
   const [isRefreshed, setIsRefreshed] = useState(false); // Для отслеживания нажатия на кнопку Refresh
@@ -50,8 +51,8 @@ export const SetItem: React.FC<Props> = ({ data, onUpdate }) => {
           <Title text="Set" className="font-medium text-[20px]" />
         </div>
         <button 
-					className="text-muted"
-					onClick={() => console.log("Settings clicked")}
+					className="text-red-400"
+					onClick={() => onDelete(data.order)}
 					>
           <Trash2 size={26} />
         </button>

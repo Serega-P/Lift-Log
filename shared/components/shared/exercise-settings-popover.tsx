@@ -3,7 +3,11 @@
 import { Popover, PopoverContent, PopoverTrigger, Button } from "@/shared/components";
 import { Settings2, Edit, Trash2 } from "lucide-react";
 
-export function ExerciseSettingsPopover() {
+interface Props {
+  onDelete: () => void; // ✅ Добавил пропс для удаления
+}
+
+export function ExerciseSettingsPopover({ onDelete }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,7 +28,7 @@ export function ExerciseSettingsPopover() {
           </button>
           <button
             className="flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500/10 transition"
-            onClick={() => console.log("Delete clicked")}
+            onClick={onDelete}
           >
             <Trash2 size={18} className="mr-2" /> Delete
           </button>

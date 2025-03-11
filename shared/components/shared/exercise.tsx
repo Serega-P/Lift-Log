@@ -18,17 +18,21 @@ import {
 
 interface Props {
   exercise: ExerciseType;
-  onUpdate: (updatedExercise: ExerciseType) => void; // ✅ Передаём коллбэк
+  onUpdate: (updatedExercise: ExerciseType) => void;
+  onDelete: (id: number) => void;
 }
 
-export function Exercise({ exercise, onUpdate }: Props) {
+export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(exercise);
-	const [done, setDone] =  useState(true)
+  const [done, setDone] = useState(true);
   const [sets, setSets] = useState<SetType[]>(() => 
     exercise.setGroup?.flatMap((group) => group.sets)?.sort((a, b) => a.order - b.order) || []
   );
-	// console.log("exerciseData:", exerciseData)
+
+	// console.log("Exercise exerciseData:", exerciseData)
+
+  // Обновление упражнения
   const handleUpdateExercise = (updatedSets: SetType[]) => {
     const updatedExercise = {
       ...exerciseData,
@@ -52,7 +56,8 @@ export function Exercise({ exercise, onUpdate }: Props) {
         <div className="flex items-center gap-2">
           <Title text={exerciseData.name} className="font-medium text-[20px]" />
         </div>
-        <ExerciseSettingsPopover />
+        {/* Передаем onDelete в ExerciseSettingsPopover */}
+        <ExerciseSettingsPopover onDelete={() => onDelete(exerciseData.id ?? 0)} />
       </div>
 
       {/* Список сетов и трисетов */}
@@ -75,7 +80,6 @@ export function Exercise({ exercise, onUpdate }: Props) {
           </div>
         ))}
 
-        {/* Кнопка открытия модального окна */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
            <Button className="mt-6 w-full font-bold uppercase text-base" variant="accent" onClick={() => setIsOpen(true)}>
@@ -89,7 +93,12 @@ export function Exercise({ exercise, onUpdate }: Props) {
              Here you can edit your exercise details and set a new record.
            </DialogDescription>
        
-           <EditExerciseModal name={exerciseData.name} sets={sets} onClose={() => setIsOpen(false)} onSave={handleUpdateExercise} />
+						<EditExerciseModal 
+							name={exerciseData.name} 
+							sets={sets} 
+							onClose={() => setIsOpen(false)} 
+							onSave={handleUpdateExercise} 
+						/>
          </DialogContent>
        </Dialog>
 
