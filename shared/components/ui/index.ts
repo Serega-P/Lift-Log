@@ -21,3 +21,4 @@ export { SetControls } from './set-controls';
 export { InstallPWA } from './install-PWA';
 export { BottomNavigation } from './bottom-navigation';
 export { ModalForm } from './modal-form';
+export { WorkoutSaveModal } from './workout-save-modal';

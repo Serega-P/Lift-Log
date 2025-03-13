@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Button,
@@ -7,12 +7,12 @@ import {
   Title,
   WorkoutDay,
   Skeleton,
-	BottomNavigation
-} from "@/shared/components";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { WorkoutType, DayWithColor } from "@/app/types/types";
+  BottomNavigation,
+} from '@/shared/components';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { WorkoutType, DayWithColor } from '@/app/types/types';
 
 export default function Home() {
   const router = useRouter();
@@ -20,20 +20,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/workouts")
+    fetch('/api/workouts')
       .then((res) => res.json())
       .then((data) => {
         setWorkouts(data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Ошибка загрузки:", err);
+        console.error('Ошибка загрузки:', err);
         setIsLoading(false);
       });
   }, []);
 
   const handleAddWorkout = () => {
-    router.push("/workout/create");
+    router.push('/workout/create');
   };
 
   const handleCalendarClick = (date: string) => {
@@ -44,7 +44,7 @@ export default function Home() {
     workout.days.map((day) => ({
       date: new Date(day.date),
       color: workout.color,
-    }))
+    })),
   );
 
   return (
@@ -63,12 +63,14 @@ export default function Home() {
         ) : workouts.length > 0 ? (
           workouts.map((workout) => <WorkoutDay key={workout.id} workout={workout} />)
         ) : (
-          <p className="text-center text-muted text-lg mt-4">No workouts yet, create your first one!</p>
+          <p className="text-center text-muted text-lg mt-4">
+            No workouts yet, create your first one!
+          </p>
         )}
         <Button className="w-full mb-6 mt-2.5" onClick={handleAddWorkout}>
-         + Add Workout
+          + Add Workout
         </Button>
-				<BottomNavigation />
+        <BottomNavigation />
       </Container>
     </div>
   );

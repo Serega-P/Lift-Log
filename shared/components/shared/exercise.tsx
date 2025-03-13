@@ -27,7 +27,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(exercise);
-  const [newExerciseName, setNewExerciseName] = useState(exercise.name);
+  const [newExerciseName, setNewExerciseName] = useState('');
   const [done, setDone] = useState(true);
   const [sets, setSets] = useState<SetType[]>(
     () =>
@@ -87,7 +87,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
         title="Rename Exercise"
         description="Enter a new name for the exercise"
         inputPlaceholder={exerciseData.name}
-        inputValue={''}
+        inputValue={newExerciseName}
         onInputChange={setNewExerciseName}
         onSubmit={handleRenameExercise}
       />

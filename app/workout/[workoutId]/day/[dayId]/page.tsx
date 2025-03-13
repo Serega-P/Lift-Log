@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Disc3 } from 'lucide-react';
+import { ChevronLeft, Disc3, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WorkoutType, ExerciseType, ExerciseCreateType } from '@/app/types/types';
 import {
@@ -12,9 +12,10 @@ import {
   Button,
   WorkoutSettingsPopover,
   ModalForm,
+  WorkoutSaveModal,
 } from '@/shared/components';
 
-export default function WorkoutDay({ params }: { params: { workoutId: number } }) {
+export default function WorkoutDay({ params }: { params: { workoutId: number | string } }) {
   const { workoutId } = params;
   const [workout, setWorkout] = useState<WorkoutType | null>(null);
   const [exercises, setExercises] = useState<ExerciseType[]>([]);
@@ -24,6 +25,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number } }
   const [isSaving, setIsSaving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRenameWorkoutModalOpen, setIsRenameWorkoutModalOpen] = useState(false);
+  const [isWorkoutDayModalOpen, setIsWorkoutDayModalOpen] = useState(false);
   const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
   const [newExerciseName, setNewExerciseName] = useState('');
   const router = useRouter();
@@ -36,7 +38,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number } }
 
         const data: WorkoutType = await res.json();
         setWorkout(data);
-
         let loadedExercises: ExerciseType[] = [];
         if (data.days?.length) {
           loadedExercises = data.days[data.days.length - 1].exercises;
@@ -63,22 +64,62 @@ export default function WorkoutDay({ params }: { params: { workoutId: number } }
   const saveWorkout = async () => {
     if (!isChanged) return;
     setIsSaving(true);
+    const res = await fetch(`/api/workouts/${workoutId}`);
+    const data: WorkoutType = await res.json();
+
+    const today = new Date().toISOString().split('T')[0];
+    const existingWorkoutDay = data.days?.find(
+      (day) => new Date(day.date).toISOString().split('T')[0] === today,
+    );
+
+    if (existingWorkoutDay) {
+      setIsWorkoutDayModalOpen(true);
+      setIsSaving(false);
+    } else {
+      createNewWorkoutDay();
+    }
+  };
+
+  const createNewWorkoutDay = async () => {
+    setIsSaving(true);
     try {
-      const res = await fetch(`/api/workouts/${workoutId}`, {
+      await fetch(`/api/workouts/${workoutId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ workoutId, exercises }),
       });
 
-      if (!res.ok) throw new Error('Failed to save workout');
-
       setInitialExercises(exercises);
       setIsChanged(false);
       router.push('/');
     } catch (error) {
-      console.error('❌ Ошибка при сохранении тренировки:', error);
+      console.error('Ошибка при сохранении тренировки:', error);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const updateExistingWorkoutDay = async () => {
+    if (!workoutId) return;
+    setIsSaving(true);
+
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      await fetch(`/api/workouts/${workoutId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workoutId, exercises }),
+      });
+
+      setInitialExercises(exercises);
+      setIsChanged(false);
+    } catch (error) {
+      console.error('Ошибка при обновлении тренировки:', error);
+    } finally {
+      setIsSaving(false);
+      setIsWorkoutDayModalOpen(false);
     }
   };
 
@@ -167,7 +208,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number } }
               <span
                 className="absolute inset-0 flex items-center justify-center bg-accent/50 transition-opacity duration-300"
                 style={{ opacity: isSaving ? 1 : 0 }}>
-                {isSaving && <Disc3 className="h-5 w-5 text-white animate-spin" />}
+                {isSaving && <Loader className="h-5 w-5 text-white animate-spin" />}
               </span>
               <span
                 className={cn('transition-opacity duration-300', {
@@ -230,6 +271,16 @@ export default function WorkoutDay({ params }: { params: { workoutId: number } }
           onSubmit={handleAddExercise}
         />
       </div>
+
+      <WorkoutSaveModal
+        isOpen={isWorkoutDayModalOpen}
+        onClose={() => {
+          setIsWorkoutDayModalOpen(false);
+          setIsSaving(false);
+        }}
+        onUpdate={updateExistingWorkoutDay}
+        onCreateNew={createNewWorkoutDay}
+      />
     </Container>
   );
 }

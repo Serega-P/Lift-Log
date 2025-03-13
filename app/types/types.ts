@@ -1,6 +1,6 @@
 export enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
 
 // Пользователь
@@ -8,11 +8,11 @@ export interface UserType {
   id: number;
   fullName: string;
   email: string;
-	image?: string;
+  image?: string;
   password: string;
   role: UserRole;
   emailVerified?: string | null;
-	provider: string;
+  provider: string;
   workouts: WorkoutType[];
 }
 
@@ -24,7 +24,7 @@ export interface WorkoutType {
   userId: number;
   user: UserType;
   days: WorkoutDayType[];
-	exercises: ExerciseType[];
+  exercises: ExerciseType[];
 }
 
 // День тренировки
@@ -47,7 +47,7 @@ export interface ExerciseType {
   dayExercise: WorkoutDayType;
 }
 
-export type ExerciseCreateType = Pick<ExerciseType, "name" | "setGroup">;
+export type ExerciseCreateType = Pick<ExerciseType, 'name' | 'setGroup'>;
 
 // Группа сетов (может включать обычные сеты или трисеты)
 export interface SetGroupType {
@@ -61,10 +61,10 @@ export interface SetGroupType {
 export interface SetType {
   id?: number;
   type: string;
-	order: number;
+  order: number;
   setGroupId?: number;
-	isTriSet: boolean;
-	subSets: SubSetType[];
+  isTriSet: boolean;
+  subSets: SubSetType[];
   weight?: number | string;
   reps?: number | string;
 }
@@ -73,16 +73,15 @@ export interface SubSetType {
   id?: number;
   setId: number;
   set: SetType[];
-	isAutoFilled: boolean;
+  isAutoFilled: boolean;
   weight?: number | string;
   reps?: number | string;
-	originalWeight?: number | string;
-	originalReps?: number | string;
+  originalWeight?: number | string;
+  originalReps?: number | string;
   order: number;
 }
 
 export interface DayWithColor {
-	date: object;
-	color: string;
+  date: object;
+  color: string;
 }
-
