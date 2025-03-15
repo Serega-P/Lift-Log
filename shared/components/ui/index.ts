@@ -22,3 +22,7 @@ export { InstallPWA } from './install-PWA';
 export { BottomNavigation } from './bottom-navigation';
 export { ModalForm } from './modal-form';
 export { WorkoutSaveModal } from './workout-save-modal';
+export { Toggle } from './toggle';
+export { toggleVariants } from './toggle';
+export { ToggleGroup } from './toggle-group';
+export { ToggleGroupItem } from './toggle-group';

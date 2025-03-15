@@ -278,6 +278,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
           setIsWorkoutDayModalOpen(false);
           setIsSaving(false);
         }}
+        isSaving={isSaving}
         onUpdate={updateExistingWorkoutDay}
         onCreateNew={createNewWorkoutDay}
       />
