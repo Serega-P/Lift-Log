@@ -43,8 +43,8 @@ model Workout {
 model WorkoutDay {
   id          Int       @id @default(autoincrement())
   date        DateTime?
-  workoutId   Int
-  workout     Workout   @relation(fields: [workoutId], references: [id])
+  workoutId   Int?
+  workout     Workout?   @relation(fields: [workoutId], references: [id])
   exercises   Exercise[]
 
   createdAt   DateTime  @default(now())
@@ -56,10 +56,10 @@ model WorkoutDay {
 model Exercise {
   id            Int         @id @default(autoincrement())
   name          String
-  workoutId     Int
+  workoutId     Int?
   workoutDayId  Int?
 
-  workout       Workout     @relation(fields: [workoutId], references: [id])
+  workout       Workout?     @relation(fields: [workoutId], references: [id])
   workoutDay    WorkoutDay? @relation(fields: [workoutDayId], references: [id])
   setGroup      Sets[]
 

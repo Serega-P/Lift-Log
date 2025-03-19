@@ -1,33 +1,75 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button, WorkoutSettingsPopover, ModalForm } from '@/shared/components';
+import { Button, WorkoutSettingsPopover, ModalForm, WorkoutDeleteModal } from '@/shared/components';
 
 interface WorkoutHeaderProps {
   workoutTitle: string;
+  workoutColor: string;
+  workoutId: number | string;
   isChanged: boolean;
   isSaving: boolean;
   onSave: () => void;
-  onRename: (newTitle: string) => void;
+  onUpdate: (updates: { title?: string; color?: string }) => void;
 }
 
 export function WorkoutHeader({
   workoutTitle,
+  workoutColor,
   isChanged,
   isSaving,
   onSave,
-  onRename,
+  onUpdate,
+  workoutId,
 }: WorkoutHeaderProps) {
   const router = useRouter();
-  const [isRenameWorkoutModalOpen, setIsRenameWorkoutModalOpen] = React.useState(false);
-  const [newWorkoutTitle, setNewWorkoutTitle] = React.useState(workoutTitle);
+  const [isRenameWorkoutModalOpen, setIsRenameWorkoutModalOpen] = useState(false);
+  const [newWorkoutTitle, setNewWorkoutTitle] = useState(workoutTitle);
+  const [newWorkoutColor, setNewWorkoutColor] = useState(workoutColor);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleRenameWorkout = () => {
-    onRename(newWorkoutTitle);
+  // Обновляем состояние, если входные пропсы изменились
+  React.useEffect(() => {
+    setNewWorkoutTitle(workoutTitle);
+    setNewWorkoutColor(workoutColor);
+  }, [workoutTitle, workoutColor]);
+
+  const handleUpdateWorkout = () => {
+    onUpdate({
+      title: newWorkoutTitle,
+      color: newWorkoutColor,
+    });
     setIsRenameWorkoutModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    // console.log('Deleting...');
+    // setIsDeleting(true);
+    // setTimeout(() => {
+    //   setIsDeleting(false);
+    //   setIsDeleteDialogOpen(false);
+    //   console.log('Done');
+    //   router.back();
+    // }, 2000);
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/workouts/${workoutId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete workout: ${response.status}`);
+      }
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      router.back();
+    } catch (error) {
+      console.error('Ошибка при удалении тренировки:', error);
+    }
   };
 
   return (
@@ -38,17 +80,34 @@ export function WorkoutHeader({
         <ChevronLeft size={24} />
       </Button>
       <div className="flex items-center space-x-4">
-        <WorkoutSettingsPopover onRename={() => setIsRenameWorkoutModalOpen(true)} />
+        <WorkoutSettingsPopover
+          workoutId={workoutId}
+          onRename={() => setIsRenameWorkoutModalOpen(true)}
+          onDelete={() => setIsDeleteDialogOpen(true)}
+        />
+
+        {/* Модалка редактирования */}
         <ModalForm
           isOpen={isRenameWorkoutModalOpen}
           onClose={() => setIsRenameWorkoutModalOpen(false)}
-          title="Rename Workout"
-          description="Enter a new name for your workout"
+          title="Update Workout"
+          description="Enter a new name and color for your workout"
           inputPlaceholder={workoutTitle}
           inputValue={newWorkoutTitle}
           onInputChange={setNewWorkoutTitle}
-          onSubmit={handleRenameWorkout}
+          onSubmit={handleUpdateWorkout}
+          isWorkoutEdit={true}
+          selectedColor={newWorkoutColor}
+          onColorChange={setNewWorkoutColor}
         />
+
+        <WorkoutDeleteModal
+          onClose={() => setIsDeleteDialogOpen(false)}
+          isDeleting={isDeleting}
+          isOpen={isDeleteDialogOpen}
+          onConfirmDelete={() => handleDelete()}
+        />
+
         {isChanged && (
           <Button
             variant="accent"

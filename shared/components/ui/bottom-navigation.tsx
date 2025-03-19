@@ -15,7 +15,7 @@ export function BottomNavigation() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 pt-1 pb-4 left-1/2 -translate-x-1/2 w-full px-10 bg-bgBase flex items-center justify-center">
+    <div className="fixed bottom-0 pt-1 pb-6 left-1/2 -translate-x-1/2 w-full px-10 bg-bgBase flex items-center justify-center">
       <nav className="w-full max-w-[430px] flex justify-between items-center ">
         {navItems.map(({ href, icon: Icon }) => {
           const isActive = pathname === href;
@@ -28,7 +28,7 @@ export function BottomNavigation() {
                 className={`p-4 rounded-full transition-all ${
                   isActive ? 'text-accent' : 'text-muted'
                 }`}>
-                <Icon size={20} strokeWidth={isActive ? '2' : '1'} />
+                <Icon size={24} strokeWidth={2} />
               </div>
             </Link>
           );

@@ -77,6 +77,7 @@ export function WorkoutExercises({
         inputValue={newExerciseName}
         onInputChange={setNewExerciseName}
         onSubmit={handleAddExercise}
+        isWorkoutEdit={false}
       />
     </div>
   );
