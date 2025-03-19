@@ -16,7 +16,7 @@ export function ExerciseSettingsPopover({ onDelete, onRename }: Props) {
           <Settings2 size={24} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-40 p-2 mr-4 bg-bgSoft rounded-[10px] border-muted/25 shadow-xxl">
+      <PopoverContent className="w-40 p-2 mr-5 bg-bgSoft rounded-[4px] border-muted/25 shadow-xxl">
         <div className="flex flex-col">
           <button
             className="flex items-center px-3 py-2 rounded-md text-white hover:bg-bgMuted transition"
