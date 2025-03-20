@@ -40,11 +40,12 @@ export default function Home() {
     console.log(date);
   };
 
-  const events: DayWithColor[] = workouts.flatMap((workout) =>
-    workout.days.map((day) => ({
-      date: new Date(day.date),
-      color: workout.color,
-    })),
+  const events: DayWithColor[] = workouts.flatMap(
+    (workout) =>
+      workout.days?.map((day) => ({
+        date: new Date(day.date),
+        color: workout.color,
+      })) || [],
   );
 
   return (

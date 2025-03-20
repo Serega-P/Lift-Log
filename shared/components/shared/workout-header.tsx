@@ -47,14 +47,6 @@ export function WorkoutHeader({
   };
 
   const handleDelete = async () => {
-    // console.log('Deleting...');
-    // setIsDeleting(true);
-    // setTimeout(() => {
-    //   setIsDeleting(false);
-    //   setIsDeleteDialogOpen(false);
-    //   console.log('Done');
-    //   router.back();
-    // }, 2000);
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/workouts/${workoutId}`, {

@@ -30,7 +30,7 @@ export interface WorkoutType {
 export interface WorkoutDayType {
   id?: number;
   date: string;
-  workoutId: number;
+  workoutId?: number | null;
   workout?: WorkoutType;
   exercises?: ExerciseType[];
 }
