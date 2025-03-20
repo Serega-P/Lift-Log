@@ -29,9 +29,10 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [exerciseData, setExerciseData] = useState(exercise);
   const [newExerciseName, setNewExerciseName] = useState('');
   const [done, setDone] = useState(true);
-  const [sets, setSets] = useState<SetType[]>(
-    () =>
-      exercise.setGroup?.flatMap((group) => group.sets)?.sort((a, b) => a.order - b.order) || [],
+  const [sets, setSets] = useState<SetType[]>(() =>
+    (exercise.setGroup ?? [])
+      .flatMap((group) => group.sets ?? []) // Если sets нет, заменяем на []
+      .sort((a, b) => a.order - b.order),
   );
 
   // Функция для обновления имени упражнения
@@ -52,7 +53,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const handleUpdateExercise = (updatedSets: SetType[]) => {
     const updatedExercise = {
       ...exerciseData,
-      setGroup: exerciseData.setGroup.map((group) => ({
+      setGroup: exerciseData.setGroup?.map((group) => ({
         ...group,
         sets: updatedSets,
       })),

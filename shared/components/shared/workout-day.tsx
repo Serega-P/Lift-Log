@@ -13,7 +13,7 @@ export const WorkoutDay: React.FC<Props> = ({ workout }) => {
     return null;
   }
 
-  const { id, title, color, days } = workout;
+  const { id, title, color, days = [] } = workout;
   const lastDayIndex = days.length - 1;
   const lastWorkout = days[lastDayIndex];
 
