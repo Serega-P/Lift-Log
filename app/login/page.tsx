@@ -2,7 +2,7 @@
 
 import { Button, Container, Input, Title } from '@/shared/components';
 import { useSession, signIn } from 'next-auth/react';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Google from '@/public/assets/images/google.svg';
@@ -10,6 +10,14 @@ import Facebook from '@/public/assets/images/facebook.svg';
 import { Lock, Mail } from 'lucide-react';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
