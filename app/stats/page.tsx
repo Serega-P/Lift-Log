@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { WorkoutType } from '@/app/types/types';
 import { BottomNavigation, WorkoutDay, Skeleton } from '@/shared/components';
 
-export default function WorkoutsPage() {
+export default function Stats() {
   const [workouts, setWorkouts] = useState<WorkoutType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
