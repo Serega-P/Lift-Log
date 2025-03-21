@@ -1,12 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Pencil, Camera, LogOut } from 'lucide-react';
 import { Button, ToggleGroup, ToggleGroupItem, BottomNavigation } from '@/shared/components';
 
 export default function Profile() {
   const [unit, setUnit] = useState('kg');
-  // const [name, setName] = useState('Your Name');
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false }); // Выход без редиректа
+    router.push('/login'); // Перенаправление на страницу входа
+  };
 
   return (
     <div className="flex flex-col w-full items-center justify-center min-h-screen px-12">
@@ -51,9 +58,10 @@ export default function Profile() {
         </Button>
         <Button
           variant="secondary"
-          className="w-full text-red-500 flex items-center justify-center space-x-2 bg-bgSurface">
+          className="w-full text-red-500 flex items-center justify-center space-x-2 bg-bgSurface"
+          onClick={handleSignOut}>
           <LogOut className="w-4 h-4" />
-          <span>Sign out</span>
+          Sign out
         </Button>
       </div>
       <BottomNavigation />

@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Title, Button } from "@/shared/components";
-import { Download } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Title, Button } from '@/shared/components';
+import { Download } from 'lucide-react';
 
-// Интерфейсы для событий установки
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-// Расширяем `Navigator` для добавления свойства standalone
 interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
 }
@@ -19,94 +17,102 @@ export default function InstallPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [installing, setInstalling] = useState<boolean>(false);
-  const [isIOS, setIsIOS] = useState<boolean>(false); // Для проверки iOS устройства
+  const [isIOS, setIsIOS] = useState<boolean>(false);
 
   useEffect(() => {
-    // Проверяем, установлено ли приложение
     const checkPWAInstalled = () => {
       return (
-        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia('(display-mode: standalone)').matches ||
         Boolean((navigator as NavigatorWithStandalone).standalone)
       );
     };
 
-    // Проверяем, является ли устройство iOS
     const userAgent = navigator.userAgent.toLowerCase();
-    setIsIOS(userAgent.includes("iphone") || userAgent.includes("ipad"));
-
-    // Устанавливаем состояние на основе того, установлено ли приложение
+    setIsIOS(userAgent.includes('iphone') || userAgent.includes('ipad'));
     setIsInstalled(checkPWAInstalled());
 
-    // Ловим событие установки PWA (если оно доступно)
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
 
-  // Функция установки PWA
   const handleInstall = async () => {
     if (deferredPrompt) {
       setInstalling(true);
-
-      // Запрашиваем установку PWA
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
 
-      if (outcome === "accepted") {
-        setIsInstalled(true); // После установки приложение считается установленным
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
       }
 
       setInstalling(false);
     } else {
-      // Если событие установки недоступно, то покажем сообщение
-      alert("Install option is not available on this device.");
+      alert('Install option is not available on this device.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center flex-col px-10 w-full h-screen bg-blue-600">
-      <Title
-        text="Track progress effortlessly"
-        size="xl"
-        className="font-extrabold text-center leading-tight text-[42px]"
+    <div className="relative w-full h-screen bg-black flex items-center justify-center px-10">
+      {/* Фон */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: 'url(/assets/images/install-bg.jpg)' }}
       />
-      <Title text="Log workouts, monitor loads and improve results." size="sm" className="font-normal text-center" />
-      
-      {isInstalled ? (
-        <Title text="Installation complete!" size="sm" className="font-extrabold text-center mt-10" />
-      ) : (
-        <>
-          {installing ? (
-            <Title text="Installing..." size="sm" className="font-extrabold text-center mt-10" />
-          ) : (
-            <Button
-              onClick={handleInstall}
-              className="bg-green-500 text-xl px-6 mt-10"
-              variant="accent"
-              size="accent"
-            >
-              <Download />
-              Install
-            </Button>
-          )}
 
-          {/* Подсказка для iOS */}
-          {isIOS && !deferredPrompt && (
-            <Title
-              text="To install, tap 'Add to Home Screen' from your browser's menu."
-              size="xs"
-              className="font-light italic text-center mt-10"
-            />
-          )}
-        </>
-      )}
+      {/* Оверлей 85% */}
+      <div className="absolute inset-0 bg-bgPrimary/90" />
+
+      {/* Контент поверх */}
+      <div className="relative z-10 flex flex-col items-center text-white">
+        <Title
+          text="Workout Log"
+          size="xl"
+          className="font-extrabold text-center leading-tight text-[42px]"
+        />
+        <Title
+          text="Log workouts, monitor loads and improve results."
+          size="sm"
+          className="font-normal text-center"
+        />
+
+        {isInstalled ? (
+          <Title
+            text="Installation complete!"
+            size="sm"
+            className="font-extrabold text-center mt-10"
+          />
+        ) : (
+          <>
+            {installing ? (
+              <Title text="Installing..." size="sm" className="font-extrabold text-center mt-10" />
+            ) : (
+              <Button
+                onClick={handleInstall}
+                className="bg-green-500 text-lg px-12 mt-10"
+                variant="accent"
+                size="accent">
+                <Download size={20} />
+                Install
+              </Button>
+            )}
+
+            {isIOS && !deferredPrompt && (
+              <Title
+                text="To install, tap 'Add to Home Screen' from your browser's menu."
+                size="xs"
+                className="font-light italic text-center mt-10"
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
