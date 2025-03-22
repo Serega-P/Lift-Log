@@ -9,7 +9,14 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      authorization: { params: { prompt: 'select_account' } },
+      authorization: {
+        params: {
+          prompt: 'select_account consent', // Всегда показывать выбор аккаунта и заново запрашивать разрешения
+          access_type: 'offline', // Получение refresh-токена
+          response_type: 'code',
+          hd: '*', // ⬅ Показывать все аккаунты, включая рабочие
+        },
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
