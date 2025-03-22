@@ -36,10 +36,6 @@ export default function Home() {
     router.push('/workout/create');
   };
 
-  const handleCalendarClick = (date: string) => {
-    console.log(date);
-  };
-
   const events: DayWithColor[] = workouts.flatMap(
     (workout) =>
       workout.days?.map((day) => ({
@@ -47,6 +43,10 @@ export default function Home() {
         color: workout.color,
       })) || [],
   );
+
+  const handleCalendarClick = (date: string | null) => {
+    console.log(date);
+  };
 
   return (
     <div className="pb-24">

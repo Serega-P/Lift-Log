@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import { DayWithColor } from "@/app/types/types"; // Импорт типизации
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import { DayWithColor } from '@/app/types/types'; // Импорт типизации
 
 interface Props {
   events: DayWithColor[]; // Список событий
-  onDayClick: (date: string) => void; // Обработчик клика на день
+  onDayClick: (date: string | null) => void; // Обработчик клика на день
 }
 
 export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
@@ -14,28 +14,27 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
 
   // Преобразование списка событий в карту (ключ: "YYYY-MM-DD")
   const eventMap: Record<string, string[]> = events.reduce((acc, event) => {
-		let dateKey: string;
-	
-		if (event.date instanceof Date) {
-			dateKey = event.date.toISOString().split("T")[0]; // Уже объект Date
-		} else if (typeof event.date === "string" || typeof event.date === "number") {
-			dateKey = new Date(event.date).toISOString().split("T")[0]; // Конвертируем строку/число в Date
-		} else {
-			console.error("Invalid date format:", event.date); // Логируем ошибку
-			return acc;
-		}
-	
-		if (!acc[dateKey]) {
-			acc[dateKey] = [];
-		}
-		acc[dateKey].push(event.color);
-		return acc;
-	}, {} as Record<string, string[]>);
-	
+    let dateKey: string;
+
+    if (event.date instanceof Date) {
+      dateKey = event.date.toISOString().split('T')[0]; // Уже объект Date
+    } else if (typeof event.date === 'string' || typeof event.date === 'number') {
+      dateKey = new Date(event.date).toISOString().split('T')[0]; // Конвертируем строку/число в Date
+    } else {
+      console.error('Invalid date format:', event.date); // Логируем ошибку
+      return acc;
+    }
+
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(event.color);
+    return acc;
+  }, {} as Record<string, string[]>);
 
   // Кастомизация ячейки календаря
   const tileContent = ({ date }: { date: Date }) => {
-    const dateKey = date.toISOString().split("T")[0]; // Тот же формат
+    const dateKey = date.toISOString().split('T')[0]; // Тот же формат
     const colors = eventMap[dateKey] || []; // Получаем массив цветов
 
     return (
@@ -57,9 +56,11 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
 
   // Обработчик клика по дню
   const handleDayClick = (value: Date) => {
-    const dateString = value.toISOString().split("T")[0];
+    const dateString = value.toISOString().split('T')[0];
+    const isEventDay = eventMap[dateString] !== undefined; // Проверяем, есть ли дата в eventMap
+
     setSelectedDate(value);
-    onDayClick(dateString);
+    onDayClick(isEventDay ? dateString : null); // Если дата есть в events, передаём её, иначе null
   };
 
   return (

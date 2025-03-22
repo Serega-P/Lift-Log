@@ -1,19 +1,20 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaClient } from "@prisma/client";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      authorization: { params: { prompt: 'select_account' } },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   callbacks: {
     async signIn({ user, account }) {
@@ -26,16 +27,16 @@ const handler = NextAuth({
         if (!existingUser) {
           existingUser = await prisma.user.create({
             data: {
-              fullName: user.name || "No Name",
+              fullName: user.name || 'No Name',
               email: user.email,
               image: user.image,
-              provider: account?.provider || "google",
+              provider: account?.provider || 'google',
             },
           });
         }
         return true;
       } catch (error) {
-        console.error("Error checking user in DB:", error);
+        console.error('Error checking user in DB:', error);
         return false;
       }
     },

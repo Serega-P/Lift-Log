@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import { Providers } from "@/shared/components";
-import { Rubik } from "next/font/google";
-import "react-calendar/dist/Calendar.css";
-import "./globals.css";
-import "./styles/calendar.css";
-import { useEffect } from "react";
+import { Providers } from '@/shared/components';
+import { Rubik } from 'next/font/google';
+import 'react-calendar/dist/Calendar.css';
+import './globals.css';
+import './styles/calendar.css';
+import { useEffect } from 'react';
 
 const rubik = Rubik({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-rubik",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-rubik',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
-
 
 export default function RootLayout({
   children,
@@ -20,18 +19,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register("/service-worker.js")
-        .then(() => console.log("Service Worker зарегистрирован"))
-        .catch((err) => console.error("Ошибка Service Worker:", err));
+        .register('/service-worker.js')
+        .then(() => console.log('Service Worker зарегистрирован'))
+        .catch((err) => console.error('Ошибка Service Worker:', err));
     }
   }, []);
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head><link rel="manifest" href="/manifest.json" /><meta name="theme-color" content="#000000" /></head>
-      <body className={`${rubik.variable} antialiased`}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+      </head>
+      <body className={`${rubik.variable} max-w-[430px] m-auto antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
