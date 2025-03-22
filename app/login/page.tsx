@@ -100,7 +100,7 @@ function LoginContent() {
         <Button
           variant="secondary"
           className="w-full bg-white flex items-center text-bgBase font-bold py-5 min-h-16 rounded-full justify-center hover:bg-slate-200"
-          onClick={() => signIn('google', { callbackUrl })}>
+          onClick={() => signIn('google', { prompt: 'select_account', callbackUrl })}>
           <Image src={Google} alt="Google" width={24} height={24} className="mr-2" />
           Log in using Google
         </Button>
