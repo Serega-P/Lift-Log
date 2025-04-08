@@ -13,23 +13,31 @@ interface Props {
 
 export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
   // Локальное состояние для каждого сета
-  const [sets, setSets] = useState(
+  const [sets, setSets] = useState<
+    {
+      weight: string;
+      reps: string;
+      isRefreshed: boolean;
+      originalWeight: number;
+      originalReps: number;
+    }[]
+  >(
     data.subSets?.map((set) => ({
       weight: '', // Начальное значение пустое (input изначально пуст)
       reps: '', // Начальное значение пустое
       isRefreshed: false,
       originalWeight: set.weight ?? 0,
       originalReps: set.reps ?? 0,
-    })),
+    })) ?? [],
   );
 
   // Функция обновления локального состояния + передача данных в `onUpdate`
   const updateSet = (index: number, field: 'weight' | 'reps', value: string) => {
-    const updatedSets = sets?.map((set, idx) =>
+    const updatedSets = sets.map((set, idx) =>
       idx === index
         ? {
             ...set,
-            [field]: value, // Сохраняем строку
+            [field]: value, // Сохраняем строку для локального состояния
             isRefreshed: set.weight !== '' && set.reps !== '', // Если оба поля заполнены — обновляем
           }
         : set,
@@ -37,25 +45,32 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
 
     setSets(updatedSets);
 
-    // Передаём данные вверх
+    // Передаём данные вверх, преобразуя строки в number | null
     onUpdate({
       ...data,
-      subSets: updatedSets?.map((set, i) => ({
-        ...((data.subSets ?? [])[i] || {}), // Если `data.subSets` undefined, берем пустой массив
-        weight: set.weight === '' ? set.originalWeight : set.weight,
-        reps: set.reps === '' ? set.originalReps : set.reps,
-      })),
+      subSets: updatedSets.map((set, i) => {
+        const existingSubSet = (data.subSets ?? [])[i] || {};
+        const weightValue = set.weight === '' ? set.originalWeight : Number(set.weight);
+        const repsValue = set.reps === '' ? set.originalReps : Number(set.reps);
+
+        return {
+          ...existingSubSet,
+          weight: isNaN(weightValue) ? null : weightValue, // Преобразуем в number | null
+          reps: isNaN(repsValue) ? null : repsValue, // Преобразуем в number | null
+          order: existingSubSet.order ?? i + 1, // Устанавливаем порядок
+        };
+      }),
     });
   };
 
   // Функция сброса значений на оригинальные
   const refreshSet = (index: number) => {
-    const updatedSets = sets?.map((set, idx) =>
+    const updatedSets = sets.map((set, idx) =>
       idx === index
         ? {
             ...set,
-            weight: String(set.originalWeight), // Приводим к строке
-            reps: String(set.originalReps), // Приводим к строке
+            weight: String(set.originalWeight), // Приводим к строке для input
+            reps: String(set.originalReps), // Приводим к строке для input
             isRefreshed: true, // Теперь это авто-заполнение
           }
         : set,
@@ -66,13 +81,15 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
     // Передаём данные вверх
     onUpdate({
       ...data,
-      subSets: data.subSets
-        ? updatedSets?.map((set, i) => ({
-            ...data.subSets![i], // `!` говорит TypeScript, что `subSets` точно не undefined
-            weight: set.originalWeight,
-            reps: set.originalReps,
-          }))
-        : [], // Если subSets нет, подставляем пустой массив
+      subSets: updatedSets.map((set, i) => {
+        const existingSubSet = (data.subSets ?? [])[i] || {};
+        return {
+          ...existingSubSet,
+          weight: set.originalWeight, // Уже number | null
+          reps: set.originalReps, // Уже number | null
+          order: existingSubSet.order ?? i + 1, // Устанавливаем порядок
+        };
+      }),
     });
   };
 
@@ -88,7 +105,7 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
         </button>
       </div>
 
-      {sets?.map((set, index) => {
+      {sets.map((set, index) => {
         const isAutoFilled = set.isRefreshed || (set.weight !== '' && set.reps !== '');
 
         return (
@@ -103,7 +120,7 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
                 value={set.weight}
                 onChange={(e) => updateSet(index, 'weight', e.target.value)}
                 className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
-									${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
+                  ${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
               />
               <span className={`text-lg font-bold ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
                 kg
@@ -118,7 +135,7 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
                 value={set.reps}
                 onChange={(e) => updateSet(index, 'reps', e.target.value)}
                 className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
-									${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
+                  ${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
               />
               <span className={`text-lg font-bold ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
                 reps
@@ -131,7 +148,7 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
                 variant="icons"
                 size="icons"
                 onClick={() => refreshSet(index)}
-                className="bg-non opacity-100 disabled:opacity-100"
+                className="bg-none opacity-100 disabled:opacity-100"
                 disabled={isAutoFilled} // Отключаем кнопку, если уже обновлено
               >
                 {isAutoFilled ? (

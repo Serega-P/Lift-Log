@@ -1,10 +1,9 @@
 // /lib/api/workoutHandlers.ts
 import { prisma } from '@/prisma/prisma-client';
-// import { NextRequest, NextResponse } from 'next/server';
-import { ExerciseType, WorkoutDayWithExercises } from '@/app/types/types';
+import { WorkoutDayWithExercises, SetGroupType, SetType, SubSetType } from '@/app/types/types';
 
 // Вспомогательная функция для проверки workoutId
-const validateWorkoutId = (workoutId: string) => {
+const validateWorkoutId = (workoutId: string): number => {
   const id = Number(workoutId);
   if (isNaN(id)) {
     throw new Error('Invalid workout ID');
@@ -20,12 +19,13 @@ export const getWorkout = async (workoutId: string) => {
     where: { id },
     include: {
       days: {
-        where: { date: { not: null } },
+        // where: { date: { not: null } },
         orderBy: { updatedAt: 'desc' },
         take: 1,
         include: {
           exercises: {
             include: {
+              exerciseType: true,
               setGroup: {
                 include: {
                   sets: {
@@ -35,17 +35,6 @@ export const getWorkout = async (workoutId: string) => {
                     },
                   },
                 },
-              },
-            },
-          },
-        },
-      },
-      exercises: {
-        include: {
-          setGroup: {
-            include: {
-              sets: {
-                include: { subSets: true },
               },
             },
           },
@@ -63,12 +52,21 @@ export const getWorkout = async (workoutId: string) => {
   return {
     ...workout,
     days: lastWorkoutDay ? [lastWorkoutDay] : [],
-    exercises: lastWorkoutDay ? [] : workout.exercises,
   };
 };
 
+// Тип для входных данных упражнений
+type ExerciseInput = {
+  name: string;
+  workoutId: number;
+  setGroup?: SetGroupType[];
+};
+
 // Функция для создания нового WorkoutDay (POST)
-export const createWorkoutDay = async (workoutId: string, exercises: ExerciseType[]) => {
+export const createWorkoutDay = async (
+  workoutId: string,
+  exercises: ExerciseInput[],
+): Promise<WorkoutDayWithExercises> => {
   const id = validateWorkoutId(workoutId);
 
   if (!Array.isArray(exercises)) {
@@ -78,61 +76,69 @@ export const createWorkoutDay = async (workoutId: string, exercises: ExerciseTyp
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const userId = (await prisma.workout.findUnique({ where: { id } }))?.userId;
+  if (!userId) {
+    throw new Error('Workout not found');
+  }
+
   const newWorkoutDay = await prisma.workoutDay.create({
     data: {
       date: today,
       workoutId: id,
       exercises: {
-        create: exercises.map((exercise) => ({
-          workoutId: id,
-          name: exercise.name,
-          setGroup: exercise.setGroup?.length
-            ? {
-                create: exercise.setGroup.map((group) => {
-                  // Проверяем, что group.sets существует и не пустой
-                  if (!group.sets || group.sets.length === 0) {
-                    return { sets: undefined };
-                  }
-                  return {
-                    sets: {
-                      create: group.sets.map((set) => {
-                        // Проверяем, что set.subSets существует и не пустой
-                        if (!set.subSets || set.subSets.length === 0) {
-                          return {
+        create: await Promise.all(
+          exercises.map(async (exercise) => {
+            // Проверяем или создаём ExerciseType
+            let exerciseType = await prisma.exerciseType.findFirst({
+              where: { name: exercise.name, userId },
+            });
+            if (!exerciseType) {
+              exerciseType = await prisma.exerciseType.create({
+                data: { name: exercise.name, userId },
+              });
+            }
+
+            return {
+              exerciseTypeId: exerciseType.id,
+              setGroup: exercise.setGroup?.length
+                ? {
+                    create: exercise.setGroup.map((group: SetGroupType) => {
+                      if (!group.sets || group.sets.length === 0) {
+                        return {};
+                      }
+                      return {
+                        sets: {
+                          create: group.sets.map((set: SetType) => ({
                             type: set.type,
                             order: set.order,
-                            weight: set.weight !== '' ? Number(set.weight) : null,
-                            reps: set.reps !== '' ? Number(set.reps) : null,
+                            weight: set.weight !== undefined ? Number(set.weight) : null,
+                            reps: set.reps !== undefined ? Number(set.reps) : null,
                             isTriSet: set.isTriSet,
-                            subSets: undefined,
-                          };
-                        }
-                        return {
-                          type: set.type,
-                          order: set.order,
-                          weight: set.weight !== '' ? Number(set.weight) : null,
-                          reps: set.reps !== '' ? Number(set.reps) : null,
-                          isTriSet: set.isTriSet,
-                          subSets: {
-                            create: set.subSets.map((subSet) => ({
-                              order: subSet.order,
-                              weight: subSet.weight !== '' ? Number(subSet.weight) : null,
-                              reps: subSet.reps !== '' ? Number(subSet.reps) : null,
-                            })),
-                          },
-                        };
-                      }),
-                    },
-                  };
-                }),
-              }
-            : undefined,
-        })),
+                            subSets: set.subSets?.length
+                              ? {
+                                  create: set.subSets.map((subSet: SubSetType) => ({
+                                    order: subSet.order,
+                                    weight:
+                                      subSet.weight !== undefined ? Number(subSet.weight) : null,
+                                    reps: subSet.reps !== undefined ? Number(subSet.reps) : null,
+                                  })),
+                                }
+                              : undefined,
+                          })),
+                        },
+                      };
+                    }),
+                  }
+                : { create: {} },
+            };
+          }),
+        ),
       },
     },
     include: {
       exercises: {
         include: {
+          exerciseType: true,
           setGroup: {
             include: {
               sets: {
@@ -144,14 +150,15 @@ export const createWorkoutDay = async (workoutId: string, exercises: ExerciseTyp
           },
         },
       },
+      workout: true,
     },
   });
 
-  return newWorkoutDay;
+  return newWorkoutDay as WorkoutDayWithExercises;
 };
 
 // Вспомогательная функция для удаления существующих упражнений и их зависимостей
-const deleteExistingExercises = async (workoutDay: WorkoutDayWithExercises) => {
+const deleteExistingExercises = async (workoutDay: WorkoutDayWithExercises): Promise<void> => {
   const exercisesToDelete = workoutDay.exercises.map((ex) => ex.id);
 
   if (exercisesToDelete.length > 0) {
@@ -178,7 +185,7 @@ const deleteExistingExercises = async (workoutDay: WorkoutDayWithExercises) => {
       });
     }
 
-    // Удаляем все setGroup (в схеме Prisma это модель Sets)
+    // Удаляем все setGroup
     const setGroupsToDelete = workoutDay.exercises
       .flatMap((ex) => ex.setGroup?.map((sg) => sg.id) ?? [])
       .filter((id): id is number => id !== undefined);
@@ -197,7 +204,10 @@ const deleteExistingExercises = async (workoutDay: WorkoutDayWithExercises) => {
 };
 
 // Функция для обновления WorkoutDay (PATCH для упражнений)
-export const updateWorkoutDay = async (workoutId: string, exercises: ExerciseType[]) => {
+export const updateWorkoutDay = async (
+  workoutId: string,
+  exercises: ExerciseInput[],
+): Promise<WorkoutDayWithExercises> => {
   const id = validateWorkoutId(workoutId);
 
   if (!Array.isArray(exercises)) {
@@ -214,12 +224,23 @@ export const updateWorkoutDay = async (workoutId: string, exercises: ExerciseTyp
       date: today,
     },
     include: {
-      exercises: { include: { setGroup: { include: { sets: { include: { subSets: true } } } } } },
+      exercises: {
+        include: {
+          setGroup: { include: { sets: { include: { subSets: true } } } },
+          exerciseType: true,
+        },
+      },
+      workout: true,
     },
   });
 
   if (!workoutDay) {
     throw new Error('Workout day not found');
+  }
+
+  const userId = workoutDay.workout?.userId;
+  if (!userId) {
+    throw new Error('Workout not found');
   }
 
   // Удаляем существующие упражнения и их зависимости
@@ -231,57 +252,71 @@ export const updateWorkoutDay = async (workoutId: string, exercises: ExerciseTyp
     data: {
       updatedAt: new Date(),
       exercises: {
-        create: exercises.map((exercise) => ({
-          name: exercise.name,
-          workout: { connect: { id } },
-          setGroup: exercise.setGroup?.length
-            ? {
-                create: exercise.setGroup.map((group) => {
-                  // Проверяем, что group.sets существует и не пустой
-                  if (!group.sets || group.sets.length === 0) {
-                    return { sets: undefined };
-                  }
-                  return {
-                    sets: {
-                      create: group.sets.map((set) => {
-                        // Проверяем, что set.subSets существует и не пустой
-                        if (!set.subSets || set.subSets.length === 0) {
-                          return {
+        create: await Promise.all(
+          exercises.map(async (exercise) => {
+            // Проверяем или создаём ExerciseType
+            let exerciseType = await prisma.exerciseType.findFirst({
+              where: { name: exercise.name, userId },
+            });
+            if (!exerciseType) {
+              exerciseType = await prisma.exerciseType.create({
+                data: { name: exercise.name, userId },
+              });
+            }
+
+            return {
+              exerciseTypeId: exerciseType.id,
+              setGroup: exercise.setGroup?.length
+                ? {
+                    create: exercise.setGroup.map((group: SetGroupType) => {
+                      if (!group.sets || group.sets.length === 0) {
+                        return {};
+                      }
+                      return {
+                        sets: {
+                          create: group.sets.map((set: SetType) => ({
                             type: set.type,
                             order: set.order,
-                            weight: set.weight !== '' ? Number(set.weight) : null,
-                            reps: set.reps !== '' ? Number(set.reps) : null,
+                            weight: set.weight !== undefined ? Number(set.weight) : null,
+                            reps: set.reps !== undefined ? Number(set.reps) : null,
                             isTriSet: set.isTriSet,
-                            subSets: undefined,
-                          };
-                        }
-                        return {
-                          type: set.type,
-                          order: set.order,
-                          weight: set.weight !== '' ? Number(set.weight) : null,
-                          reps: set.reps !== '' ? Number(set.reps) : null,
-                          isTriSet: set.isTriSet,
-                          subSets: {
-                            create: set.subSets.map((subSet) => ({
-                              order: subSet.order,
-                              weight: subSet.weight !== '' ? Number(subSet.weight) : null,
-                              reps: subSet.reps !== '' ? Number(subSet.reps) : null,
-                            })),
-                          },
-                        };
-                      }),
-                    },
-                  };
-                }),
-              }
-            : undefined,
-        })),
+                            subSets: set.subSets?.length
+                              ? {
+                                  create: set.subSets.map((subSet: SubSetType) => ({
+                                    order: subSet.order,
+                                    weight:
+                                      subSet.weight !== undefined ? Number(subSet.weight) : null,
+                                    reps: subSet.reps !== undefined ? Number(subSet.reps) : null,
+                                  })),
+                                }
+                              : undefined,
+                          })),
+                        },
+                      };
+                    }),
+                  }
+                : { create: {} },
+            };
+          }),
+        ),
       },
     },
-    include: { exercises: true },
+    include: {
+      exercises: {
+        include: {
+          exerciseType: true,
+          setGroup: {
+            include: {
+              sets: { include: { subSets: true } },
+            },
+          },
+        },
+      },
+      workout: true,
+    },
   });
 
-  return updatedWorkoutDay;
+  return updatedWorkoutDay as WorkoutDayWithExercises;
 };
 
 // Функция для обновления самой тренировки (PATCH для title и color)

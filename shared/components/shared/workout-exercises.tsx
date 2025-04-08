@@ -6,7 +6,7 @@ import { Title, Exercise, Button, ModalForm } from '@/shared/components';
 
 interface WorkoutExercisesProps {
   exercises: ExerciseType[];
-  lastWorkoutDate?: string;
+  lastWorkoutDate?: Date | null | undefined;
   workoutTitle: string;
   onUpdateExercise: (updatedExercise: ExerciseType) => void;
   onDeleteExercise: (exerciseId: number) => void;

@@ -11,19 +11,20 @@ model User {
   id            Int       @id @default(autoincrement())
   fullName      String
   email         String    @unique
-  password      String?   // Пароль нужен только для регистрации через email
+  password      String?
   role          UserRole  @default(USER)
   image         String?
-  provider      String?   // Google или email
-  emailVerified DateTime? // Подтверждение email (верификация)
+  provider      String?
+  emailVerified DateTime?
   workouts      Workout[]
+	exerciseType  ExerciseType[]
+	
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
 }
-
 
 model Workout {
   id          Int          @id @default(autoincrement())
@@ -32,7 +33,6 @@ model Workout {
   userId      Int
   user        User         @relation(fields: [userId], references: [id])
   days        WorkoutDay[]
-  exercises   Exercise[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -53,15 +53,26 @@ model WorkoutDay {
   @@map("workout_days")
 }
 
-model Exercise {
-  id            Int         @id @default(autoincrement())
-  name          String
-  workoutId     Int?
-  workoutDayId  Int?
+model ExerciseType {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  exercises   Exercise[]
 
-  workout       Workout?     @relation(fields: [workoutId], references: [id])
-  workoutDay    WorkoutDay? @relation(fields: [workoutDayId], references: [id])
-  setGroup      Sets[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("exercise_types")
+}
+
+model Exercise {
+  id             Int          @id @default(autoincrement())
+  workoutDayId   Int
+  exerciseTypeId Int
+  workoutDay     WorkoutDay   @relation(fields: [workoutDayId], references: [id])
+  exerciseType   ExerciseType @relation(fields: [exerciseTypeId], references: [id])
+  setGroup       Sets[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -73,8 +84,7 @@ model Sets {
   id         Int       @id @default(autoincrement())
   exerciseId Int
   exercise   Exercise  @relation(fields: [exerciseId], references: [id])
-
-  sets       Set[]  // Группа сетов
+  sets       Set[]
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -85,13 +95,12 @@ model Sets {
 model Set {
   id         Int    @id @default(autoincrement())
   type       String
-  order      Int    // Очерёдность в пределах set_group
+  order      Int
   weight     Float?
   reps       Int?
-  isTriSet   Boolean @default(false) // Флаг, является ли это TriSet
+  isTriSet   Boolean @default(false)
 
   subSets    SubSet[] @relation(name: "TrisetSubsets")
-
   setGroupId Int
   setGroup   Sets @relation(fields: [setGroupId], references: [id])
 
@@ -104,18 +113,16 @@ model Set {
 model SubSet {
   id     Int    @id @default(autoincrement())
   setId  Int
-  set    Set @relation(fields: [setId], references: [id], name: "TrisetSubsets") // Связь с TriSet
-
+  set    Set @relation(fields: [setId], references: [id], name: "TrisetSubsets")
   weight Float?
   reps   Int?
-  order  Int    // Очерёдность в пределах Triset
+  order  Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("sub_sets")
 }
-
 
 enum UserRole {
   USER

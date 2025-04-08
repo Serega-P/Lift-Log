@@ -21,7 +21,7 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
     } else if (typeof event.date === 'string' || typeof event.date === 'number') {
       dateKey = new Date(event.date).toISOString().split('T')[0]; // Конвертируем строку/число в Date
     } else {
-      console.error('Invalid date format:', event.date); // Логируем ошибку
+      // console.error('Invalid date format:', event.date); // Логируем ошибку
       return acc;
     }
 

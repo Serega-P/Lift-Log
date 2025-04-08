@@ -39,7 +39,7 @@ export default function Home() {
   const events: DayWithColor[] = workouts.flatMap(
     (workout) =>
       workout.days?.map((day) => ({
-        date: new Date(day.date),
+        date: day.date ? new Date(day.date) : null, // Обрабатываем null
         color: workout.color,
       })) || [],
   );

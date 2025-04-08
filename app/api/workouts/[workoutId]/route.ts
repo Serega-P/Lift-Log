@@ -7,9 +7,13 @@ import {
   updateWorkout,
 } from '@/lib/api/workoutHandlers';
 
-export async function GET(req: NextRequest, { params }: { params: { workoutId: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { workoutId: string; lastDayIndex: string } },
+) {
   try {
-    const workout = await getWorkout(params.workoutId);
+    const { workoutId } = params;
+    const workout = await getWorkout(workoutId);
     return NextResponse.json(workout, { status: 200 });
   } catch (error: unknown) {
     console.error('Ошибка при получении тренировки:', error);
@@ -24,10 +28,14 @@ export async function GET(req: NextRequest, { params }: { params: { workoutId: s
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { workoutId: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { workoutId: string; lastDayIndex: string } },
+) {
   try {
+    const { workoutId } = params;
     const { exercises } = await req.json();
-    const newWorkoutDay = await createWorkoutDay(params.workoutId, exercises);
+    const newWorkoutDay = await createWorkoutDay(workoutId, exercises);
     return NextResponse.json(newWorkoutDay, { status: 201 });
   } catch (error: unknown) {
     console.error('❌ Ошибка при сохранении тренировки:', error);
@@ -39,19 +47,23 @@ export async function POST(req: NextRequest, { params }: { params: { workoutId: 
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { workoutId: string } }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { workoutId: string; lastDayIndex: string } },
+) {
   try {
+    const { workoutId } = params;
     const body = await req.json();
 
     // Если есть title или color, обновляем саму тренировку
     if (body.title || body.color) {
-      const updatedWorkout = await updateWorkout(params.workoutId, body.title, body.color);
+      const updatedWorkout = await updateWorkout(workoutId, body.title, body.color);
       return NextResponse.json(updatedWorkout, { status: 200 });
     }
 
     // Если есть exercises, обновляем WorkoutDay
     const { exercises } = body;
-    const updatedWorkoutDay = await updateWorkoutDay(params.workoutId, exercises);
+    const updatedWorkoutDay = await updateWorkoutDay(workoutId, exercises);
     return NextResponse.json(updatedWorkoutDay, { status: 200 });
   } catch (error: unknown) {
     console.error('❌ Ошибка при обновлении тренировки:', error);
@@ -69,28 +81,32 @@ export async function PATCH(req: NextRequest, { params }: { params: { workoutId:
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { workoutId: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { workoutId: string; lastDayIndex: string } },
+) {
   try {
-    const workoutId = Number(params.workoutId);
+    const { workoutId } = params;
+    const id = Number(workoutId);
 
-    if (isNaN(workoutId)) {
+    if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid workout ID' }, { status: 400 });
     }
 
     // Обновляем все упражнения, связанные с этой тренировкой, устанавливая workoutId в null
-    await prisma.exercise.updateMany({
-      where: { workoutId },
-      data: { workoutId: { set: null } },
-    });
+    // await prisma.exercise.updateMany({
+    //   where: { workoutId: id },
+    //   data: { workoutId: null }, // Используем прямое присваивание null
+    // });
 
     await prisma.workoutDay.updateMany({
-      where: { workoutId },
-      data: { workoutId: { set: null } },
+      where: { workoutId: id },
+      data: { workoutId: null },
     });
 
     // Удаляем тренировку
     await prisma.workout.delete({
-      where: { id: workoutId },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Workout deleted successfully' }, { status: 200 });

@@ -31,7 +31,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [done, setDone] = useState(true);
   const [sets, setSets] = useState<SetType[]>(() =>
     (exercise.setGroup ?? [])
-      .flatMap((group) => group.sets ?? []) // Если sets нет, заменяем на []
+      .flatMap((group) => group.sets ?? [])
       .sort((a, b) => a.order - b.order),
   );
 
@@ -39,9 +39,15 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const handleRenameExercise = () => {
     if (!newExerciseName.trim()) return;
 
-    const updatedExercise = {
+    const updatedExercise: ExerciseType = {
       ...exerciseData,
-      name: newExerciseName,
+      exerciseType: {
+        id: exerciseData.exerciseType?.id ?? exerciseData.exerciseTypeId,
+        name: newExerciseName,
+        userId: exerciseData.exerciseType?.userId ?? 0,
+        createdAt: exerciseData.exerciseType?.createdAt ?? new Date(),
+        updatedAt: new Date(),
+      },
     };
 
     setExerciseData(updatedExercise);
@@ -51,12 +57,18 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
 
   // Обновление сетов упражнения
   const handleUpdateExercise = (updatedSets: SetType[]) => {
-    const updatedExercise = {
+    const updatedExercise: ExerciseType = {
       ...exerciseData,
-      setGroup: exerciseData.setGroup?.map((group) => ({
-        ...group,
-        sets: updatedSets,
-      })),
+      setGroup:
+        updatedSets.length > 0
+          ? [
+              {
+                ...(exerciseData.setGroup?.[0] ?? {}), // Сохраняем существующие свойства группы, если есть
+                exerciseId: exerciseData.id, // Устанавливаем связь с упражнением
+                sets: updatedSets, // Обновляем сеты
+              },
+            ]
+          : [], // Если сетов нет, оставляем пустой массив
     };
 
     setExerciseData(updatedExercise);
@@ -74,7 +86,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
       {/* Верхняя часть */}
       <div className="flex justify-between items-center pl-5 py-2.5 bg-bgSoft">
         <div className="flex items-center gap-2">
-          <Title text={exerciseData.name} className="font-medium text-[20px]" />
+          <Title text={exerciseData.exerciseType?.name} className="font-medium text-[20px]" />
         </div>
         <ExerciseSettingsPopover
           onDelete={() => onDelete(exerciseData.id ?? 0)}
@@ -87,7 +99,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
         onClose={() => setIsModalOpen(false)}
         title="Rename Exercise"
         description="Enter a new name for the exercise"
-        inputPlaceholder={exerciseData.name}
+        inputPlaceholder={exerciseData.exerciseType?.name}
         inputValue={newExerciseName}
         onInputChange={setNewExerciseName}
         onSubmit={handleRenameExercise}
@@ -132,7 +144,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
             </DialogDescription>
 
             <EditExerciseModal
-              name={exerciseData.name}
+              name={exerciseData.exerciseType?.name}
               sets={sets}
               onClose={() => setIsOpen(false)}
               onSave={handleUpdateExercise}

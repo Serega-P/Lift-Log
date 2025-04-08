@@ -6,7 +6,7 @@ type TitleSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 interface Props {
   size?: TitleSize;
   className?: string;
-  text: string;
+  text: string | undefined;
 }
 
 export const Title: React.FC<Props> = ({ text, size = 'sm', className }) => {

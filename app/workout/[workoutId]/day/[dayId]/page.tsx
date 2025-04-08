@@ -28,8 +28,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         let loadedExercises: ExerciseType[] = [];
         if (data.days?.length) {
           loadedExercises = data.days[data.days.length - 1].exercises ?? [];
-        } else if (data.exercises?.length) {
-          loadedExercises = data.exercises ?? [];
         }
 
         setExercises(loadedExercises);
@@ -56,7 +54,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
 
     const today = new Date().toISOString().split('T')[0];
     const existingWorkoutDay = data.days?.find(
-      (day) => new Date(day.date).toISOString().split('T')[0] === today,
+      (day) => day.date && new Date(day.date).toISOString().split('T')[0] === today,
     );
 
     if (existingWorkoutDay) {
@@ -73,7 +71,12 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
       await fetch(`/api/workouts/${workoutId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workoutId, exercises }),
+        body: JSON.stringify({
+          exercises: exercises.map((ex) => ({
+            name: ex.exerciseType?.name || 'Unnamed Exercise', // Используем имя из exerciseType
+            setGroup: ex.setGroup || [],
+          })),
+        }),
       });
 
       setInitialExercises(exercises);
@@ -91,13 +94,15 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     setIsSaving(true);
 
     try {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
       await fetch(`/api/workouts/${workoutId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workoutId, exercises }),
+        body: JSON.stringify({
+          exercises: exercises.map((ex) => ({
+            name: ex.exerciseType?.name || 'Unnamed Exercise',
+            setGroup: ex.setGroup || [],
+          })),
+        }),
       });
 
       setInitialExercises(exercises);
@@ -118,17 +123,33 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
 
   const handleAddExercise = (exerciseName: string) => {
     const newExercise: ExerciseCreateType = {
-      name: exerciseName,
-      setGroup: [{ sets: [], exerciseId: 0, exercise: null }],
+      exerciseTypeId: Date.now(), // Временный ID, реальный будет создан на сервере
+      workoutDayId: 0, // Временное значение, будет установлено сервером
+      setGroup: [
+        {
+          id: 0, // Временный ID для фронтенда
+          exerciseId: 0, // Временное значение, будет установлено сервером
+          sets: [], // Пустой массив сетов
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ], // Явно указываем как SetGroupType[]
     };
 
     setExercises((prev) => [
       ...prev,
       {
         ...newExercise,
-        id: Date.now(),
-        workoutId: workoutId,
-        dayExercises: 0,
+        id: Date.now(), // Временный ID для Exercise
+        exerciseType: {
+          id: newExercise.exerciseTypeId,
+          name: exerciseName,
+          userId: 0, // Временное значение
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }, // Временный exerciseType
+        createdAt: new Date(),
+        updatedAt: new Date(),
       } as ExerciseType,
     ]);
   };
