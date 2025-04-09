@@ -16,6 +16,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
   const [isSaving, setIsSaving] = useState(false);
   const [isWorkoutDayModalOpen, setIsWorkoutDayModalOpen] = useState(false);
   const router = useRouter();
+  console.log('exercises', exercises);
 
   useEffect(() => {
     async function fetchWorkout() {
@@ -121,7 +122,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     );
   };
 
-  const handleAddExercise = (exerciseName: string) => {
+  const handleCreateExercise = (exerciseName: string) => {
     const newExercise: ExerciseCreateType = {
       exerciseTypeId: Date.now(), // Временный ID, реальный будет создан на сервере
       workoutDayId: 0, // Временное значение, будет установлено сервером
@@ -215,6 +216,9 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         onSave={saveWorkout}
         onUpdate={handleUpdateWorkout}
         workoutId={workoutId}
+        onCreateExercise={handleCreateExercise}
+        exercises={exercises}
+        setExercises={setExercises}
       />
 
       <WorkoutExercises
@@ -223,7 +227,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         workoutTitle={workout.title}
         onUpdateExercise={updateExercise}
         onDeleteExercise={handleDeleteExercise}
-        onAddExercise={handleAddExercise}
       />
 
       <WorkoutModals

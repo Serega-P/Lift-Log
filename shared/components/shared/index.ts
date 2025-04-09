@@ -14,3 +14,4 @@ export { ExerciseSettingsPopover } from './exercise-settings-popover';
 export { WorkoutExercises } from './workout-exercises';
 export { WorkoutHeader } from './workout-header';
 export { WorkoutModals } from './workout-modals';
+export { AddExerciseModal } from './add-exercise-modal';

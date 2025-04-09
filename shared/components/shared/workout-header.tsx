@@ -4,7 +4,14 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button, WorkoutSettingsPopover, ModalForm, WorkoutDeleteModal } from '@/shared/components';
+import { ExerciseType } from '@/app/types/types';
+import {
+  Button,
+  WorkoutSettingsPopover,
+  ModalForm,
+  WorkoutDeleteModal,
+  AddExerciseModal,
+} from '@/shared/components';
 
 interface WorkoutHeaderProps {
   workoutTitle: string;
@@ -13,7 +20,10 @@ interface WorkoutHeaderProps {
   isChanged: boolean;
   isSaving: boolean;
   onSave: () => void;
+  setExercises: React.Dispatch<React.SetStateAction<ExerciseType[]>>;
+  exercises: ExerciseType[];
   onUpdate: (updates: { title?: string; color?: string }) => void;
+  onCreateExercise: (exerciseName: string) => void;
 }
 
 export function WorkoutHeader({
@@ -23,20 +33,33 @@ export function WorkoutHeader({
   isSaving,
   onSave,
   onUpdate,
+  onCreateExercise,
   workoutId,
+  exercises,
+  setExercises,
 }: WorkoutHeaderProps) {
   const router = useRouter();
   const [isRenameWorkoutModalOpen, setIsRenameWorkoutModalOpen] = useState(false);
   const [newWorkoutTitle, setNewWorkoutTitle] = useState(workoutTitle);
   const [newWorkoutColor, setNewWorkoutColor] = useState(workoutColor);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isCreateExerciseOpen, setIsCreateExerciseOpen] = useState(false);
+  const [isAddExerciseDialogOpen, setIsAddExerciseDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [newExerciseName, setNewExerciseName] = React.useState('');
 
   // Обновляем состояние, если входные пропсы изменились
   React.useEffect(() => {
     setNewWorkoutTitle(workoutTitle);
     setNewWorkoutColor(workoutColor);
   }, [workoutTitle, workoutColor]);
+
+  const handleCreateExercise = () => {
+    if (!newExerciseName.trim()) return;
+    onCreateExercise(newExerciseName);
+    setNewExerciseName('');
+    setIsCreateExerciseOpen(false);
+  };
 
   const handleUpdateWorkout = () => {
     onUpdate({
@@ -77,6 +100,8 @@ export function WorkoutHeader({
             workoutId={workoutId}
             onRename={() => setIsRenameWorkoutModalOpen(true)}
             onDelete={() => setIsDeleteDialogOpen(true)}
+            onCreateExercise={() => setIsCreateExerciseOpen(true)}
+            onAddExercise={() => setIsAddExerciseDialogOpen(true)}
           />
 
           {/* Модалка редактирования */}
@@ -99,6 +124,25 @@ export function WorkoutHeader({
             isDeleting={isDeleting}
             isOpen={isDeleteDialogOpen}
             onConfirmDelete={() => handleDelete()}
+          />
+
+          <AddExerciseModal
+            onClose={() => setIsAddExerciseDialogOpen(false)}
+            isOpen={isAddExerciseDialogOpen}
+            exercises={exercises}
+            setExercises={setExercises}
+          />
+
+          <ModalForm
+            isOpen={isCreateExerciseOpen}
+            onClose={() => setIsCreateExerciseOpen(false)}
+            title="New Exercise"
+            description={`Add a new exercise to your workout ${workoutTitle}`}
+            inputPlaceholder="Exercise name"
+            inputValue={newExerciseName}
+            onInputChange={setNewExerciseName}
+            onSubmit={handleCreateExercise}
+            isWorkoutEdit={false}
           />
 
           {isChanged && (

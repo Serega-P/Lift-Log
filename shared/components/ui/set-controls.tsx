@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Button, SetItem, TriSetItem } from "@/shared/components";
-import { SetType } from "@/app/types/types";
+import React from 'react';
+import { Button, SetItem, TriSetItem } from '@/shared/components';
+import { SetType } from '@/app/types/types';
 
 interface Props {
   sequence: SetType[];
@@ -11,20 +11,21 @@ interface Props {
 
 export function SetControls({ sequence, setSequence }: Props) {
   // Определяем следующий порядковый номер
-  const getNextOrder = () => (sequence.length > 0 ? Math.max(...sequence.map((s) => s.order)) + 1 : 1);
+  const getNextOrder = () =>
+    sequence.length > 0 ? Math.max(...sequence.map((s) => s.order)) + 1 : 1;
 
   // Добавление нового сета
   const addSet = () => {
     setSequence((prev) => [
       ...prev,
       {
-        type: "set",
+        type: 'set',
         order: getNextOrder(),
         weight: 0,
         reps: 0,
         isTriSet: false,
         subSets: [],
-      } as SetType,
+      } as unknown as SetType,
     ]);
   };
 
@@ -33,7 +34,7 @@ export function SetControls({ sequence, setSequence }: Props) {
     setSequence((prev) => [
       ...prev,
       {
-        type: "triset",
+        type: 'triset',
         order: getNextOrder(),
         isTriSet: true,
         subSets: [
@@ -47,9 +48,7 @@ export function SetControls({ sequence, setSequence }: Props) {
 
   // Обновление элемента (сет или трисет)
   const updateItem = (updatedItem: SetType) => {
-    setSequence((prev) =>
-      prev.map((s) => (s.order === updatedItem.order ? updatedItem : s))
-    );
+    setSequence((prev) => prev.map((s) => (s.order === updatedItem.order ? updatedItem : s)));
   };
 
   // Удаление элемента и пересчет order
@@ -74,10 +73,15 @@ export function SetControls({ sequence, setSequence }: Props) {
           .sort((a, b) => a.order - b.order) // Сортируем по order
           .map((item) =>
             item.isTriSet ? (
-              <TriSetItem key={item.order} data={item} onUpdate={updateItem} onDelete={deleteItem} />
+              <TriSetItem
+                key={item.order}
+                data={item}
+                onUpdate={updateItem}
+                onDelete={deleteItem}
+              />
             ) : (
               <SetItem key={item.order} data={item} onUpdate={updateItem} onDelete={deleteItem} />
-            )
+            ),
           )
       ) : (
         <p className="text-gray-500">No sets added yet.</p>

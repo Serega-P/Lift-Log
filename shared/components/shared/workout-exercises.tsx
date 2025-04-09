@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ExerciseType } from '@/app/types/types';
-import { Title, Exercise, Button, ModalForm } from '@/shared/components';
+import { Title, Exercise } from '@/shared/components';
 
 interface WorkoutExercisesProps {
   exercises: ExerciseType[];
@@ -10,7 +10,6 @@ interface WorkoutExercisesProps {
   workoutTitle: string;
   onUpdateExercise: (updatedExercise: ExerciseType) => void;
   onDeleteExercise: (exerciseId: number) => void;
-  onAddExercise: (exerciseName: string) => void;
 }
 
 export function WorkoutExercises({
@@ -19,18 +18,7 @@ export function WorkoutExercises({
   workoutTitle,
   onUpdateExercise,
   onDeleteExercise,
-  onAddExercise,
 }: WorkoutExercisesProps) {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [newExerciseName, setNewExerciseName] = React.useState('');
-
-  const handleAddExercise = () => {
-    if (!newExerciseName.trim()) return;
-    onAddExercise(newExerciseName);
-    setNewExerciseName('');
-    setIsModalOpen(false);
-  };
-
   return (
     <div className="pt-20">
       <div className="mb-4">
@@ -63,22 +51,6 @@ export function WorkoutExercises({
           <p className="text-gray-500">No exercises available.</p>
         )}
       </div>
-
-      <Button className="w-full mb-6 mt-5" onClick={() => setIsModalOpen(true)}>
-        + Add exercise
-      </Button>
-
-      <ModalForm
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="New Exercise"
-        description={`Add a new exercise to your workout ${workoutTitle}`}
-        inputPlaceholder="Exercise name"
-        inputValue={newExerciseName}
-        onInputChange={setNewExerciseName}
-        onSubmit={handleAddExercise}
-        isWorkoutEdit={false}
-      />
     </div>
   );
 }
