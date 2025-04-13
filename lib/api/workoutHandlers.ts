@@ -76,6 +76,8 @@ export const createWorkoutDay = async (
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  console.log('today', today);
+
   const userId = (await prisma.workout.findUnique({ where: { id } }))?.userId;
   if (!userId) {
     throw new Error('Workout not found');

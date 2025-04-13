@@ -53,9 +53,9 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     const res = await fetch(`/api/workouts/${workoutId}`);
     const data: WorkoutType = await res.json();
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().setHours(0, 0, 0, 0);
     const existingWorkoutDay = data.days?.find(
-      (day) => day.date && new Date(day.date).toISOString().split('T')[0] === today,
+      (day) => day.date && new Date(day.createdAt).setHours(0, 0, 0, 0) === today,
     );
 
     if (existingWorkoutDay) {

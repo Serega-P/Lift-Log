@@ -19,21 +19,19 @@ const COLORS = [
 
 export default function NewWorkout() {
   const [workoutName, setWorkoutName] = React.useState<string>('');
-  const [exercises, setExercises] = React.useState<{ id: number; name: string }[]>([]); // Изначально пустой массив
+  const [exercises, setExercises] = React.useState<{ id: number; name: string }[]>([]);
   const [selectedColor, setSelectedColor] = React.useState(COLORS[0]);
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [isChanged, setIsChanged] = React.useState(false); // Флаг изменений
+  const [isChanged, setIsChanged] = React.useState(false);
 
   const router = useRouter();
 
-  // Исходное состояние для отслеживания изменений
   const initialState = React.useRef({
     workoutName: '',
-    exercises: [], // Изначально пустой массив
+    exercises: [],
   });
 
-  // Проверяем, были ли изменения
   React.useEffect(() => {
     const hasChanges =
       workoutName !== initialState.current.workoutName ||
@@ -57,8 +55,16 @@ export default function NewWorkout() {
   };
 
   const handleSubmit = async () => {
-    if (!workoutName.trim() || exercises.length === 0 || exercises.some((e) => !e.name.trim())) {
-      setErrorMessage('Please fill in all fields and add at least one exercise');
+    // Проверяем только название тренировки
+    if (!workoutName.trim()) {
+      setErrorMessage('Please fill in the workout name');
+      setTimeout(() => setErrorMessage(null), 3000);
+      return;
+    }
+
+    // Если есть упражнения, проверяем, что их названия заполнены
+    if (exercises.length > 0 && exercises.some((e) => !e.name.trim())) {
+      setErrorMessage('Please fill in all exercise names');
       setTimeout(() => setErrorMessage(null), 3000);
       return;
     }
@@ -72,10 +78,13 @@ export default function NewWorkout() {
         body: JSON.stringify({
           title: workoutName,
           color: selectedColor,
-          exercises: exercises.map((e) => ({
-            name: e.name,
-            setGroup: [{}], // Пустой массив для setGroup, если сетов пока нет
-          })),
+          exercises:
+            exercises.length > 0
+              ? exercises.map((e) => ({
+                  name: e.name,
+                  setGroup: [{}], // Пустой setGroup для совместимости
+                }))
+              : [], // Отправляем пустой массив, если нет упражнений
         }),
       });
 
@@ -109,8 +118,7 @@ export default function NewWorkout() {
             size="default"
             className="bg-green-500 h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-green-400"
             onClick={handleSubmit}
-            disabled={!isChanged || loading} // Блокируем, если нет изменений
-          >
+            disabled={!isChanged || loading}>
             <span
               className="absolute inset-0 flex items-center justify-center bg-accent/50 transition-opacity duration-300"
               style={{ opacity: loading ? 1 : 0 }}>

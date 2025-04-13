@@ -48,7 +48,12 @@ export function WorkoutExercises({
             />
           ))
         ) : (
-          <p className="text-gray-500">No exercises available.</p>
+          <p className="text-base">
+            No exercises available. <br />
+            <span className="text-sm text-muted">
+              You can add or create a new exercise in the settings menu above.
+            </span>
+          </p>
         )}
       </div>
     </div>
