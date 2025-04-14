@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
+import dynamic from 'next/dynamic';
+const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
 import { DayWithColor } from '@/app/types/types'; // Импорт типизации
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  console.log(events);
 
   // Преобразование списка событий в карту (ключ: "YYYY-MM-DD")
   const eventMap: Record<string, string[]> = events.reduce((acc, event) => {
