@@ -13,24 +13,24 @@ interface Props {
 export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  // Преобразование списка событий в карту (ключ: "YYYY-MM-DD" в UTC)
+  // Преобразование списка событий в карту (ключ: "YYYY-MM-DD" в локальном времени)
   const eventMap: Record<string, string[]> = events.reduce((acc, event) => {
     let dateKey: string;
 
     if (event.date instanceof Date) {
-      // Извлекаем дату в UTC
-      const year = event.date.getUTCFullYear();
-      const month = String(event.date.getUTCMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
-      const day = String(event.date.getUTCDate()).padStart(2, '0');
+      // Извлекаем дату в локальном времени
+      const year = event.date.getFullYear();
+      const month = String(event.date.getMonth() + 1).padStart(2, '0');
+      const day = String(event.date.getDate()).padStart(2, '0');
       dateKey = `${year}-${month}-${day}`;
     } else if (typeof event.date === 'string' || typeof event.date === 'number') {
       const date = new Date(event.date);
-      const year = date.getUTCFullYear();
-      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-      const day = String(date.getUTCDate()).padStart(2, '0');
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
       dateKey = `${year}-${month}-${day}`;
     } else {
-      // console.error('Invalid date format:', event.date);
+      console.error('Invalid date format:', event.date);
       return acc;
     }
 
@@ -43,16 +43,13 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
 
   // Кастомизация ячейки календаря
   const tileContent = ({ date }: { date: Date }) => {
-    // Извлекаем дату в UTC
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
+    // Извлекаем дату в локальном времени
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     const dateKey = `${year}-${month}-${day}`;
 
     const colors = eventMap[dateKey] || [];
-    console.log('Events:', events);
-    console.log('Event Map:', eventMap);
-    console.log('Server Date:', new Date());
 
     return (
       <div className="absolute w-full h-full">
@@ -73,9 +70,9 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
 
   // Обработчик клика по дню
   const handleDayClick = (value: Date) => {
-    const year = value.getUTCFullYear();
-    const month = String(value.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(value.getUTCDate()).padStart(2, '0');
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
     const isEventDay = eventMap[dateString] !== undefined;
