@@ -50,6 +50,9 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
     const dateKey = `${year}-${month}-${day}`;
 
     const colors = eventMap[dateKey] || [];
+    console.log('Events:', events);
+    console.log('Event Map:', eventMap);
+    console.log('Server Date:', new Date());
 
     return (
       <div className="absolute w-full h-full">
