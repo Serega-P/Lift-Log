@@ -38,10 +38,12 @@ export default function Home() {
 
   const events: DayWithColor[] = workouts.flatMap(
     (workout) =>
-      workout.days?.map((day) => ({
-        date: day.date ? new Date(day.date) : null, // Обрабатываем null
-        color: workout.color,
-      })) || [],
+      workout.days
+        ?.filter((day) => day.date !== null) // Исключаем дни с day.date === null
+        .map((day) => ({
+          date: new Date(new Date(day.createdAt).toISOString()), // Используем createdAt, приводим к UTC
+          color: workout.color,
+        })) || [],
   );
 
   const handleCalendarClick = (date: string | null) => {

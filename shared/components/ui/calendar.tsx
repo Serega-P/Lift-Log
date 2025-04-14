@@ -12,7 +12,6 @@ interface Props {
 
 export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  console.log(events);
 
   // Преобразование списка событий в карту (ключ: "YYYY-MM-DD")
   const eventMap: Record<string, string[]> = events.reduce((acc, event) => {
@@ -33,6 +32,8 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
     acc[dateKey].push(event.color);
     return acc;
   }, {} as Record<string, string[]>);
+
+  console.log(eventMap);
 
   // Кастомизация ячейки календаря
   const tileContent = ({ date }: { date: Date }) => {
