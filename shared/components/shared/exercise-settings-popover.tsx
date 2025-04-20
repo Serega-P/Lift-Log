@@ -12,21 +12,21 @@ export function ExerciseSettingsPopover({ onDelete, onRename }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="icons" className="text-muted bg-none hover:text-primary">
+        <Button variant="icons" className="text-muted bg-none hover:text-muted">
           <Settings2 size={24} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-40 p-2 mr-5 bg-bgSoft rounded-[4px] border-muted/25 shadow-xxl">
+      <PopoverContent className="w-auto min-w-[200px] p-0 mr-7 bg-bgBase rounded-2xl border-muted/25 shadow-xxl">
         <div className="flex flex-col">
           <button
-            className="flex items-center px-3 py-2 rounded-md text-white hover:bg-bgMuted transition"
+            className="flex items-center px-5 py-3 rounded-md text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
             onClick={onRename}>
-            <Edit size={18} className="mr-2" /> Rename
+            <Edit size={18} className="mr-4" /> Rename
           </button>
           <button
-            className="flex items-center px-3 py-2 rounded-md text-red-500 hover:bg-red-500/10 transition"
+            className="flex items-center px-5 py-3 rounded-md text-red-500 hover:bg-red-500/10 transition"
             onClick={onDelete}>
-            <Trash2 size={18} className="mr-2" /> Delete
+            <Trash2 size={18} className="mr-4" /> Delete
           </button>
         </div>
       </PopoverContent>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Disc3 } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { WorkoutType, ExerciseType, ExerciseCreateType } from '@/app/types/types';
 import { Container, WorkoutHeader, WorkoutExercises, WorkoutModals } from '@/shared/components';
 
@@ -16,7 +16,6 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
   const [isSaving, setIsSaving] = useState(false);
   const [isWorkoutDayModalOpen, setIsWorkoutDayModalOpen] = useState(false);
   const router = useRouter();
-  console.log('exercises', exercises);
 
   useEffect(() => {
     async function fetchWorkout() {
@@ -196,7 +195,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     return (
       <div className="w-full h-screen flex items-center justify-center">
         <div className="animate-spin">
-          <Disc3 size={36} />
+          <Loader size={36} />
         </div>
       </div>
     );

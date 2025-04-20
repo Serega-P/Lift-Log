@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Loader } from 'lucide-react';
+import { ArrowLeft, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ExerciseType } from '@/app/types/types';
 import {
@@ -88,12 +88,10 @@ export function WorkoutHeader({
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-bgBase flex justify-center items-center z-50">
-      <div className="w-full max-w-[430px] bg-bgBase px-6 py-4 flex justify-between items-center">
-        <Button
-          className="text-white border-none bg-bgSoft h-12 w-12 p-2"
-          onClick={() => router.back()}>
-          <ChevronLeft size={24} />
+    <div className="fixed top-0 left-0 w-full bg-black flex justify-center items-center z-50">
+      <div className="w-full max-w-[430px] px-5 py-2 flex justify-between items-center">
+        <Button className="text-muted border-none h-12 w-12 p-2" onClick={() => router.back()}>
+          <ArrowLeft size={24} strokeWidth={3} />
         </Button>
         <div className="flex items-center space-x-4">
           <WorkoutSettingsPopover
@@ -149,7 +147,7 @@ export function WorkoutHeader({
             <Button
               variant="accent"
               size="default"
-              className="bg-green-500 h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-green-400"
+              className="bg-none h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-accent"
               onClick={onSave}
               disabled={isSaving}>
               <span

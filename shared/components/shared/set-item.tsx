@@ -44,11 +44,11 @@ export const SetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
   };
 
   return (
-    <div className="w-full bg-bgBase rounded-[10px] text-primary mb-5 overflow-hidden">
+    <div className="w-full bg-bgBase rounded-2xl text-primary mb-5 overflow-hidden">
       {/* Верхняя часть */}
-      <div className="flex justify-between items-center px-5 py-2.5 bg-bgSoft">
+      <div className="flex justify-between items-center px-5 py-2.5">
         <div className="flex items-center gap-2">
-          <Title text="Set" className="font-medium text-[20px]" />
+          <Title text="Set" className="font-medium text-base" />
         </div>
         <button className="text-red-400" onClick={() => onDelete(data.order)}>
           <Trash2 size={26} />
@@ -64,10 +64,10 @@ export const SetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
             placeholder={data.weight != null ? String(data.weight) : undefined} // Преобразуем только если не null/undefined
             value={weight === '' ? '' : String(weight)} // Значение импута
             onChange={(e) => handleInputChange('weight', e.target.value)} // Обработчик изменения
-            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgBase border-muted h-12 px-0 py-0 text-center text-2xl placeholder:text-muted text-primary font-medium
                             ${isAutoFilled ? 'border-accent' : 'border-muted'}`}
           />
-          <span className={`${isAutoFilled ? 'text-primary' : 'text-muted'} text-lg font-bold`}>
+          <span className={`${isAutoFilled ? 'text-primary' : 'text-muted'} text-base font-medium`}>
             kg
           </span>
         </div>
@@ -79,10 +79,10 @@ export const SetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
             placeholder={data.reps != null ? String(data.reps) : undefined} // Преобразуем только если не null/undefined
             value={reps === '' ? '' : String(reps)} // Значение импута
             onChange={(e) => handleInputChange('reps', e.target.value)} // Обработчик изменения
-            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+            className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgBase border-muted h-12 px-0 py-0 text-center text-2xl placeholder:text-muted text-primary font-medium
                             ${isAutoFilled ? 'border-accent' : 'border-muted'}`}
           />
-          <span className={`${isAutoFilled ? 'text-primary' : 'text-muted'} text-lg font-bold`}>
+          <span className={`${isAutoFilled ? 'text-primary' : 'text-muted'} text-base font-medium`}>
             reps
           </span>
         </div>

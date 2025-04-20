@@ -94,11 +94,11 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
   };
 
   return (
-    <div className="w-full m-auto bg-bgBase rounded-[10px] text-primary pb-2.5 mb-5 overflow-hidden">
+    <div className="w-full m-auto bg-bgBase rounded-2xl text-primary pb-2.5 mb-5 overflow-hidden">
       {/* Верхняя часть */}
-      <div className="flex justify-between items-center mb-2.5 px-5 py-2.5 bg-bgSoft">
+      <div className="flex justify-between items-center mb-2.5 px-5 py-2.5">
         <div className="flex items-center gap-2">
-          <Title text="Tri-set" className="font-medium text-[20px]" />
+          <Title text="Tri-set" className="font-medium text-base" />
         </div>
         <button className="text-red-400" onClick={() => onDelete(data.order)}>
           <Trash2 size={26} />
@@ -119,10 +119,11 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
                 placeholder={String(set.originalWeight)}
                 value={set.weight}
                 onChange={(e) => updateSet(index, 'weight', e.target.value)}
-                className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+                className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgBase border-muted h-12 px-0 py-0 text-center text-2xl placeholder:text-muted text-primary font-medium
                   ${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
               />
-              <span className={`text-lg font-bold ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
+              <span
+                className={`text-base font-medium ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
                 kg
               </span>
             </div>
@@ -134,10 +135,11 @@ export const TriSetItem: React.FC<Props> = ({ data, onUpdate, onDelete }) => {
                 placeholder={String(set.originalReps)}
                 value={set.reps}
                 onChange={(e) => updateSet(index, 'reps', e.target.value)}
-                className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgSoft border-muted h-12 px-0 py-0 text-center text-3xl placeholder:text-muted text-primary font-medium
+                className={`w-full max-w-[100px] min-w-20 rounded-[6px] bg-bgBase border-muted h-12 px-0 py-0 text-center text-2xl placeholder:text-muted text-primary font-medium
                   ${isAutoFilled ? 'border-accentSoft' : 'border-muted'}`}
               />
-              <span className={`text-lg font-bold ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
+              <span
+                className={`text-base font-medium ${isAutoFilled ? 'text-primary' : 'text-muted'}`}>
                 reps
               </span>
             </div>

@@ -9,13 +9,13 @@
 }
 
 body {
-  @apply text-primary bg-bgPrimary;
+  @apply text-primary bg-black;
   font-family: var(--font-rubik), sans-serif; /* Убедимся, что шрифт применяется */
 }
 
 @layer base {
   :root {
-    --font-rubik: "Rubik", sans-serif; /* Резервное значение на случай, если next/font не работает */
+    --font-rubik: 'Rubik', sans-serif; /* Резервное значение на случай, если next/font не работает */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -71,6 +71,6 @@ body {
   }
 }
 
-[data-state="open"] button.absolute {
+[data-state='open'] button.absolute {
   display: none !important;
 }

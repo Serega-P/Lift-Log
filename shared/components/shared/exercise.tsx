@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ExerciseType, SetType } from '@/app/types/types';
+import { ArrowRight } from 'lucide-react';
 import {
   Button,
   Set,
@@ -28,7 +29,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(exercise);
   const [newExerciseName, setNewExerciseName] = useState('');
-  const [done, setDone] = useState(true);
+  // const [done, setDone] = useState(true);
   const [sets, setSets] = useState<SetType[]>(() =>
     (exercise.setGroup ?? [])
       .flatMap((group) => group.sets ?? [])
@@ -75,18 +76,18 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
     setSets(updatedSets);
     onUpdate(updatedExercise);
     setIsOpen(false);
-    setDone(false);
+    // setDone(false);
   };
 
   return (
-    <div
-      className={`${
-        done ? 'border-none' : 'border-accent'
-      } bg-bgBase rounded-[10px] text-primary mb-5 border-2 overflow-hidden`}>
+    <div className="bg-bgBase rounded-2xl text-primary mb-5 overflow-hidden">
       {/* Верхняя часть */}
-      <div className="flex justify-between items-center pl-5 py-2.5 bg-bgSoft">
+      <div className="flex justify-between items-center pl-5  border-b border-muted/25">
         <div className="flex items-center gap-2">
-          <Title text={exerciseData.exerciseType?.name} className="font-medium text-[20px]" />
+          <Title
+            text={exerciseData.exerciseType?.name}
+            className="font-medium text-primary text-lg"
+          />
         </div>
         <ExerciseSettingsPopover
           onDelete={() => onDelete(exerciseData.id ?? 0)}
@@ -106,18 +107,18 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
       />
 
       {/* Список сетов и трисетов */}
-      <div className="p-3">
+      <div>
         {sets.map((set) => (
-          <div key={set.order} className="py-1">
+          <div key={set.order}>
             {set.type === 'set' && (
               <>
-                <span className="font-normal text-sm text-muted pl-6">Set</span>
+                <span className="font-normal text-sm text-muted pl-5">Set</span>
                 <Set set={set} />
               </>
             )}
             {set.type === 'triset' && (
               <>
-                <span className="font-normal text-sm text-muted pl-6">Tri-set</span>
+                <span className="font-normal text-sm text-muted pl-5">Tri-set</span>
                 <TriSet triSet={set} />
               </>
             )}
@@ -128,10 +129,10 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button
-              className="mt-6 w-full font-bold uppercase text-base"
+              className="w-full font-normal uppercase text-base"
               variant="accent"
               onClick={() => setIsOpen(true)}>
-              SET A NEW RECORD
+              SET A NEW RECORD <ArrowRight size={20} />
             </Button>
           </DialogTrigger>
 

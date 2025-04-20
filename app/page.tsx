@@ -4,7 +4,6 @@ import {
   Button,
   MyCalendar,
   Container,
-  Title,
   WorkoutDay,
   Skeleton,
   BottomNavigation,
@@ -51,17 +50,16 @@ export default function Home() {
   };
 
   return (
-    <div className="pb-24">
-      <Container className="bg-bgBase pb-2.5 pt-5 rounded-b-2xl drop-shadow-3xl">
+    <div className="pb-24 pt-5 px-5">
+      <Container className="bg-bgBase rounded-2xl">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>
 
-      <Container className="px-7 pt-10">
-        <Title text="Workouts" size="lg" className="text-title font-bold mb-3" />
+      <Container className="pt-5">
         {isLoading ? (
           <>
-            <Skeleton className="w-full h-20 mb-4" />
-            <Skeleton className="w-full h-20 mb-4" />
+            <Skeleton className="w-full h-20 mb-4 rounded-2xl" />
+            <Skeleton className="w-full h-20 mb-4 rounded-2xl" />
           </>
         ) : workouts.length > 0 ? (
           workouts.map((workout) => <WorkoutDay key={workout.id} workout={workout} />)
