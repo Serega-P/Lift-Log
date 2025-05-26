@@ -31,7 +31,7 @@ module.exports = {
         bgPrimary: '#1B2026',
         bgBase: '#1C1C1E',
         bgMuted: '#2C2E30',
-        bgSoft: '#2B343F', // фон для светлых поверхностей, например, полей ввода
+        bgSoft: '#3D3D3D', // фон для светлых поверхностей, например, полей ввода
         bgSurface: '#262E37',
 
         DayOne: '#FF9500',

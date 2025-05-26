@@ -108,7 +108,7 @@ export const AddExerciseModal: React.FC<Props> = ({ exercises, setExercises, isO
           </Button>
           <Button
             variant="accent"
-            className="text-base rounded-[6px] w-full"
+            className="text-base text-primary rounded-[6px] w-full bg-accent hover:text-primary"
             onClick={handleSave}
             disabled={selectedExercises.length === 0 || loading}>
             Save
