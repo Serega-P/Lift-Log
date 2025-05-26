@@ -20,7 +20,7 @@ export function WorkoutExercises({
   onDeleteExercise,
 }: WorkoutExercisesProps) {
   return (
-    <div className="pt-20">
+    <div>
       <div className="mb-4">
         {lastWorkoutDate ? (
           <p className="flex items-center text-muted text-sm">

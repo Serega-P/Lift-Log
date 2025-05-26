@@ -74,7 +74,7 @@ export const ModalForm: React.FC<ModalFormProps> = ({
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
           placeholder={inputPlaceholder}
-          className="pl-4 rounded-[6px] bg-bgSoft placeholder:font-normal font-bold border-muted/25 mb-5"
+          className="pl-4 py-3 rounded-[6px] bg-bgSoft placeholder:font-normal font-bold border-muted/25 mb-5"
         />
 
         {/* Показываем выбор цвета только если isWorkoutEdit === true */}
@@ -101,7 +101,10 @@ export const ModalForm: React.FC<ModalFormProps> = ({
           <Button variant="secondary" className="text-base rounded-[6px] w-full" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="accent" className="text-base rounded-[6px] w-full" onClick={onSubmit}>
+          <Button
+            variant="accent"
+            className="text-base text-primary rounded-[6px] w-full bg-accent hover:text-primary"
+            onClick={onSubmit}>
             Save
           </Button>
         </div>

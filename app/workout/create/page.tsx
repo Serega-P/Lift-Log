@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Container, Input, Title } from '@/shared/components';
-import { Trash2, Check, ChevronLeft, Loader } from 'lucide-react';
+import { Trash2, Check, ArrowLeft, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const COLORS = [
@@ -106,26 +106,24 @@ export default function NewWorkout() {
   return (
     <Container className="w-full px-6 py-20 space-y-7 relative min-h-screen">
       {/* Fixed header with buttons */}
-      <div className="fixed top-0 left-0 w-full flex justify-center bg-bgBase z-50">
-        <div className="w-full max-w-[430px] px-6 py-4 flex justify-between items-center">
-          <Button
-            className="text-white border-none bg-bgSoft h-12 w-12 p-2"
-            onClick={() => router.back()}>
-            <ChevronLeft size={24} />
+      <div className="fixed top-0 left-0 w-full bg-black flex justify-center items-center z-50">
+        <div className="w-full max-w-[430px] px-5 py-2 flex justify-between items-center">
+          <Button className="text-muted border-none h-12 w-12 p-2" onClick={() => router.back()}>
+            <ArrowLeft size={24} strokeWidth={3} />
           </Button>
           <Button
             variant="accent"
             size="default"
-            className="bg-green-500 h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-green-400"
+            className="bg-none h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-none"
             onClick={handleSubmit}
             disabled={!isChanged || loading}>
             <span
-              className="absolute inset-0 flex items-center justify-center bg-accent/50 transition-opacity duration-300"
+              className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
               style={{ opacity: loading ? 1 : 0 }}>
               {loading && <Loader className="h-5 w-5 text-white animate-spin" />}
             </span>
             <span
-              className={cn('transition-opacity duration-300', {
+              className={cn('transition-opacity duration-300 ', {
                 'opacity-0': loading,
                 'opacity-100': !loading,
               })}>
@@ -136,7 +134,7 @@ export default function NewWorkout() {
       </div>
 
       {/* Offset content to account for fixed header */}
-      <div className="pt-20 space-y-6">
+      <div className="space-y-6">
         <Title text="New workout" size="md" className="font-extrabold" />
 
         <div className="w-full space-y-1">

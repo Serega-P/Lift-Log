@@ -147,7 +147,7 @@ export function WorkoutHeader({
             <Button
               variant="accent"
               size="default"
-              className="bg-none h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-accent"
+              className="bg-none h-12 px-6 text-lg font-normal relative overflow-hidden hover:bg-none"
               onClick={onSave}
               disabled={isSaving}>
               <span
