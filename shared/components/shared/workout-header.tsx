@@ -151,7 +151,7 @@ export function WorkoutHeader({
               onClick={onSave}
               disabled={isSaving}>
               <span
-                className="absolute inset-0 flex items-center justify-center bg-accent/50 transition-opacity duration-300"
+                className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
                 style={{ opacity: isSaving ? 1 : 0 }}>
                 {isSaving && <Loader className="h-5 w-5 text-white animate-spin" />}
               </span>

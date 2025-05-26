@@ -84,7 +84,7 @@ export const AddExerciseModal: React.FC<Props> = ({ exercises, setExercises, isO
               {availableExercises.map((exercise) => (
                 <div
                   key={exercise.id}
-                  className="flex items-center space-x-2 p-2 border border-muted rounded-[6px]">
+                  className="flex items-center space-x-2 p-2 border-b border-muted/25">
                   <Checkbox
                     id={`exercise-${exercise.id}`}
                     checked={selectedExercises.some((ex) => ex.id === exercise.id)}
@@ -92,7 +92,9 @@ export const AddExerciseModal: React.FC<Props> = ({ exercises, setExercises, isO
                       handleCheckboxChange(exercise, checked as boolean)
                     }
                   />
-                  <label htmlFor={`exercise-${exercise.id}`} className="text-base text-primary">
+                  <label
+                    htmlFor={`exercise-${exercise.id}`}
+                    className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     {exercise.exerciseType?.name}
                   </label>
                 </div>
