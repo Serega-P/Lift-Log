@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/prisma/prisma-client';
 import { getServerSession } from 'next-auth';
@@ -13,11 +15,8 @@ export async function GET() {
 
     const userId = Number(session.user.id);
 
-    // Получаем все ExerciseType для текущего пользователя
     const exerciseTypes = await prisma.exerciseType.findMany({
-      where: {
-        userId,
-      },
+      where: { userId },
       select: {
         id: true,
         name: true,
@@ -25,8 +24,8 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
         exercises: {
-          orderBy: { createdAt: 'desc' }, // Сортируем по дате создания, чтобы взять последний
-          take: 1, // Берём только последний Exercise
+          orderBy: { createdAt: 'desc' },
+          take: 1,
           select: {
             id: true,
             workoutDayId: true,
@@ -69,9 +68,8 @@ export async function GET() {
       },
     });
 
-    // Форматируем результат в формат ExerciseType
     const formattedExercises = exerciseTypes
-      .filter((et) => et.exercises.length > 0) // Только те ExerciseType, у которых есть Exercise
+      .filter((et) => et.exercises.length > 0)
       .map((et) => {
         const lastExercise = et.exercises[0];
         return {
