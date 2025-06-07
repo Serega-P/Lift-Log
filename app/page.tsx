@@ -48,13 +48,11 @@ export default function Home() {
   );
 
   const handleCalendarClick = (date: string | null) => {
-    if (!date) {
-      toast.info('No workout on this day!');
-      return;
+    if (date) {
+      router.push(`/workout/date?date=${date}`);
+    } else {
+      toast.info('No training on this day!');
     }
-
-    // Логика, если дата есть — можешь добавить что-то ещё здесь
-    console.log('Clicked date:', date);
   };
 
   return (
