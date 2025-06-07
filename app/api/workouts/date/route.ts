@@ -32,29 +32,37 @@ export async function GET(req: NextRequest) {
     const nextDay = new Date(parsedDate);
     nextDay.setDate(nextDay.getDate() + 1);
 
-    const workoutDays = await prisma.workoutDay.findMany({
+    const workouts = await prisma.workout.findMany({
       where: {
-        date: {
-          gte: parsedDate,
-          lt: nextDay,
-        },
-        NOT: {
-          date: null,
-        },
-        workout: {
-          userId: user.id,
+        userId: user.id,
+        days: {
+          some: {
+            date: {
+              gte: parsedDate,
+              lt: nextDay,
+            },
+          },
         },
       },
       include: {
-        workout: true,
-        exercises: {
+        days: {
+          where: {
+            date: {
+              gte: parsedDate,
+              lt: nextDay,
+            },
+          },
           include: {
-            exerciseType: true,
-            setGroup: {
+            exercises: {
               include: {
-                sets: {
+                exerciseType: true,
+                setGroup: {
                   include: {
-                    subSets: true,
+                    sets: {
+                      include: {
+                        subSets: true,
+                      },
+                    },
                   },
                 },
               },
@@ -62,10 +70,9 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      orderBy: { date: 'asc' },
     });
 
-    return NextResponse.json({ days: workoutDays });
+    return NextResponse.json({ days: workouts });
   } catch (error) {
     console.error('Ошибка при получении тренировок по дате:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

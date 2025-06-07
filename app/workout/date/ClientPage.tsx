@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { WorkoutType } from '@/app/types/types';
-import { WorkoutDay, Skeleton, Container, Button, Title } from '@/shared/components';
+import { WorkoutDateView, Skeleton, Container, Button } from '@/shared/components';
 import { ArrowLeft } from 'lucide-react';
 
 export default function ClientPage() {
@@ -13,6 +13,8 @@ export default function ClientPage() {
   const router = useRouter();
 
   const date = searchParams.get('date');
+
+  console.log(workouts);
 
   useEffect(() => {
     if (!date) return;
@@ -43,18 +45,23 @@ export default function ClientPage() {
       </div>
 
       <div className="mt-20">
-        <Title
-          text="Workouts on Date"
-          size="lg"
-          className="px-5 text-muted font-normal text-base mb-2"
-        />
+        <p className="flex items-center text-muted text-base px-5 m-2">
+          {date
+            ? new Date(date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })
+            : 'No date selected'}
+        </p>
+
         {isLoading ? (
           <>
             <Skeleton className="w-full h-20 mb-4" />
             <Skeleton className="w-full h-20 mb-4" />
           </>
         ) : workouts.length > 0 ? (
-          workouts.map((workout) => <WorkoutDay key={workout.id} workout={workout} />)
+          workouts.map((workout) => <WorkoutDateView key={workout.id} workout={workout} />)
         ) : (
           <p className="text-center text-muted text-lg mt-4">No workouts!</p>
         )}
