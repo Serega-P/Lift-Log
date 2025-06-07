@@ -35,3 +35,4 @@ export { ToggleGroup } from './toggle-group';
 export { ToggleGroupItem } from './toggle-group';
 export { buttonVariants } from './button';
 export { Checkbox } from './checkbox';
+export { Toaster } from './sonner';

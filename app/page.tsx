@@ -7,7 +7,9 @@ import {
   WorkoutDay,
   Skeleton,
   BottomNavigation,
+  Toaster,
 } from '@/shared/components';
+import { toast } from 'sonner';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -46,11 +48,18 @@ export default function Home() {
   );
 
   const handleCalendarClick = (date: string | null) => {
-    console.log(date);
+    if (!date) {
+      toast.info('No workout on this day!');
+      return;
+    }
+
+    // Логика, если дата есть — можешь добавить что-то ещё здесь
+    console.log('Clicked date:', date);
   };
 
   return (
     <div className="pb-24 pt-5 px-5">
+      <Toaster position="top-center" />
       <Container className="bg-bgBase rounded-2xl">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>

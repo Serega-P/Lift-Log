@@ -21,10 +21,10 @@ export function WorkoutExercises({
 }: WorkoutExercisesProps) {
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-4 px-5">
         {lastWorkoutDate ? (
           <p className="flex items-center text-muted text-sm">
-            Last workout:{' '}
+            {' '}
             {new Date(lastWorkoutDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
