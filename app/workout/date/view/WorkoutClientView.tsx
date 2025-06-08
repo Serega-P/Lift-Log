@@ -52,7 +52,7 @@ export default function WorkoutClientView() {
         {day.exercises.map((exercise) => (
           <div
             key={exercise.id}
-            className="bg-bgBase rounded-2xl text-primary mb-5 overflow-hidden">
+            className="bg-bgBase rounded-2xl text-primary pb-5 mb-5 overflow-hidden">
             {/* Заголовок упражнения */}
             <div className="flex justify-between items-center pl-5 py-4 border-b border-muted/25">
               <div className="flex items-center gap-2">
