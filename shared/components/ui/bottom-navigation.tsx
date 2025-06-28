@@ -7,7 +7,7 @@ import { Home, ChartSpline, LayoutGrid, User } from 'lucide-react';
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/workout', icon: LayoutGrid, label: 'Workouts' },
-  { href: '/stats', icon: ChartSpline, label: 'Stats' },
+  { href: '/exercises', icon: ChartSpline, label: 'Exercises' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
 

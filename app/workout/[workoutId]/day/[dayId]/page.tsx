@@ -73,7 +73,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           exercises: exercises.map((ex) => ({
-            name: ex.exerciseType?.name || 'Unnamed Exercise', // Используем имя из exerciseType
+            name: ex.exerciseType?.name || 'Unnamed Exercise',
             setGroup: ex.setGroup || [],
           })),
         }),
