@@ -115,10 +115,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     }
   };
 
-  console.log(exercises);
-
   const updateExercise = (updatedExercise: ExerciseType) => {
-    console.log(updatedExercise);
     setExercises((prev) =>
       prev.map((exercise) => (exercise.id === updatedExercise.id ? updatedExercise : exercise)),
     );

@@ -47,6 +47,7 @@ export function WorkoutHeader({
   const [isAddExerciseDialogOpen, setIsAddExerciseDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [newExerciseName, setNewExerciseName] = React.useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Обновляем состояние, если входные пропсы изменились
   React.useEffect(() => {
@@ -71,6 +72,7 @@ export function WorkoutHeader({
 
   const handleDelete = async () => {
     setIsDeleting(true);
+    setIsLoading(true);
     try {
       const response = await fetch(`/api/workouts/${workoutId}`, {
         method: 'DELETE',
@@ -79,6 +81,7 @@ export function WorkoutHeader({
       if (!response.ok) {
         throw new Error(`Failed to delete workout: ${response.status}`);
       }
+      setIsLoading(false);
       setIsDeleting(false);
       setIsDeleteDialogOpen(false);
       router.back();
@@ -115,6 +118,7 @@ export function WorkoutHeader({
             isWorkoutEdit={true}
             selectedColor={newWorkoutColor}
             onColorChange={setNewWorkoutColor}
+            loading={isLoading}
           />
 
           <WorkoutDeleteModal
@@ -141,6 +145,7 @@ export function WorkoutHeader({
             onInputChange={setNewExerciseName}
             onSubmit={handleCreateExercise}
             isWorkoutEdit={false}
+            loading={isLoading}
           />
 
           {isChanged && (
