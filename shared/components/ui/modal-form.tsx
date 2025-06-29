@@ -7,7 +7,7 @@ import {
   Button,
   Input,
 } from '@/shared/components';
-import { Check } from 'lucide-react';
+import { Check, Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 
 const COLORS = [
@@ -23,6 +23,7 @@ const COLORS = [
 
 type ModalFormProps = {
   isOpen: boolean;
+  loading: boolean;
   onClose: () => void;
   title: string;
   description?: string;
@@ -37,6 +38,7 @@ type ModalFormProps = {
 
 export const ModalForm: React.FC<ModalFormProps> = ({
   isOpen,
+  loading,
   onClose,
   title,
   description,
@@ -104,8 +106,9 @@ export const ModalForm: React.FC<ModalFormProps> = ({
           <Button
             variant="accent"
             className="text-base text-primary rounded-[6px] w-full bg-accent hover:text-primary"
-            onClick={onSubmit}>
-            Save
+            onClick={onSubmit}
+            disabled={loading}>
+            {loading ? <Loader2 className="animate-spin w-4 h-4" /> : 'Save'}
           </Button>
         </div>
       </DialogContent>

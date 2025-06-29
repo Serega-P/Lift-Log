@@ -29,6 +29,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(exercise);
   const [newExerciseName, setNewExerciseName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   // const [done, setDone] = useState(true);
   const [sets, setSets] = useState<SetType[]>(() =>
     (exercise.setGroup ?? [])
@@ -37,23 +38,45 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   );
 
   // Функция для обновления имени упражнения
-  const handleRenameExercise = () => {
+  const handleRenameExercise = async () => {
     if (!newExerciseName.trim()) return;
 
-    const updatedExercise: ExerciseType = {
-      ...exerciseData,
-      exerciseType: {
-        id: exerciseData.exerciseType?.id ?? exerciseData.exerciseTypeId,
-        name: newExerciseName,
-        userId: exerciseData.exerciseType?.userId ?? 0,
-        createdAt: exerciseData.exerciseType?.createdAt ?? new Date(),
-        updatedAt: new Date(),
-      },
-    };
+    const exerciseId = exerciseData.exerciseType?.id ?? exerciseData.exerciseTypeId;
 
-    setExerciseData(updatedExercise);
-    onUpdate(updatedExercise);
-    setIsModalOpen(false);
+    try {
+      setIsLoading(true); // 🔄 Показываем спиннер
+
+      const res = await fetch(`/api/exercises/${exerciseId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newExerciseName }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to rename exercise');
+      }
+
+      // ✅ Обновляем локальный стейт
+      const updatedExercise: ExerciseType = {
+        ...exerciseData,
+        exerciseType: {
+          id: exerciseId,
+          name: newExerciseName,
+          userId: exerciseData.exerciseType?.userId ?? 0,
+          createdAt: exerciseData.exerciseType?.createdAt ?? new Date(),
+          updatedAt: new Date(),
+        },
+      };
+
+      setExerciseData(updatedExercise);
+      onUpdate(updatedExercise);
+      setIsModalOpen(false); // ✅ Закрываем модалку
+    } catch (error) {
+      console.error('❌ Ошибка при переименовании:', error);
+      alert('Не удалось переименовать упражнение');
+    } finally {
+      setIsLoading(false); // 🔽 Скрываем спиннер
+    }
   };
 
   // Обновление сетов упражнения
@@ -104,6 +127,7 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
         inputValue={newExerciseName}
         onInputChange={setNewExerciseName}
         onSubmit={handleRenameExercise}
+        loading={isLoading}
       />
 
       {/* Список сетов и трисетов */}
