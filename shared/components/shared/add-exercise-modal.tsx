@@ -71,39 +71,41 @@ export const AddExerciseModal: React.FC<Props> = ({ exercises, setExercises, isO
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-bgBase border-none max-w-[400px] py-10 rounded-[10px] flex flex-col items-center justify-center">
+      <DialogContent className="bg-bgBase border-none max-w-[400px] py-10 rounded-[10px]">
         <DialogHeader>
           <DialogTitle className="text-xl">All Exercises</DialogTitle>
           <DialogDescription className="mb-5 text-base">Select an exercise</DialogDescription>
         </DialogHeader>
-        <ScrollArea className="w-full max-h-[500px]">
-          {loading ? (
-            <div className="text-center text-muted">Loading exercises...</div>
-          ) : availableExercises.length > 0 ? (
-            <div className="space-y-2">
-              {availableExercises.map((exercise) => (
-                <div
-                  key={exercise.id}
-                  className="flex items-center space-x-2 p-2 border-b border-muted/25">
-                  <Checkbox
-                    id={`exercise-${exercise.id}`}
-                    checked={selectedExercises.some((ex) => ex.id === exercise.id)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange(exercise, checked as boolean)
-                    }
-                  />
-                  <label
-                    htmlFor={`exercise-${exercise.id}`}
-                    className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    {exercise.exerciseType?.name}
-                  </label>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-muted">No new exercises available</div>
-          )}
-        </ScrollArea>
+        <div className="max-h-[400px] w-full overflow-y-auto">
+          <ScrollArea className="w-full h-full">
+            {loading ? (
+              <div className="text-center text-muted">Loading exercises...</div>
+            ) : availableExercises.length > 0 ? (
+              <div className="space-y-2">
+                {availableExercises.map((exercise) => (
+                  <div
+                    key={exercise.id}
+                    className="flex items-center space-x-2 p-2 border-b border-muted/25">
+                    <Checkbox
+                      id={`exercise-${exercise.id}`}
+                      checked={selectedExercises.some((ex) => ex.id === exercise.id)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange(exercise, checked as boolean)
+                      }
+                    />
+                    <label
+                      htmlFor={`exercise-${exercise.id}`}
+                      className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      {exercise.exerciseType?.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-muted">No new exercises available</div>
+            )}
+          </ScrollArea>
+        </div>
         <div className="w-full flex justify-between space-x-5 mt-5">
           <Button variant="secondary" className="text-base rounded-[6px] w-full" onClick={onClose}>
             Cancel
