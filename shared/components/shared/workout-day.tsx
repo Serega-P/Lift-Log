@@ -26,11 +26,12 @@ export const WorkoutDay: React.FC<Props> = ({ workout }) => {
   return (
     <Link
       href={days.length > 0 ? `/workout/${id}/day/${lastDayIndex}` : '#'}
-      className="flex items-center justify-between w-full bg-bgBase py-5 px-5 rounded-2xl mb-2.5">
+      className="flex items-center justify-between w-full bg-bgBase/50 py-5 px-5 rounded-3xl border border-bgBase mb-2.5">
       <div className="flex flex-col space-y-0 flex-1 max-w-[80%]">
+        <h3 className="font-bold text-2xl truncate">{title}</h3>
         <div className="flex items-center space-x-2">
-          <div className="w-2.5 h-2.5 rounded-full mr-1" style={{ backgroundColor: color }}></div>
-          <p className="text-sm text-muted">
+          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }}></div>
+          <p className="text-xs text-muted">
             {daysAgo !== null
               ? daysAgo === 0
                 ? 'Today'
@@ -38,10 +39,9 @@ export const WorkoutDay: React.FC<Props> = ({ workout }) => {
               : 'No workouts yet'}
           </p>
         </div>
-        <h3 className="font-bold text-lg truncate">{title}</h3>
       </div>
       <div className="flex-shrink-0">
-        <ChevronRight strokeWidth={2} className="text-muted" />
+        <ChevronRight strokeWidth={1} className="text-bgSoft" />
       </div>
     </Link>
   );

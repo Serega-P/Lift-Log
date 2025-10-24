@@ -4,9 +4,9 @@
 
 /* Базовая стилизация для react-calendar */
 .home-calendar .react-calendar {
-	background: none !important;
+  background: none !important;
   box-shadow: none !important;
-	border: none  !important;
+  border: none !important;
   @apply w-full min-w-full bg-bgBase text-primary p-4 border-none;
 }
 
@@ -18,8 +18,8 @@
   @apply flex justify-center items-center relative text-base transition duration-200 ease-in-out;
 }
 
-.home-calendar .react-calendar .react-calendar__tile--now{
-	background: none !important;
+.home-calendar .react-calendar .react-calendar__tile--now {
+  background: none !important;
   box-shadow: none !important;
   @apply font-bold border-[1px] border-solid rounded-lg border-bgSoft;
 }
@@ -33,13 +33,13 @@
 }
 /* Дни недели */
 .home-calendar .react-calendar .react-calendar__month-view__days__day {
-	background: none !important;
+  background: none !important;
   box-shadow: none !important;
-	@apply rounded-lg transition-all duration-200;
+  @apply rounded-2xl transition-all duration-200 text-xs font-bold;
 }
 
 .home-calendar .react-calendar .react-calendar__month-view__days__day:hover {
-	@apply outline outline-2 outline-bgSoft;
+  @apply outline outline-1 rounded-2xl outline-bgSoft;
 }
 abbr[title] {
   @apply no-underline;
@@ -58,15 +58,15 @@ abbr[title] {
   @apply text-primary;
 }
 
-.home-calendar .react-calendar .react-calendar__navigation__label:hover, 
+.home-calendar .react-calendar .react-calendar__navigation__label:hover,
 .home-calendar .react-calendar .react-calendar__navigation__arrow:hover {
-	background: none !important;
+  background: none !important;
   box-shadow: none !important;
-	@apply text-muted;
+  @apply text-muted;
 }
 
 .home-calendar .react-calendar .react-calendar__navigation__arrow:hover {
-	@apply text-primary outline outline-2 outline-bgSoft;
+  @apply text-primary outline outline-2 outline-bgSoft;
 }
 
 /* Заголовок месяца */

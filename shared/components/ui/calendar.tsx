@@ -54,12 +54,12 @@ export const MyCalendar: React.FC<Props> = ({ events, onDayClick }) => {
     return (
       <div className="absolute w-full h-full">
         {colors.length > 0 && (
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex gap-1">
+          <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 flex gap-1">
             {colors.map((color, index) => (
               <span
                 key={index}
                 style={{ backgroundColor: color }}
-                className="w-2 h-2 rounded-full"
+                className="w-1.5 h-1.5 rounded-full"
               />
             ))}
           </div>
