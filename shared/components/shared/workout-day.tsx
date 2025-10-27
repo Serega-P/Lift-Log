@@ -19,11 +19,11 @@ export const WorkoutDay: React.FC<Props> = ({ workout }) => {
 
   const lastWorkoutDate = lastWorkout && lastWorkout.date ? new Date(lastWorkout.date) : null;
 
+  // console.log(workout);
+
   const daysAgo = lastWorkoutDate
     ? Math.floor((new Date().getTime() - lastWorkoutDate.getTime()) / (1000 * 60 * 60 * 24))
     : null;
-  console.log(workout);
-  console.log(lastDayIndex);
   return (
     <Link
       href={days.length > 0 ? `/workout/${id}/day/${lastDayIndex}` : '#'}
