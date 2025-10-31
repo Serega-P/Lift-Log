@@ -55,10 +55,12 @@ export default function Home() {
     }
   };
 
+  console.log(workouts);
+
   return (
     <div className="pb-24 pt-5 px-5">
       <Toaster position="top-center" />
-      <Container className="bg-bgBase/80 rounded-3xl border border-bgSoft/50">
+      <Container className="bg-bgBase/90 rounded-3xl border border-bgBase">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>
 
@@ -76,7 +78,7 @@ export default function Home() {
           </p>
         )}
         <Button
-          className="w-full rounded-3xl mb-6 mt-2.5 border-bgSoft/80 text-bgSoft/80"
+          className="w-full rounded-3xl mb-6 mt-2.5 border-bgSoft/90 text-bgSoft/90"
           onClick={handleAddWorkout}>
           + Add Workout
         </Button>
