@@ -84,7 +84,7 @@ export const NewWorkoutDrawer: React.FC<Props> = ({ onWorkoutCreated }) => {
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="h-[95vh] m-auto max-w-[480px] overflow-y-auto p-5 pb-8 pt-0 bg-bgBase border border-bgSoft/70 rounded-t-6xl overflow-hidden">
+      <DrawerContent className="h-[95vh] m-auto max-w-[720px] overflow-y-auto p-5 pb-8 pt-0 bg-bgBase border border-bgSoft/70 border-b-0 border-r-0 border-l-0 rounded-t-6xl overflow-hidden">
         <DrawerHeader className="mb-10">
           <DrawerTitle className="mt-4 text-3xl font-normal text-center">New workout</DrawerTitle>
           <DrawerDescription className="text-base text-muted font-light text-center">
