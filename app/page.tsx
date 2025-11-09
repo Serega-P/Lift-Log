@@ -1,17 +1,17 @@
 'use client';
 
 import {
-  Button,
   MyCalendar,
   Container,
   WorkoutDay,
   Skeleton,
   BottomNavigation,
   Toaster,
+  NewWorkoutDrawer, // Drawer
 } from '@/shared/components';
 import { toast } from 'sonner';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { WorkoutType, DayWithColor } from '@/app/types/types';
 
@@ -20,29 +20,31 @@ export default function Home() {
   const [workouts, setWorkouts] = useState<WorkoutType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetch('/api/workouts')
-      .then((res) => res.json())
-      .then((data) => {
-        setWorkouts(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error('Ошибка загрузки:', err);
-        setIsLoading(false);
-      });
+  // Загружаем тренировки
+  const fetchWorkouts = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch('/api/workouts');
+      const data = await res.json();
+      setWorkouts(data);
+    } catch (err) {
+      console.error('Ошибка загрузки тренировок:', err);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const handleAddWorkout = () => {
-    router.push('/workout/create');
-  };
+  useEffect(() => {
+    fetchWorkouts();
+  }, [fetchWorkouts]);
 
+  // События для календаря
   const events: DayWithColor[] = workouts.flatMap(
     (workout) =>
       workout.days
-        ?.filter((day) => day.date !== null) // Исключаем дни с day.date === null
+        ?.filter((day) => day.date !== null)
         .map((day) => ({
-          date: new Date(new Date(day.createdAt).toISOString()), // Используем createdAt, приводим к UTC
+          date: new Date(new Date(day.createdAt).toISOString()),
           color: workout.color,
         })) || [],
   );
@@ -55,15 +57,16 @@ export default function Home() {
     }
   };
 
-  console.log(workouts);
-
   return (
     <div className="pb-24 pt-5 px-5">
       <Toaster position="top-center" />
+
+      {/* Календарь */}
       <Container className="bg-bgBase/90 rounded-3xl border border-bgBase">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>
 
+      {/* Список тренировок */}
       <Container className="pt-5">
         {isLoading ? (
           <>
@@ -77,11 +80,13 @@ export default function Home() {
             No workouts yet, create your first one!
           </p>
         )}
-        <Button
-          className="w-full rounded-3xl mb-6 mt-2.5 border-bgSoft/90 text-bgSoft/90"
-          onClick={handleAddWorkout}>
-          + Add Workout
-        </Button>
+
+        {/* Drawer для создания новой тренировки */}
+        <div className="w-full mb-6 mt-2.5">
+          {/* <NewWorkoutDrawer /> */}
+          <NewWorkoutDrawer onWorkoutCreated={fetchWorkouts} />
+        </div>
+
         <BottomNavigation />
       </Container>
     </div>

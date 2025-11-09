@@ -16,3 +16,4 @@ export { WorkoutHeader } from './workout-header';
 export { WorkoutModals } from './workout-modals';
 export { AddExerciseModal } from './add-exercise-modal';
 export { WorkoutDateView } from './workout-date-view';
+export { NewWorkoutDrawer } from './NewWorkoutDrawer';

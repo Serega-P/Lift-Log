@@ -74,9 +74,9 @@ export async function GET() {
         color: true,
         title: true,
         days: {
-          where: {
-            NOT: { date: null }, // исключаем дни без даты
-          },
+          // where: {
+          //   NOT: { date: null }, // исключаем дни без даты
+          // },
           select: {
             id: true,
             date: true,
