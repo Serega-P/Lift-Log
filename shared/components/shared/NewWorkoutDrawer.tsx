@@ -12,6 +12,7 @@ import {
   Button,
   Input,
 } from '@/shared/components';
+import { CirclePlus } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Props {
@@ -79,10 +80,8 @@ export const NewWorkoutDrawer: React.FC<Props> = ({ onWorkoutCreated }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          variant="secondary"
-          className="rounded-3xl bg-bgBase border-t border-bgSoft/50 text-base font-light text-white mt-2 p-8 py-6">
-          + Add
+        <Button className="bg-none border-none text-base font-normal mt-2">
+          <CirclePlus strokeWidth={1} /> Add workout
         </Button>
       </DrawerTrigger>
 
