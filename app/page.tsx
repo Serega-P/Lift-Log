@@ -62,7 +62,7 @@ export default function Home() {
       <Toaster position="top-center" />
 
       {/* Календарь */}
-      <Container className="bg-bgBase/90 rounded-3xl border border-bgBase">
+      <Container className="bg-bgBase rounded-3xl">
         <MyCalendar events={events} onDayClick={handleCalendarClick} />
       </Container>
 
@@ -70,8 +70,8 @@ export default function Home() {
       <Container className="pt-5">
         {isLoading ? (
           <>
-            <Skeleton className="w-full h-20 mb-4 rounded-3xl border border-bgSoft/80" />
-            <Skeleton className="w-full h-20 mb-4 rounded-3xl border border-bgSoft/80" />
+            <Skeleton className="w-full h-20 mb-4 rounded-3xl" />
+            <Skeleton className="w-full h-20 mb-4 rounded-3xl" />
           </>
         ) : workouts.length > 0 ? (
           workouts.map((workout) => <WorkoutDay key={workout.id} workout={workout} />)

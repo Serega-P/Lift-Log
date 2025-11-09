@@ -28,7 +28,7 @@ export function BottomNavigation() {
                 className={`p-4 rounded-full transition-all ${
                   isActive ? 'text-accent' : 'text-muted'
                 }`}>
-                <Icon size={24} strokeWidth={2} />
+                <Icon size={24} strokeWidth={1} />
               </div>
             </Link>
           );

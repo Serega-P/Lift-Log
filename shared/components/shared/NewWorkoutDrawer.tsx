@@ -79,8 +79,10 @@ export const NewWorkoutDrawer: React.FC<Props> = ({ onWorkoutCreated }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="secondary" className="rounded-full border-bgSoft/90 font-medium mt-4">
-          + Add Workout
+        <Button
+          variant="secondary"
+          className="rounded-3xl bg-bgBase border-t border-bgSoft/50 text-base font-light text-white mt-2 p-8 py-6">
+          + Add
         </Button>
       </DrawerTrigger>
 

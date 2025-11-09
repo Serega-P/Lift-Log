@@ -22,14 +22,14 @@ module.exports = {
         rubik: ['"Rubik"', 'sans-serif'],
       },
       colors: {
-        accent: '#DDEE5E',
+        accent: '#DDEF5B',
         accentSoft: '#448BD4',
 
         primary: '#F0EFF0', // цвет текста
         muted: '#8D8D93', // цвет текста 2
 
         bgPrimary: '#848484',
-        bgBase: '#1A1A1A',
+        bgBase: '#1A1A1A', // цвет блоков
         bgMuted: '#2C2E30',
         bgSoft: '#3D3D3D', // фон для светлых поверхностей, например, полей ввода
         bgSurface: '#262E37',
