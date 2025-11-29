@@ -36,47 +36,40 @@ export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order 
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="icons"
-          className="text-muted bg-none hover:text-muted hover:bg-bgPrimary"
-          aria-label="Open set settings"
-          onTouchStart={(e) => e.preventDefault()} // 🔥 помогает ловить tap
-        >
+          className="text-muted bg-none hover:text-white hover:bg-bgPrimary"
+          aria-label="Open set settings">
           <Ellipsis size={24} />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent
+        sideOffset={8}
+        align="end"
         className="w-auto min-w-[200px] p-0 mr-7 bg-bgSoft rounded-2xl border-muted/25 shadow-xxl"
-        sideOffset={8} // 🔥 добавили
-        align="end" // 🔥 позиция для телефона
-        style={{ pointerEvents: 'auto', touchAction: 'auto' }} // 🔥 добавили touchAction
-      >
+        style={{ pointerEvents: 'auto', touchAction: 'auto' }}>
         <div className="flex flex-col">
           <button
             type="button"
             className="flex items-center px-5 py-3 text-white hover:bg-bgMuted w-full border-b border-muted/25"
-            onClick={handleDropset}
-            onTouchEnd={handleDropset} // 🔥 ловим касание
-          >
+            onClick={() => onAddDropSet(order)}>
             <ArrowDownRight size={24} className="mr-4" /> Dropset
           </button>
 
           <button
             type="button"
             className="flex items-center px-5 py-3 text-white hover:bg-bgMuted w-full border-b border-muted/25"
-            onClick={handleCopyPaste}
-            onTouchEnd={handleCopyPaste}>
+            onClick={() => onCopyPaste?.()}>
             <Copy size={22} className="mr-4" /> Copy + paste
           </button>
 
           <button
             type="button"
             className="flex items-center px-5 py-3 text-red-500 hover:bg-red-500/10 w-full"
-            onClick={handleDelete}
-            onTouchEnd={handleDelete}>
+            onClick={() => onDelete(order)}>
             <Trash2 size={22} className="mr-4" /> Delete
           </button>
         </div>
