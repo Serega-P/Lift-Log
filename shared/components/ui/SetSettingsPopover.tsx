@@ -9,39 +9,29 @@ interface Props {
   onCopyPaste?: () => void;
   onDelete: (id: number) => void;
   order: number;
-  portal: boolean;
 }
 
-export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order, portal }: Props) {
+export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order }: Props) {
   const [open, setOpen] = useState(false);
 
-  const handleDropset = (e: React.MouseEvent) => {
-    e.stopPropagation(); // предотвращаем проскакивание клика
-    try {
-      onAddDropSet?.(order);
-    } catch (err) {
-      console.error('onAddDropSet error', err);
-    }
+  const handleDropset = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault(); // 🔥 важно для iOS
+    onAddDropSet(order);
     setOpen(false);
   };
 
-  const handleCopyPaste = (e: React.MouseEvent) => {
-    e.stopPropagation(); // предотвращаем проскакивание клика
-    try {
-      onCopyPaste?.();
-    } catch (err) {
-      console.error('onCopyPaste error', err);
-    }
+  const handleCopyPaste = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onCopyPaste?.();
     setOpen(false);
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation(); // предотвращаем проскакивание клика
-    try {
-      onDelete(order);
-    } catch (err) {
-      console.error('onDelete error', err);
-    }
+  const handleDelete = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onDelete(order);
     setOpen(false);
   };
 
@@ -51,34 +41,42 @@ export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order,
         <Button
           variant="icons"
           className="text-muted bg-none hover:text-muted"
-          aria-label="Open set settings">
+          aria-label="Open set settings"
+          onTouchStart={(e) => e.preventDefault()} // 🔥 помогает ловить tap
+        >
           <Ellipsis size={24} />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent
         className="w-auto min-w-[200px] p-0 mr-7 bg-bgSoft rounded-2xl border-muted/25 shadow-xxl"
-        style={{ pointerEvents: 'auto' }} // явно включаем обработку кликов
+        sideOffset={8} // 🔥 добавили
+        align="end" // 🔥 позиция для телефона
+        style={{ pointerEvents: 'auto', touchAction: 'auto' }} // 🔥 добавили touchAction
       >
         <div className="flex flex-col">
           <button
             type="button"
-            className="flex items-center px-5 py-3 rounded-none text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
-            onClick={handleDropset}>
+            className="flex items-center px-5 py-3 text-white hover:bg-bgMuted w-full border-b border-muted/25"
+            onClick={handleDropset}
+            onTouchEnd={handleDropset} // 🔥 ловим касание
+          >
             <ArrowDownRight size={24} className="mr-4" /> Dropset
           </button>
 
           <button
             type="button"
-            className="flex items-center px-5 py-3 rounded-none text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
-            onClick={handleCopyPaste}>
+            className="flex items-center px-5 py-3 text-white hover:bg-bgMuted w-full border-b border-muted/25"
+            onClick={handleCopyPaste}
+            onTouchEnd={handleCopyPaste}>
             <Copy size={22} className="mr-4" /> Copy + paste
           </button>
 
           <button
             type="button"
-            className="flex items-center px-5 py-3 rounded-none text-red-500 hover:bg-red-500/10 transition"
-            onClick={handleDelete}>
+            className="flex items-center px-5 py-3 text-red-500 hover:bg-red-500/10 w-full"
+            onClick={handleDelete}
+            onTouchEnd={handleDelete}>
             <Trash2 size={22} className="mr-4" /> Delete
           </button>
         </div>
