@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { WorkoutType, SetType } from '@/app/types/types';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { Container, Button, Title, Set, TriSet } from '@/shared/components';
+import { Container, Button, Title, Set } from '@/shared/components';
 
 export default function WorkoutClientView() {
   const [workout, setWorkout] = useState<WorkoutType | null>(null);

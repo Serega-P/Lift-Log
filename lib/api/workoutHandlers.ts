@@ -1,6 +1,5 @@
 // /lib/api/workoutHandlers.ts
 import { prisma } from '@/prisma/prisma-client';
-import { Prisma } from '@prisma/client';
 import { WorkoutDayWithExercises, SetGroupType, SetType } from '@/app/types/types';
 
 // --- Валидация workoutId ---
