@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-// Перечисление ролей пользователя
+// Роли пользователя
 export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
@@ -11,11 +11,11 @@ export interface UserType {
   id: number;
   fullName: string;
   email: string;
-  password?: string | null; // Пароль необязателен (например, для OAuth)
+  password?: string | null;
   role: UserRole;
   image?: string | null;
-  provider?: string | null; // Провайдер авторизации (Google, email и т.д.)
-  emailVerified?: Date | null; // Используем Date вместо string
+  provider?: string | null;
+  emailVerified?: Date | null;
   workouts?: WorkoutType[];
   createdAt: Date;
   updatedAt: Date;
@@ -36,7 +36,7 @@ export interface WorkoutType {
 // Тип дня тренировки
 export interface WorkoutDayType {
   id: number;
-  date?: Date | null; // Используем Date вместо string
+  date?: Date | null;
   workoutId?: number | null;
   workout?: WorkoutType;
   exercises?: ExerciseType[];
@@ -44,22 +44,23 @@ export interface WorkoutDayType {
   updatedAt: Date;
 }
 
-// Тип упражнения (уникальный тип, например "Жим лёжа")
+// Тип определения упражнения (ExerciseType table)
 export interface ExerciseTypeDef {
   id: number;
   name: string;
   userId: number;
   user?: UserType;
-  exercises?: ExerciseType[]; // Все выполнения этого типа упражнения
+  exercises?: ExerciseType[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип выполнения упражнения
+// Выполнение упражнения
 export interface ExerciseType {
   id: number;
   workoutDayId: number;
   exerciseTypeId: number;
+
   exerciseType?: {
     id: number;
     name: string;
@@ -67,15 +68,15 @@ export interface ExerciseType {
     createdAt: Date;
     updatedAt: Date;
   };
+
   setGroup?: SetGroupType[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип для создания выполнения упражнения
 export type ExerciseCreateType = Pick<ExerciseType, 'exerciseTypeId' | 'setGroup' | 'workoutDayId'>;
 
-// Тип группы сетов
+// Группа сетов
 export interface SetGroupType {
   id?: number;
   exerciseId: number;
@@ -85,66 +86,65 @@ export interface SetGroupType {
   updatedAt?: Date;
 }
 
-// Тип для создания группы сетов
 export interface SetGroupCreateType {
   sets?: SetType[];
 }
 
-// Тип сета
-export interface SetType {
+// 🔥 Тип DropSet
+export interface DropSetType {
   id: number;
-  type: string; // Например, "warmup", "working"
-  order: number; // Порядок в группе сетов
-  weight?: number | null; // Убрано string, используем только number или null
-  reps?: number | null; // То же самое для reps
-  isTriSet: boolean;
-  subSets?: SubSetType[];
-  setGroupId: number;
-  setGroup?: SetGroupType;
-  createdAt: Date;
-  updatedAt: Date;
-}
+  parentSetId: number;
+  parentSet?: SetType;
 
-// Тип для создания сета
-export type SetCreateType = Pick<
-  SetType,
-  'type' | 'order' | 'weight' | 'reps' | 'isTriSet' | 'subSets'
-> & {
-  subSets?: { create: SubSetCreateType[] };
-};
-
-// Тип подсета (для TriSet)
-export interface SubSetType {
-  id: number;
-  setId: number;
-  set?: SetType;
   weight?: number | null;
   reps?: number | null;
-  order: number; // Порядок в TriSet
+  order: number;
+
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип для создания подсета
-export type SubSetCreateType = Pick<SubSetType, 'weight' | 'reps' | 'order'>;
+export type DropSetCreateType = Pick<DropSetType, 'weight' | 'reps' | 'order'>;
 
-// Тип для дня с цветом (если используется в UI)
+// 🔥 Обновленный SetType
+export interface SetType {
+  id?: number;
+  type: string; // например "working"
+  order: number;
+  weight?: number | null;
+  reps?: number | null;
+
+  dropSets: DropSetType[]; // 🔥 заменили subSets
+
+  setGroupId?: number;
+  setGroup?: SetGroupType;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+// Создание сета
+export type SetCreateType = Pick<SetType, 'type' | 'order' | 'weight' | 'reps' | 'dropSets'> & {
+  dropSets?: { create: DropSetCreateType[] };
+};
+
+// Для UI
 export interface DayWithColor {
-  date: Date | null; // Используем Date вместо object
+  date: Date | null;
   color: string;
 }
 
-// Тип для получения данных из Prisma с включением связанных сущностей
+// Для Prisma Include
 export type WorkoutDayWithExercises = Prisma.WorkoutDayGetPayload<{
   include: {
     exercises: {
       include: {
-        exerciseType: true; // Включаем тип упражнения
+        exerciseType: true;
         setGroup: {
           include: {
             sets: {
               include: {
-                subSets: true;
+                dropSets: true; // 🔥 заменили subSets
               };
             };
           };

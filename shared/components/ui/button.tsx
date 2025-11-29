@@ -12,20 +12,21 @@ const buttonVariants = cva(
         default: 'text-muted text-base font-normal border border-dashed border-muted', // Основной стиль
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90', // Деструктивная кнопка
         outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground', // Контурная кнопка
-        secondary: 'bg-bgBase border-bg-bgSoft/90 text-muted hover:bg-bgSoft', // Вторичная кнопка
+        secondary: 'bg-bgMuted border-bg-bgSoft/90 text-muted hover:bg-bgSoft', // Вторичная кнопка
         ghost: 'hover:bg-accent hover:text-accent-foreground', // Прозрачная кнопка
         link: 'text-primary underline-offset-4 hover:underline', // Ссылка
-        accent: 'bg-accent text-bgBase hover:bg-accent/70', // Кастомный стиль для кнопки Save
+        accent: 'bg-accent text-bgBase min-w-20 hover:bg-accent/70', // Кастомный стиль для кнопки Save
         icons: 'text-primary [&_svg]:size-auto',
       },
       size: {
+        destructive: 'h-10 rounded-[6px] px-4 py-6',
         default: 'h-10 rounded-[6px] px-4 py-6',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10',
         accent: 'py-6 px-4 rounded-[16px]',
         icons: 'h-auto w-auto',
-        secondary: 'h-auto w-auto',
+        secondary: 'h-10 rounded-[6px] px-4 py-6',
       },
     },
     defaultVariants: {

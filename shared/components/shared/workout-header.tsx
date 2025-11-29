@@ -8,9 +8,10 @@ import { ExerciseType } from '@/app/types/types';
 import {
   Button,
   WorkoutSettingsPopover,
-  ModalForm,
-  WorkoutDeleteModal,
-  AddExerciseModal,
+  ConfirmDeleteDrawer,
+  AddExerciseDrawer,
+  CreateExerciseDrawer,
+  EditWorkoutDrawer,
 } from '@/shared/components';
 
 interface WorkoutHeaderProps {
@@ -105,46 +106,38 @@ export function WorkoutHeader({
             onAddExercise={() => setIsAddExerciseDialogOpen(true)}
           />
 
-          {/* Модалка редактирования */}
-          <ModalForm
-            isOpen={isRenameWorkoutModalOpen}
-            onClose={() => setIsRenameWorkoutModalOpen(false)}
-            title="Update Workout"
-            description="Enter a new name and color for your workout"
-            inputPlaceholder={workoutTitle}
-            inputValue={newWorkoutTitle}
-            onInputChange={setNewWorkoutTitle}
-            onSubmit={handleUpdateWorkout}
-            isWorkoutEdit={true}
-            selectedColor={newWorkoutColor}
-            onColorChange={setNewWorkoutColor}
-            loading={isLoading}
-          />
-
-          <WorkoutDeleteModal
+          <ConfirmDeleteDrawer
             onClose={() => setIsDeleteDialogOpen(false)}
             isDeleting={isDeleting}
             isOpen={isDeleteDialogOpen}
             onConfirmDelete={() => handleDelete()}
           />
 
-          <AddExerciseModal
+          <AddExerciseDrawer
             onClose={() => setIsAddExerciseDialogOpen(false)}
             isOpen={isAddExerciseDialogOpen}
             exercises={exercises}
             setExercises={setExercises}
           />
 
-          <ModalForm
+          <CreateExerciseDrawer
             isOpen={isCreateExerciseOpen}
             onClose={() => setIsCreateExerciseOpen(false)}
-            title="New Exercise"
-            description={`Add a new exercise to your workout ${workoutTitle}`}
-            inputPlaceholder="Exercise name"
             inputValue={newExerciseName}
             onInputChange={setNewExerciseName}
             onSubmit={handleCreateExercise}
-            isWorkoutEdit={false}
+            loading={isLoading}
+          />
+
+          <EditWorkoutDrawer
+            isOpen={isRenameWorkoutModalOpen}
+            onClose={() => setIsRenameWorkoutModalOpen(false)}
+            inputPlaceholder={workoutTitle}
+            inputValue={newWorkoutTitle}
+            onInputChange={setNewWorkoutTitle}
+            onSubmit={handleUpdateWorkout}
+            selectedColor={newWorkoutColor}
+            onColorChange={setNewWorkoutColor}
             loading={isLoading}
           />
 

@@ -2,57 +2,7 @@ import { prisma } from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { ExerciseCreateType } from '@/app/types/types';
-
-// export async function GET() {
-//   try {
-//     const session = await getServerSession(authOptions);
-
-//     console.log('🔹 GET session:', session);
-
-//     if (!session?.user || !('id' in session.user)) {
-//       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-//     }
-
-//     const userId = Number(session.user.id);
-
-//     // Получаем тренировки
-//     const workouts = await prisma.workout.findMany({
-//       where: { userId },
-//       select: {
-//         id: true,
-//         color: true,
-//         title: true,
-//         days: {
-//           select: {
-//             id: true,
-//             date: true,
-//             createdAt: true,
-//           },
-//         },
-//       },
-//     });
-
-//     // Сортируем тренировки по максимальному createdAt из days (последняя тренировка)
-//     const sortedWorkouts = [...workouts].sort((a, b) => {
-//       // Находим самый новый день в тренировке a
-//       const latestDayA = a.days?.length
-//         ? new Date(Math.max(...a.days.map((day) => new Date(day.createdAt).getTime())))
-//         : new Date(0); // Если дней нет, используем минимальную дату
-//       // Находим самый новый день в тренировке b
-//       const latestDayB = b.days?.length
-//         ? new Date(Math.max(...b.days.map((day) => new Date(day.createdAt).getTime())))
-//         : new Date(0);
-//       // Сортируем так, чтобы новые даты были в конце (старые -> новые)
-//       return latestDayA.getTime() - latestDayB.getTime();
-//     });
-
-//     return NextResponse.json(sortedWorkouts);
-//   } catch (error) {
-//     console.error('❌ Ошибка при получении тренировок:', error);
-//     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
-//   }
-// }
+import { SetGroupType } from '@/app/types/types';
 
 export async function GET() {
   try {
@@ -66,7 +16,6 @@ export async function GET() {
 
     const userId = Number(session.user.id);
 
-    // Получаем тренировки с фильтрацией и сортировкой days
     const workouts = await prisma.workout.findMany({
       where: { userId },
       select: {
@@ -74,22 +23,32 @@ export async function GET() {
         color: true,
         title: true,
         days: {
-          // where: {
-          //   NOT: { date: null }, // исключаем дни без даты
-          // },
           select: {
             id: true,
             date: true,
             createdAt: true,
+            exercises: {
+              include: {
+                exerciseType: true,
+                setGroup: {
+                  include: {
+                    sets: {
+                      orderBy: { order: 'asc' },
+                      include: {
+                        // 🔥 теперь DropSets включены
+                        dropSets: { orderBy: { order: 'asc' } },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-          orderBy: {
-            date: 'asc', // сортировка дней по дате (старые -> новые)
-          },
+          orderBy: { date: 'asc' },
         },
       },
     });
 
-    // Сортируем тренировки по последнему createdAt среди days
     const sortedWorkouts = [...workouts].sort((a, b) => {
       const latestDayA = a.days.length
         ? new Date(Math.max(...a.days.map((d) => new Date(d.createdAt).getTime())))
@@ -99,7 +58,6 @@ export async function GET() {
         ? new Date(Math.max(...b.days.map((d) => new Date(d.createdAt).getTime())))
         : new Date(0);
 
-      // старые тренировки первыми, новые — в конце
       return latestDayA.getTime() - latestDayB.getTime();
     });
 
@@ -109,6 +67,11 @@ export async function GET() {
     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
   }
 }
+
+type ExerciseRequestInput = {
+  name: string;
+  setGroup?: SetGroupType[];
+};
 
 export async function POST(req: NextRequest) {
   try {
@@ -128,50 +91,34 @@ export async function POST(req: NextRequest) {
 
     const userId = Number(session.user.id);
 
-    // 1️⃣ Создаём воркаут
+    // 1️⃣ создаём воркаут
     const newWorkout = await prisma.workout.create({
-      data: {
-        title,
-        color,
-        userId,
-      },
+      data: { title, color, userId },
     });
 
-    // 2️⃣ Создаём день тренировки
+    // 2️⃣ создаём WorkoutDay и упражнения
     const newWorkoutDay = await prisma.workoutDay.create({
       data: {
         date: null,
         workoutId: newWorkout.id,
-        // Создаём упражнения только если массив exercises не пустой
         ...(exercises.length > 0 && {
           exercises: {
             create: await Promise.all(
-              exercises.map(async (exercise: { name: string; setGroup?: ExerciseCreateType }) => {
-                // Проверяем, существует ли ExerciseType с таким именем для пользователя
+              exercises.map(async (exercise: ExerciseRequestInput) => {
+                // ищем/создаём тип упражнения
                 let exerciseType = await prisma.exerciseType.findFirst({
-                  where: {
-                    name: exercise.name,
-                    userId,
-                  },
+                  where: { name: exercise.name, userId },
                 });
 
-                // Если нет, создаём новый ExerciseType
                 if (!exerciseType) {
                   exerciseType = await prisma.exerciseType.create({
-                    data: {
-                      name: exercise.name,
-                      userId,
-                    },
+                    data: { name: exercise.name, userId },
                   });
                 }
 
                 return {
                   exerciseTypeId: exerciseType.id,
-                  setGroup: exercise.setGroup
-                    ? {
-                        create: exercise.setGroup,
-                      }
-                    : { create: {} }, // Пустая группа сетов, если не передана
+                  setGroup: exercise.setGroup?.length ? { create: exercise.setGroup } : undefined,
                 };
               }),
             ),
@@ -181,8 +128,16 @@ export async function POST(req: NextRequest) {
       include: {
         exercises: {
           include: {
-            exerciseType: true, // Включаем информацию о типе упражнения
-            setGroup: true,
+            exerciseType: true,
+            setGroup: {
+              include: {
+                sets: {
+                  include: {
+                    dropSets: true, // 🔥 ещё раз включаем на всякий случай
+                  },
+                },
+              },
+            },
           },
         },
       },

@@ -34,7 +34,7 @@ export function WorkoutExercises({
         ) : (
           <p className="flex items-center text-muted text-sm">No workout yet</p>
         )}
-        <Title text={workoutTitle} size="sm" className="font-bold" />
+        <Title text={workoutTitle} size="md" className="font-normal text-2xl" />
       </div>
 
       <div className="space-y-6">

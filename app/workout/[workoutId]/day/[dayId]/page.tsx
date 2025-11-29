@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader } from 'lucide-react';
 import { WorkoutType, ExerciseType, ExerciseCreateType } from '@/app/types/types';
-import { Container, WorkoutHeader, WorkoutExercises, WorkoutModals } from '@/shared/components';
+import { Container, WorkoutHeader, WorkoutExercises, WorkoutSaveDrawer } from '@/shared/components';
 
 export default function WorkoutDay({ params }: { params: { workoutId: number | string } }) {
   const { workoutId } = params;
@@ -15,6 +15,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isWorkoutDayModalOpen, setIsWorkoutDayModalOpen] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -228,7 +229,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         onDeleteExercise={handleDeleteExercise}
       />
 
-      <WorkoutModals
+      <WorkoutSaveDrawer
         isOpen={isWorkoutDayModalOpen}
         isSaving={isSaving}
         onClose={() => {

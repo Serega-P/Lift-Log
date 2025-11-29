@@ -17,25 +17,35 @@ export async function PUT(request: Request, { params }: { params: { exerciseId: 
 
   const { name } = await request.json();
 
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+  }
+
   try {
-    const updated = await prisma.exerciseType.updateMany({
+    const updated = await prisma.exerciseType.update({
       where: {
-        id: exerciseId, // обязательно
-        userId,
+        id: exerciseId,
+        userId, // защита: обновим только если ID принадлежит юзеру
       },
       data: {
-        name,
+        name: name.trim(),
         updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        name: true,
+        updatedAt: true,
       },
     });
 
-    if (updated.count === 0) {
-      return NextResponse.json({ error: 'Not found or no permission' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, exercise: updated });
   } catch (error) {
     console.error('❌ Ошибка при обновлении названия упражнения:', error);
+
+    if (String(error).includes('Unique constraint')) {
+      return NextResponse.json({ error: 'Exercise name already exists' }, { status: 409 });
+    }
+
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

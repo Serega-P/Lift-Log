@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Button, SetItem, TriSetItem } from '@/shared/components';
-import { SetType } from '@/app/types/types';
+import { Button, SetItem } from '@/shared/components';
+import { SetType, DropSetType } from '@/app/types/types';
+import { CirclePlus } from 'lucide-react';
 
 interface Props {
   sequence: SetType[];
@@ -10,91 +11,101 @@ interface Props {
 }
 
 export function SetControls({ sequence, setSequence }: Props) {
-  // Определяем следующий порядковый номер
   const getNextOrder = () =>
     sequence.length > 0 ? Math.max(...sequence.map((s) => s.order)) + 1 : 1;
 
-  // Добавление нового сета
   const addSet = () => {
     setSequence((prev) => [
       ...prev,
       {
+        id: Date.now(),
         type: 'set',
         order: getNextOrder(),
-        weight: 0,
-        reps: 0,
-        isTriSet: false,
-        subSets: [],
-      } as unknown as SetType,
+        weight: null,
+        reps: null,
+        dropSets: [],
+      },
     ]);
   };
 
-  // Добавление нового трисета
-  const addTriSet = () => {
-    setSequence((prev) => [
-      ...prev,
-      {
-        type: 'triset',
-        order: getNextOrder(),
-        isTriSet: true,
-        subSets: [
-          { weight: 0, reps: 0, order: 1 },
-          { weight: 0, reps: 0, order: 2 },
-          { weight: 0, reps: 0, order: 3 },
-        ],
-      } as SetType,
-    ]);
-  };
-
-  // Обновление элемента (сет или трисет)
   const updateItem = (updatedItem: SetType) => {
     setSequence((prev) => prev.map((s) => (s.order === updatedItem.order ? updatedItem : s)));
   };
 
-  // Удаление элемента и пересчет order
   const deleteItem = (order: number) => {
     setSequence((prev) => {
-      // Фильтруем удаляемый элемент
-      const updatedSequence = prev.filter((s) => s.order !== order);
-
-      // Пересчитываем order у оставшихся элементов
-      return updatedSequence.map((s, index) => ({
-        ...s,
-        order: index + 1, // Новый порядок от 1 и далее
-      }));
+      const filtered = prev.filter((s) => s.order !== order);
+      return filtered.map((s, i) => ({ ...s, order: i + 1 }));
     });
+  };
+
+  const addDropSet = (setOrder: number) => {
+    setSequence((prev) =>
+      prev.map((s) =>
+        s.order === setOrder
+          ? {
+              ...s,
+              dropSets: [
+                ...s.dropSets,
+                {
+                  id: Date.now(),
+                  order: s.dropSets.length + 1,
+                  weight: null,
+                  reps: null,
+                } as DropSetType,
+              ],
+            }
+          : s,
+      ),
+    );
+  };
+
+  const deleteDropSet = (setId: number, dropSetId: number) => {
+    setSequence((prev) =>
+      prev.map((s) => {
+        if (s.order !== setId) return s;
+
+        const filtered = s.dropSets.filter((d) => d.order !== dropSetId);
+
+        const reordered = filtered.map((d, i) => ({
+          ...d,
+          order: i + 1,
+        }));
+
+        return {
+          ...s,
+          dropSets: reordered,
+        };
+      }),
+    );
   };
 
   return (
     <div className="space-y-5 w-full max-w-[430px]">
-      {/* Отображение списка сетов и трисетов */}
       {sequence.length > 0 ? (
         sequence
-          .sort((a, b) => a.order - b.order) // Сортируем по order
-          .map((item) =>
-            item.isTriSet ? (
-              <TriSetItem
-                key={item.order}
-                data={item}
-                onUpdate={updateItem}
-                onDelete={deleteItem}
-              />
-            ) : (
-              <SetItem key={item.order} data={item} onUpdate={updateItem} onDelete={deleteItem} />
-            ),
-          )
+          .sort((a, b) => a.order - b.order)
+          .map((item) => (
+            <SetItem
+              key={item.id}
+              data={item}
+              onUpdate={updateItem}
+              onDelete={deleteItem}
+              onAddDropSet={addDropSet}
+              onDeleteDropSet={deleteDropSet}
+            />
+          ))
       ) : (
         <p className="text-gray-500">No sets added yet.</p>
       )}
 
-      {/* Кнопки добавления */}
-      <div className="flex justify-between max-w-[430px] mx-auto">
-        <Button className="flex-1 w-full mb-6 h-12 mr-3" onClick={addSet}>
-          + Set
+      <div className="flex max-w-[430px] mx-auto">
+        <Button onClick={addSet} className="bg-none border-none text-base font-normal mt-2">
+          <CirclePlus strokeWidth={1} /> + Set
         </Button>
-        <Button className="flex-1 w-full mb-6 h-12 ml-3" onClick={addTriSet}>
-          + Tri-set
-        </Button>
+        {/* <Button className="flex-1 w-full mb-6 h-12" onClick={addSet}>
+          + Set 
+        </Button> */}
       </div>
     </div>
   );

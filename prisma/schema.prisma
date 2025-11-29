@@ -17,8 +17,7 @@ model User {
   provider      String?
   emailVerified DateTime?
   workouts      Workout[]
-	exerciseType  ExerciseType[]
-	
+  exerciseType  ExerciseType[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,6 +100,8 @@ model Set {
   isTriSet   Boolean @default(false)
 
   subSets    SubSet[] @relation(name: "TrisetSubsets")
+  dropSets   DropSet[]   // 🔥 Добавили dropsets
+
   setGroupId Int
   setGroup   Sets @relation(fields: [setGroupId], references: [id])
 
@@ -122,6 +123,20 @@ model SubSet {
   updatedAt DateTime @updatedAt
 
   @@map("sub_sets")
+}
+
+model DropSet {
+  id         Int     @id @default(autoincrement())
+  parentSetId Int
+  parentSet   Set      @relation(fields: [parentSetId], references: [id])
+  weight     Float?
+  reps       Int?
+  order      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("drop_sets")
 }
 
 enum UserRole {

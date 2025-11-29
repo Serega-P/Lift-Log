@@ -34,6 +34,7 @@ export function WorkoutSettingsPopover({
           <button
             className="flex items-center px-5 py-3 rounded-none text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
             onClick={() => {
+              setIsPopoverOpen(false);
               onAddExercise();
             }}>
             <Plus size={18} className="mr-4" /> Add exercise
@@ -41,6 +42,7 @@ export function WorkoutSettingsPopover({
           <button
             className="flex items-center px-5 py-3 rounded-none text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
             onClick={() => {
+              setIsPopoverOpen(false);
               onCreateExercise();
             }}>
             <SquarePen size={18} className="mr-4" /> Create exercise
@@ -48,7 +50,7 @@ export function WorkoutSettingsPopover({
           <button
             className="flex items-center px-5 py-3 rounded-none text-white hover:bg-bgMuted transition w-full border-b border-muted/25"
             onClick={() => {
-              // setIsPopoverOpen(false); // Закрываем Popover
+              setIsPopoverOpen(false);
               onRename();
             }}>
             <Settings2 size={18} className="mr-4" /> Edit
@@ -56,7 +58,7 @@ export function WorkoutSettingsPopover({
           <button
             className="flex items-center px-5 py-3 rounded-none text-red-500 hover:bg-red-500/10 transition"
             onClick={() => {
-              setIsPopoverOpen(false); // Закрываем Popover перед AlertDialog
+              setIsPopoverOpen(false);
               onDelete();
             }}>
             <Trash2 size={18} className="mr-4" /> Delete

@@ -68,17 +68,9 @@ export default function WorkoutClientView() {
               {exercise.setGroup?.map((group) =>
                 group.sets?.map((set: SetType) => (
                   <div key={set.id}>
-                    {set.isTriSet ? (
-                      <>
-                        <span className="font-normal text-sm text-muted pl-5">Tri-set</span>
-                        <TriSet triSet={set} />
-                      </>
-                    ) : (
-                      <>
-                        <span className="font-normal text-sm text-muted pl-5">Set</span>
-                        <Set set={set} />
-                      </>
-                    )}
+                    <>
+                      <Set set={set} />
+                    </>
                   </div>
                 )),
               )}

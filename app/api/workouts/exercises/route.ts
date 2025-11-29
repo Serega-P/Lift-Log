@@ -35,14 +35,15 @@ export async function GET() {
                 id: true,
                 exerciseId: true,
                 sets: {
+                  orderBy: { order: 'asc' }, // 🧠 оставляю сортировку по order как логичная
                   select: {
                     id: true,
                     type: true,
                     order: true,
                     weight: true,
                     reps: true,
-                    isTriSet: true,
-                    subSets: {
+                    dropSets: {
+                      orderBy: { order: 'asc' }, // ✅ дропсеты сортируем
                       select: {
                         id: true,
                         order: true,
@@ -72,6 +73,7 @@ export async function GET() {
       .filter((et) => et.exercises.length > 0)
       .map((et) => {
         const lastExercise = et.exercises[0];
+
         return {
           id: lastExercise.id,
           workoutDayId: lastExercise.workoutDayId,
@@ -86,7 +88,10 @@ export async function GET() {
           setGroup: lastExercise.setGroup.map((group) => ({
             id: group.id,
             exerciseId: group.exerciseId,
-            sets: group.sets,
+            sets: group.sets.map((set) => ({
+              ...set,
+              dropSets: set.dropSets ?? [], // ✅ гарантировано массив
+            })),
             createdAt: group.createdAt,
             updatedAt: group.updatedAt,
           })),
@@ -97,7 +102,7 @@ export async function GET() {
 
     return NextResponse.json(formattedExercises);
   } catch (error) {
-    console.error('Error fetching exercises:', error);
+    console.error('❌ Error fetching exercises:', error);
     return NextResponse.json({ error: 'Failed to fetch exercises' }, { status: 500 });
   }
 }

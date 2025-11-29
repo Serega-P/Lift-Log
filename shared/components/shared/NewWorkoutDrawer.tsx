@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   Drawer,
   DrawerTrigger,
+  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
@@ -12,7 +13,7 @@ import {
   Button,
   Input,
 } from '@/shared/components';
-import { CirclePlus } from 'lucide-react';
+import { CirclePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Props {
@@ -85,7 +86,12 @@ export const NewWorkoutDrawer: React.FC<Props> = ({ onWorkoutCreated }) => {
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="h-[95vh] m-auto max-w-[720px] overflow-y-auto p-5 pb-8 pt-0 bg-bgBase border border-bgSoft/70 border-b-0 border-r-0 border-l-0 rounded-t-6xl overflow-hidden">
+      <DrawerContent className="h-[99.5vh] m-auto max-w-[720px] overflow-y-auto p-5 pb-8 pt-4 bg-bgBase border border-bgSoft/70 border-b-0 border-r-0 border-l-0 rounded-t-6xl overflow-hidden">
+        <DrawerClose asChild>
+          <button className="p-2 w-12 h-12 rounded-full bg-black/50 text-muted">
+            <X size={24} strokeWidth={1} className="m-auto" />
+          </button>
+        </DrawerClose>
         <DrawerHeader className="mb-10">
           <DrawerTitle className="mt-4 text-3xl font-normal text-center">New workout</DrawerTitle>
           <DrawerDescription className="text-base text-muted font-light text-center">
@@ -94,13 +100,13 @@ export const NewWorkoutDrawer: React.FC<Props> = ({ onWorkoutCreated }) => {
         </DrawerHeader>
 
         {/* Workout name */}
-        <div className="flex flex-col space-y-3 mt-4">
+        <div className="flex flex-col space-y-3 mt-2">
           <label className="text-lg">Name</label>
           <Input
             value={workoutName}
             onChange={(e) => setWorkoutName(e.target.value)}
             placeholder="Enter name..."
-            className="text-lg rounded-2xl h-14 border-bgSoft/80 bg-bgMuted"
+            className="text-lg rounded-2xl h-16 border-bgMuted/80 bg-black/50"
           />
         </div>
 

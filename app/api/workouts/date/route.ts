@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
                   include: {
                     sets: {
                       include: {
-                        subSets: true,
+                        dropSets: true, // ✅ Включаем DropSets, вместо subSets
                       },
                     },
                   },
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ days: workouts });
   } catch (error) {
-    console.error('Ошибка при получении тренировок по дате:', error);
+    console.error('❌ Ошибка при получении тренировок по дате:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

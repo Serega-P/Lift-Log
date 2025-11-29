@@ -17,7 +17,6 @@ export async function GET() {
 
     const userId = Number(session.user.id);
 
-    // Получаем exercises
     const exercises = await prisma.exerciseType.findMany({
       where: { userId },
       select: {
