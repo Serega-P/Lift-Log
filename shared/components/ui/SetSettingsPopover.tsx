@@ -40,7 +40,7 @@ export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order 
       <PopoverTrigger asChild>
         <Button
           variant="icons"
-          className="text-muted bg-none hover:text-muted"
+          className="text-muted bg-none hover:text-muted hover:bg-bgPrimary"
           aria-label="Open set settings"
           onTouchStart={(e) => e.preventDefault()} // 🔥 помогает ловить tap
         >
