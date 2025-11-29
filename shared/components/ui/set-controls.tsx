@@ -103,9 +103,6 @@ export function SetControls({ sequence, setSequence }: Props) {
         <Button onClick={addSet} className="bg-none border-none text-base font-normal mt-2">
           <CirclePlus strokeWidth={1} /> + Set
         </Button>
-        {/* <Button className="flex-1 w-full mb-6 h-12" onClick={addSet}>
-          + Set 
-        </Button> */}
       </div>
     </div>
   );

@@ -87,7 +87,12 @@ export const SetItem: React.FC<Props> = ({
         </div>
 
         <div>
-          <SetSettingsPopover order={data.order} onAddDropSet={onAddDropSet} onDelete={onDelete} />
+          <SetSettingsPopover
+            portal={true}
+            order={data.order}
+            onAddDropSet={onAddDropSet}
+            onDelete={onDelete}
+          />
         </div>
       </div>
 

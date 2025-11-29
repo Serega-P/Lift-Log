@@ -9,9 +9,10 @@ interface Props {
   onCopyPaste?: () => void;
   onDelete: (id: number) => void;
   order: number;
+  portal: boolean;
 }
 
-export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order }: Props) {
+export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order, portal }: Props) {
   const [open, setOpen] = useState(false);
 
   const handleDropset = (e: React.MouseEvent) => {

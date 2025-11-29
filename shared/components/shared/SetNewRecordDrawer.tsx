@@ -74,7 +74,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="h-[99.5vh] m-auto max-w-[480px] p-5 pb-0 pt-2 bg-bgBase border border-bgSoft/70 rounded-t-6xl flex flex-col">
+      <DrawerContent className="max-h-screen m-auto max-w-[480px] p-5 pb-0 pt-2 bg-bgBase border border-bgSoft/70 rounded-t-6xl flex flex-col">
         <DrawerHeader className="flex px-0 py-2 justify-between items-center">
           <VisuallyHidden>
             <DrawerTitle>Hidden title for screen readers</DrawerTitle>
@@ -110,7 +110,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
           )}
         </DrawerHeader>
         <ScrollArea className="w-full flex-1">
-          <div className="flex flex-col items-center w-full min-h-full px-4 py-10 space-y-5">
+          <div className="flex flex-col items-center w-full min-h-[50vh] px-4 py-10 space-y-5">
             <div className="text-start w-full max-w-[430px]">
               <Title text={name} size="xl" className="font-light" />
             </div>
