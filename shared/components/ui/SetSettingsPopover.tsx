@@ -40,7 +40,7 @@ export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order 
       <PopoverTrigger asChild>
         <Button
           variant="icons"
-          className="text-muted bg-none hover:text-white hover:bg-bgPrimary"
+          className="text-muted bg-none hover:text-white"
           aria-label="Open set settings">
           <Ellipsis size={24} />
         </Button>
@@ -50,7 +50,7 @@ export function SetSettingsPopover({ onAddDropSet, onCopyPaste, onDelete, order 
         sideOffset={8}
         align="end"
         className="w-auto min-w-[200px] p-0 mr-7 bg-bgSoft rounded-2xl border-muted/25 shadow-xxl"
-        style={{ pointerEvents: 'auto', touchAction: 'auto' }}>
+        style={{ pointerEvents: 'auto', touchAction: 'auto', zIndex: 99 }}>
         <div className="flex flex-col">
           <button
             type="button"
