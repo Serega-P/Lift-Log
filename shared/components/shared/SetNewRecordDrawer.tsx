@@ -78,7 +78,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
       {/* ✅ FULLSCREEN CONTENT — внутри Dialog */}
       <DialogContent
         forceMount
-        className="fixed inset-0 z-50 h-screen w-screen max-w-[480px] mx-auto p-5 pb-0 pt-2 bg-bgBase border border-bgSoft/70 rounded-t-6xl shadow-xxl flex flex-col"
+        className="fixed inset-0 z-50 h-screen w-screen max-w-[480px] mx-auto p-0 pt-2 bg-bgBase border-none rounded-t-6xl shadow-xxl flex flex-col"
         onInteractOutside={(e) => e.preventDefault()}>
         {/* Анимация выезда снизу */}
         <AnimatePresence>
@@ -90,7 +90,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               className="h-full flex flex-col">
               {/* HEADER */}
-              <div className="flex px-0 py-2 justify-between items-center">
+              <div className="flex px-5 py-2 justify-between items-center">
                 <button
                   type="button"
                   className="p-2 w-12 h-12 rounded-full bg-black/50 text-muted"
