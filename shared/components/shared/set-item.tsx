@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { SetType } from '@/app/types/types';
-import { Input, DropSetRow, SetSettingsPopover } from '@/shared/components';
+import { Input, DropSetRow } from '@/shared/components';
+import { ArrowDownRight, Trash2 } from 'lucide-react';
 
 interface Props {
   data: SetType;
@@ -46,19 +47,17 @@ export const SetItem: React.FC<Props> = ({
     });
   };
 
-  // Independent activation per input
+  // Active states
   const weightActive = touched.weight && weight.trim() !== '';
   const repsActive = touched.reps && reps.trim() !== '';
 
-  // Independent classes
   const weightClass = weightActive ? 'border-accent text-primary' : 'border-muted text-muted';
-
   const repsClass = repsActive ? 'border-accent text-primary' : 'border-muted text-muted';
 
   return (
     <div className="w-full bg-bgMuted rounded-2xl text-primary mb-4 overflow-hidden">
       <div className="flex items-center w-full py-4 pr-0">
-        <div className="text-muted text-lg px-4 text-left">{data.order}</div>
+        <div className="text-muted text-base pl-3 text-left">{data.order}</div>
 
         <div className="flex items-center gap-2 flex-1 pl-2">
           {/* WEIGHT */}
@@ -86,8 +85,23 @@ export const SetItem: React.FC<Props> = ({
           </div>
         </div>
 
-        <div>
-          <SetSettingsPopover order={data.order} onAddDropSet={onAddDropSet} onDelete={onDelete} />
+        {/* NEW: Simple action buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="p-4 pr-3 bg-none text-muted hover:text-neutral-200 transition"
+            onClick={() => onAddDropSet(data.order)}
+            title="Add Dropset">
+            <ArrowDownRight size={20} strokeWidth={2.5} />
+          </button>
+
+          <button
+            type="button"
+            className="p-4 pl-3 bg-none text-muted hover:text-neutral-200 transition"
+            onClick={() => onDelete(data.order)}
+            title="Delete Set">
+            <Trash2 size={20} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
 

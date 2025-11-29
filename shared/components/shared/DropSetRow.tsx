@@ -1,9 +1,9 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { DropSetType, SetType } from '@/app/types/types';
 import { Input } from '@/shared/components';
-import { DropsetSettingsPopover } from '@/shared/components';
-import { ArrowDownRight } from 'lucide-react';
+import { Trash2, ArrowDownRight } from 'lucide-react';
 
 interface Props {
   parentSet: SetType;
@@ -24,7 +24,6 @@ export const DropSetRow: React.FC<Props> = ({ parentSet, drop, onChange, onDelet
   useEffect(() => {
     if (!touched.weight) setWeight(drop.weight != null ? String(drop.weight) : '');
     if (!touched.reps) setReps(drop.reps != null ? String(drop.reps) : '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drop]);
 
   const handleUpdate = (field: 'weight' | 'reps', value: string) => {
@@ -47,11 +46,13 @@ export const DropSetRow: React.FC<Props> = ({ parentSet, drop, onChange, onDelet
   const repsClass = repsActive ? 'border-accent text-primary' : 'border-muted text-muted';
 
   return (
-    <div className="flex items-center justify-end gap-2 pl-8 py-2 relative">
-      <div className="bg-bgSoft p-2 rounded-xl">
+    <div className="flex items-center justify-start gap-2 py-2">
+      {/* Icon before inputs */}
+      <div className="ml-8 p-2 rounded-xl flex items-center justify-center">
         <ArrowDownRight className="text-muted w-5 h-5" />
       </div>
 
+      {/* Weight input */}
       <Input
         type="number"
         className={`w-[80px] h-10 text-center text-lg bg-bgBase border ${weightClass} rounded-lg`}
@@ -61,6 +62,7 @@ export const DropSetRow: React.FC<Props> = ({ parentSet, drop, onChange, onDelet
       />
       <span className="text-muted text-sm">kg</span>
 
+      {/* Reps input */}
       <Input
         type="number"
         className={`w-[80px] h-10 text-center text-lg bg-bgBase border ${repsClass} rounded-lg`}
@@ -70,7 +72,14 @@ export const DropSetRow: React.FC<Props> = ({ parentSet, drop, onChange, onDelet
       />
       <span className="text-muted text-sm">reps</span>
 
-      <DropsetSettingsPopover onDelete={onDelete} parentSet={parentSet.order} drop={drop.order} />
+      {/* Delete button */}
+      <button
+        type="button"
+        className="p-4 bg-none text-muted hover:text-neutral-200 transition ml-auto"
+        onClick={() => onDelete(parentSet.order, drop.order)}
+        title="Delete DropSet">
+        <Trash2 size={20} strokeWidth={2.5} />
+      </button>
     </div>
   );
 };

@@ -100,8 +100,9 @@ export function SetControls({ sequence, setSequence }: Props) {
       )}
 
       <div className="flex max-w-[430px] mx-auto">
-        <Button onClick={addSet} className="bg-none border-none text-base font-normal mt-2">
-          <CirclePlus strokeWidth={1} /> + Set
+        <Button onClick={addSet} className="bg-none border-none text-sm font-medium mt-2">
+          <CirclePlus size={18} strokeWidth={2} />
+          Add set
         </Button>
       </div>
     </div>
