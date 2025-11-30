@@ -61,7 +61,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      {/* ✅ КНОПКА ОТКРЫТИЯ */}
+      {/* КНОПКА ОТКРЫТИЯ */}
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -75,22 +75,37 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
         </Button>
       </DialogTrigger>
 
-      {/* ✅ FULLSCREEN CONTENT — внутри Dialog */}
-      <DialogContent
-        forceMount
-        className="fixed inset-0 z-50 h-screen w-screen max-w-[480px] mx-auto p-0 pt-2 bg-bgBase border-none rounded-t-6xl shadow-xxl flex flex-col"
-        onInteractOutside={(e) => e.preventDefault()}>
-        {/* Анимация выезда снизу */}
-        <AnimatePresence>
-          {isOpen && (
+      <AnimatePresence>
+        {isOpen && (
+          <DialogContent
+            forceMount
+            onInteractOutside={(e) => e.preventDefault()}
+            className="
+        fixed inset-0 z-50 
+        flex 
+        justify-center 
+        items-end 
+        p-0 
+        border-none shadow-none
+				bg-transparent
+      ">
             <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="h-full flex flex-col">
+              transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+              className="
+          w-full 
+          h-full 
+          max-w-[480px] 
+          bg-bgBase
+          rounded-t-6xl 
+          shadow-xl 
+          flex flex-col 
+					overflow-hidden
+        ">
               {/* HEADER */}
-              <div className="flex px-5 py-2 justify-between items-center">
+              <div className="flex px-5 py-2 justify-between items-center bg-transparent">
                 <button
                   type="button"
                   className="p-2 w-12 h-12 rounded-full bg-black/50 text-muted"
@@ -102,7 +117,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
                   <Button
                     type="button"
                     variant="accent"
-                    className="rounded-full h-12 text-lg font-normal relative overflow-hidden hover:bg-accent"
+                    className="rounded-full h-12 text-lg font-normal relative overflow-hidden"
                     onClick={handleSave}
                     disabled={isSaving}>
                     <span
@@ -122,7 +137,7 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
                 )}
               </div>
 
-              {/* SCROLLABLE CONTENT */}
+              {/* CONTENT */}
               <ScrollArea className="w-full flex-1 overflow-y-auto touch-pan-y overscroll-contain">
                 <div className="flex flex-col items-center w-full h-full px-4 py-10 space-y-5 pb-[300px]">
                   <div className="text-start w-full max-w-[430px]">
@@ -133,9 +148,9 @@ export const SetNewRecordDrawer: React.FC<Props> = ({ name, sets, onSave }) => {
                 </div>
               </ScrollArea>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </DialogContent>
+          </DialogContent>
+        )}
+      </AnimatePresence>
     </Dialog>
   );
 };
