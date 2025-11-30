@@ -26,7 +26,7 @@ export function WorkoutSettingsPopover({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="h-8 w-8 p-6 bg-bgSoft/30 border-muted/10 backdrop-blur-lg text-muted rounded-full hover:bg-bgBase/40 hover:text-muted/40">
+          className="h-8 w-8 p-6 bg-bgSoft/30 border-muted/10 backdrop-blur-xl text-muted rounded-full hover:bg-bgBase/40 hover:text-muted/40">
           <Ellipsis size={24} />
         </Button>
       </PopoverTrigger>

@@ -39,7 +39,7 @@ export function ExerciseSettingsPopover({ onDelete, onRename }: Props) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.2 }}
-              className="w-auto min-w-[240px] p-0 mr-7 rounded-3xl bg-bgSoft/30 border border-muted/10 shadow-xxl backdrop-blur-lg overflow-hidden"
+              className="w-auto min-w-[240px] p-0 mr-7 rounded-3xl bg-bgSoft/30 border border-muted/10 shadow-xxl backdrop-blur-xl overflow-hidden"
               style={{
                 transformOrigin: 'top right',
                 pointerEvents: 'auto',
