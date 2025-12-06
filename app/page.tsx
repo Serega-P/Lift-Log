@@ -7,7 +7,7 @@ import {
   Skeleton,
   BottomNavigation,
   Toaster,
-  NewWorkoutDrawer, // Drawer
+  NewWorkoutDrawer,
 } from '@/shared/components';
 import { toast } from 'sonner';
 import * as React from 'react';
@@ -83,7 +83,6 @@ export default function Home() {
 
         {/* Drawer для создания новой тренировки */}
         <div className="w-full mb-6 mt-2.5">
-          {/* <NewWorkoutDrawer /> */}
           <NewWorkoutDrawer onWorkoutCreated={fetchWorkouts} />
         </div>
 

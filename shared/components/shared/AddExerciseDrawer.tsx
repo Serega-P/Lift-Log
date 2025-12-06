@@ -8,18 +8,25 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
-  Button,
   ScrollArea,
-  Checkbox,
+  MuscleGroupFilter,
+  ExerciseItem,
 } from '@/shared/components';
-import { X, Loader } from 'lucide-react';
-import { ExerciseType } from '@/app/types/types';
+
+import { X } from 'lucide-react';
+import {
+  ExerciseDefinition,
+  WorkoutExercise,
+  ExerciseApiItem,
+  SetGroupType,
+  SetType,
+} from '@/app/types/types';
 
 interface Props {
-  exercises: ExerciseType[];
+  exercises: WorkoutExercise[];
   isOpen: boolean;
   onClose: () => void;
-  setExercises: React.Dispatch<React.SetStateAction<ExerciseType[]>>;
+  setExercises: React.Dispatch<React.SetStateAction<WorkoutExercise[]>>;
 }
 
 export const AddExerciseDrawer: React.FC<Props> = ({
@@ -28,119 +35,137 @@ export const AddExerciseDrawer: React.FC<Props> = ({
   onClose,
   setExercises,
 }) => {
-  const [allExercises, setAllExercises] = useState<ExerciseType[]>([]);
-  const [selectedExercises, setSelectedExercises] = useState<ExerciseType[]>([]);
+  const [allDefinitions, setAllDefinitions] = useState<ExerciseDefinition[]>([]);
+  const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      const fetchExercises = async () => {
-        setLoading(true);
-        try {
-          const res = await fetch('/api/workouts/exercises');
-          const data: ExerciseType[] = await res.json();
-          setAllExercises(data);
-        } catch (err) {
-          console.error('Error fetching exercises:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
+    if (!isOpen) return;
 
-      fetchExercises();
-    }
+    const fetchDefinitions = async () => {
+      try {
+        setLoading(true);
+
+        const res = await fetch('/api/exercises');
+        const data: ExerciseApiItem[] = await res.json();
+
+        const normalized: ExerciseDefinition[] = data.map((item) => {
+          const et = item.exerciseType;
+
+          return {
+            id: et.id,
+            name: et.name,
+            muscleGroup: et.muscleGroup ?? null,
+            userId: et.userId,
+            createdAt: new Date(et.createdAt),
+            updatedAt: new Date(et.updatedAt),
+
+            lastExercise: item.exercise
+              ? {
+                  ...item.exercise,
+                  createdAt: new Date(item.exercise.createdAt),
+                  updatedAt: new Date(item.exercise.updatedAt),
+                  setGroup: item.exercise.setGroup.map((sg: SetGroupType) => ({
+                    ...sg,
+                    createdAt: new Date(sg.createdAt),
+                    updatedAt: new Date(sg.updatedAt),
+                    sets: sg.sets.map((s: SetType) => ({
+                      ...s,
+                      createdAt: new Date(s.createdAt),
+                      updatedAt: new Date(s.updatedAt),
+                    })),
+                  })),
+                }
+              : null,
+          };
+        });
+
+        setAllDefinitions(normalized);
+      } catch (err) {
+        console.error('Failed to load definitions', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDefinitions();
   }, [isOpen]);
 
-  const availableExercises = allExercises.filter(
-    (exercise) =>
-      !exercises.some((existing) => existing.exerciseType?.id === exercise.exerciseType?.id),
+  // ------------------------------
+  // 🔥 Оставить только доступные
+  // ------------------------------
+  const available = allDefinitions.filter(
+    (def) => !exercises.some((e) => e.exerciseTypeId === def.id),
   );
 
-  const handleCheckboxChange = (exercise: ExerciseType, checked: boolean) => {
-    if (checked) {
-      setSelectedExercises((prev) => [...prev, exercise]);
-    } else {
-      setSelectedExercises((prev) => prev.filter((ex) => ex.id !== exercise.id));
-    }
-  };
+  // ------------------------------
+  // 🔥 Фильтрация по группе мышц
+  // ------------------------------
+  const filtered =
+    filter === 'All'
+      ? available
+      : available.filter((ex) => ex.muscleGroup?.toLowerCase() === filter.toLowerCase());
 
-  const handleSave = () => {
-    setExercises((prev) => [...prev, ...selectedExercises]);
-    setSelectedExercises([]);
+  // ------------------------------
+  // 🔥 Добавление упражнения в список дня
+  // ------------------------------
+  const addExercise = (def: ExerciseDefinition) => {
+    const newExercise: WorkoutExercise = def.lastExercise
+      ? {
+          ...def.lastExercise,
+          exerciseTypeId: def.id,
+          exerciseType: def,
+        }
+      : {
+          id: Date.now(),
+          exerciseTypeId: def.id,
+          exerciseType: def,
+          setGroup: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+    setExercises((prev) => [...prev, newExercise]);
     onClose();
   };
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="h-[99.5vh] m-auto max-w-[720px] overflow-y-auto p-5 pb-0 pt-2 bg-bgBase border border-bgSoft/70 border-b-0 border-r-0 border-l-0 rounded-t-6xl overflow-hidden">
-        <DrawerHeader className="flex px-0 py-2 justify-between items-center">
+      <DrawerContent className="h-[100vh] max-w-[720px] bg-bgBase border-none rounded-t-6xl overflow-hidden flex flex-col">
+        <DrawerHeader className="flex justify-between items-center px-4 pb-4 sticky top-0 z-50">
+          {/* Фон с градиентом */}
+          <div className="absolute inset-0 bg-gradient-to-b from-bgBase/90 to-bgBase/0 backdrop-blur-[2px] pointer-events-none"></div>
+
+          {/* Контент Header */}
           <DrawerClose asChild>
-            <button className="p-2 w-12 h-12 rounded-full bg-black/50 text-muted" onClick={onClose}>
+            <button
+              className="p-2 w-12 h-12 rounded-full bg-black/50 text-white z-10"
+              onClick={onClose}>
               <X size={24} strokeWidth={1} className="m-auto" />
             </button>
           </DrawerClose>
 
-          <Button
-            variant="accent"
-            size="default"
-            className={`
-                    bg-none rounded-full h-12 text-lg font-normal relative overflow-hidden
-                    ${
-                      selectedExercises.length === 0
-                        ? 'opacity-40 pointer-events-none'
-                        : 'hover:bg-accent'
-                    }
-            `}
-            onClick={handleSave}
-            disabled={loading || selectedExercises.length === 0}>
-            <span
-              className="absolute inset-0 flex items-center justify-center bg-accent/50 transition-opacity duration-300"
-              style={{ opacity: loading ? 1 : 0 }}>
-              {loading && <Loader className="h-5 w-5 text-white animate-spin" />}
-            </span>
-
-            <span className={loading ? 'opacity-0' : 'opacity-100'}>Add</span>
-          </Button>
+          <div className="z-10">
+            <MuscleGroupFilter value={filter} onChange={setFilter} />
+          </div>
         </DrawerHeader>
 
-        <ScrollArea className="w-full h-full">
-          <div className="flex flex-col items-center w-full min-h-svh px-4 py-10 space-y-5">
-            {/* Title */}
-            <div className="text-start w-full max-w-[430px]">
-              <DrawerTitle className="font-light text-3xl">All Exercises</DrawerTitle>
-              <DrawerDescription className="text-muted text-base mt-1">
-                Select an exercise
-              </DrawerDescription>
+        <ScrollArea className="flex-1 w-full px-4 mt-[-76px] rounded-t-6xl overflow-hidden">
+          <div className="flex flex-col items-center w-full h-full mt-20 space-y-4">
+            <div className="w-full max-w-[430px]">
+              <DrawerTitle className="text-3xl font-light">Add Exercise</DrawerTitle>
+              <DrawerDescription className="hidden">Select exercise</DrawerDescription>
             </div>
 
-            {/* Exercises List */}
-            <div className="w-full max-w-[430px]">
+            <div className="w-full max-w-[430px] space-y-3">
               {loading ? (
-                <div className="text-center text-muted">Loading exercises...</div>
-              ) : availableExercises.length > 0 ? (
-                <div className="space-y-2">
-                  {availableExercises.map((exercise) => (
-                    <div
-                      key={exercise.id}
-                      className="flex items-center space-x-2 p-2 border-b border-muted/25">
-                      <Checkbox
-                        id={`exercise-${exercise.id}`}
-                        checked={selectedExercises.some((ex) => ex.id === exercise.id)}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(exercise, checked as boolean)
-                        }
-                      />
-
-                      <label
-                        htmlFor={`exercise-${exercise.id}`}
-                        className="text-base font-medium leading-none">
-                        {exercise.exerciseType?.name}
-                      </label>
-                    </div>
-                  ))}
-                </div>
+                <div className="text-center text-muted">Loading…</div>
+              ) : filtered.length === 0 ? (
+                <div className="text-center text-muted">Nothing found</div>
               ) : (
-                <div className="text-center text-muted">No new exercises available</div>
+                filtered.map((def) => (
+                  <ExerciseItem key={def.id} exercise={def} onAdd={() => addExercise(def)} />
+                ))
               )}
             </div>
           </div>

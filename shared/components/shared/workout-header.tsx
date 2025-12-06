@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ExerciseType } from '@/app/types/types';
+import { WorkoutExercise } from '@/app/types/types';
 import {
   Button,
   WorkoutSettingsPopover,
@@ -21,10 +21,10 @@ interface WorkoutHeaderProps {
   isChanged: boolean;
   isSaving: boolean;
   onSave: () => void;
-  setExercises: React.Dispatch<React.SetStateAction<ExerciseType[]>>;
-  exercises: ExerciseType[];
+  setExercises: React.Dispatch<React.SetStateAction<WorkoutExercise[]>>;
+  exercises: WorkoutExercise[];
   onUpdate: (updates: { title?: string; color?: string }) => void;
-  onCreateExercise: (exerciseName: string) => void;
+  onCreateExercise: (exerciseName: string, muscleGroup: string) => void;
 }
 
 export function WorkoutHeader({
@@ -48,6 +48,7 @@ export function WorkoutHeader({
   const [isAddExerciseDialogOpen, setIsAddExerciseDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [newExerciseName, setNewExerciseName] = React.useState('');
+  const [newExerciseGroup, setNewExerciseGroup] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Обновляем состояние, если входные пропсы изменились
@@ -58,8 +59,11 @@ export function WorkoutHeader({
 
   const handleCreateExercise = () => {
     if (!newExerciseName.trim()) return;
-    onCreateExercise(newExerciseName);
+
+    onCreateExercise(newExerciseName, newExerciseGroup || '');
+
     setNewExerciseName('');
+    setNewExerciseGroup('');
     setIsCreateExerciseOpen(false);
   };
 
@@ -125,6 +129,8 @@ export function WorkoutHeader({
             onClose={() => setIsCreateExerciseOpen(false)}
             inputValue={newExerciseName}
             onInputChange={setNewExerciseName}
+            selectedGroup={newExerciseGroup}
+            onSelectGroup={setNewExerciseGroup}
             onSubmit={handleCreateExercise}
             loading={isLoading}
           />

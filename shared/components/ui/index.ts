@@ -42,3 +42,5 @@ export { DropdownMenu } from './dropdown-menu';
 export { DropdownMenuTrigger } from './dropdown-menu';
 export { DropdownMenuContent } from './dropdown-menu';
 export { DropdownMenuItem } from './dropdown-menu';
+export { MuscleGroupFilter } from './MuscleGroupFilter';
+export { ExerciseItem } from './ExerciseItem';

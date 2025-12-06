@@ -28,7 +28,7 @@ export const getWorkout = async (workoutId: string) => {
                   sets: {
                     orderBy: { order: 'asc' },
                     include: {
-                      dropSets: { orderBy: { order: 'asc' } }, // ✅ dropsets only!
+                      dropSets: { orderBy: { order: 'asc' } },
                     },
                   },
                 },

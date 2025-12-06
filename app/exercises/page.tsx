@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ExerciseTypeDef } from '@/app/types/types';
+import { ExerciseDefinition } from '@/app/types/types';
 import { BottomNavigation, Skeleton } from '@/shared/components';
 
 export default function AllExercises() {
-  const [exercises, setExercises] = useState<ExerciseTypeDef[]>([]);
+  const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

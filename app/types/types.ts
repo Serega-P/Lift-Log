@@ -6,7 +6,10 @@ export enum UserRole {
   ADMIN = 'ADMIN',
 }
 
-// Тип пользователя
+/* ============================
+   👤 USER
+============================= */
+
 export interface UserType {
   id: number;
   fullName: string;
@@ -16,85 +19,156 @@ export interface UserType {
   image?: string | null;
   provider?: string | null;
   emailVerified?: Date | null;
+
   workouts?: WorkoutType[];
+  exerciseTypes?: ExerciseDefinition[];
+
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип тренировки
+/* ============================
+   🏋️ WORKOUT + DAY
+============================= */
+
 export interface WorkoutType {
   id: number;
   title: string;
   color: string;
   userId: number;
-  user?: UserType;
+
   days?: WorkoutDayType[];
+
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип дня тренировки
 export interface WorkoutDayType {
   id: number;
-  date?: Date | null;
-  workoutId?: number | null;
+  date: Date | null;
+  workoutId: number | null;
+
   workout?: WorkoutType;
-  exercises?: ExerciseType[];
+  exercises?: WorkoutExercise[];
+
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Тип определения упражнения (ExerciseType table)
-export interface ExerciseTypeDef {
+/* ============================
+   📚 EXERCISE DEFINITION (Справочник)
+============================= */
+
+export interface ExerciseDefinition {
   id: number;
   name: string;
-  userId: number;
-  user?: UserType;
-  exercises?: ExerciseType[];
+  muscleGroup: string | null;
+  userId: string | null;
+
+  exercises?: WorkoutExercise[];
+
   createdAt: Date;
   updatedAt: Date;
+
+  lastExercise?: WorkoutExercise | null;
 }
 
-// Выполнение упражнения
-export interface ExerciseType {
+export type ExerciseDefinitionCreate = {
+  name: string;
+  muscleGroup: string;
+};
+
+/* ============================
+   🟢 WORKOUT EXERCISE (выполнение)
+============================= */
+
+export interface WorkoutExercise {
   id: number;
-  workoutDayId: number;
+  workoutDayId?: number | null;
   exerciseTypeId: number;
 
-  exerciseType?: {
-    id: number;
-    name: string;
-    userId: number;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  exerciseType: ExerciseDefinition;
+  setGroup: SetGroupType[];
 
-  setGroup?: SetGroupType[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type ExerciseCreateType = Pick<ExerciseType, 'exerciseTypeId' | 'setGroup' | 'workoutDayId'>;
+export type WorkoutExerciseCreate = {
+  workoutDayId?: number | null;
+  exerciseTypeId: number;
+};
 
-// Группа сетов
+export interface ExerciseApiItem {
+  exerciseType: {
+    id: number;
+    name: string;
+    muscleGroup: string | null;
+    userId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  exercise: WorkoutExercise | null; // можешь описать глубже, если хочешь
+}
+
+/* ============================
+   📦 SET GROUP
+============================= */
+
 export interface SetGroupType {
-  id?: number;
+  id: number;
   exerciseId: number;
-  exercise?: ExerciseType | null;
-  sets?: SetType[];
-  createdAt?: Date;
-  updatedAt?: Date;
+
+  sets: SetType[];
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface SetGroupCreateType {
-  sets?: SetType[];
+  sets?: SetCreateType[];
 }
 
-// 🔥 Тип DropSet
+/* ============================
+   🟣 SET
+============================= */
+
+export interface SetType {
+  id: number;
+  type: string;
+  order: number;
+
+  weight?: number | null;
+  reps?: number | null;
+
+  isTriSet: boolean;
+
+  subSets: SubSetType[];
+  dropSets: DropSetType[];
+
+  setGroupId: number;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type SetCreateType = {
+  type: string;
+  order: number;
+  weight?: number | null;
+  reps?: number | null;
+  isTriSet?: boolean;
+  dropSets?: DropSetCreateType[];
+  subSets?: SubSetCreateType[];
+};
+
+/* ============================
+   🔽 DROP SET
+============================= */
+
 export interface DropSetType {
   id: number;
   parentSetId: number;
-  parentSet?: SetType;
 
   weight?: number | null;
   reps?: number | null;
@@ -104,37 +178,47 @@ export interface DropSetType {
   updatedAt: Date;
 }
 
-export type DropSetCreateType = Pick<DropSetType, 'weight' | 'reps' | 'order'>;
-
-// 🔥 Обновленный SetType
-export interface SetType {
-  id?: number;
-  type: string; // например "working"
-  order: number;
+export type DropSetCreateType = {
   weight?: number | null;
   reps?: number | null;
-
-  dropSets: DropSetType[]; // 🔥 заменили subSets
-
-  setGroupId?: number;
-  setGroup?: SetGroupType;
-
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-// Создание сета
-export type SetCreateType = Pick<SetType, 'type' | 'order' | 'weight' | 'reps' | 'dropSets'> & {
-  dropSets?: { create: DropSetCreateType[] };
+  order: number;
 };
 
-// Для UI
+/* ============================
+   🔼 SUB SET
+============================= */
+
+export interface SubSetType {
+  id: number;
+  setId: number;
+
+  weight?: number | null;
+  reps?: number | null;
+  order: number;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type SubSetCreateType = {
+  weight?: number | null;
+  reps?: number | null;
+  order: number;
+};
+
+/* ============================
+   🎨 UI
+============================= */
+
 export interface DayWithColor {
   date: Date | null;
   color: string;
 }
 
-// Для Prisma Include
+/* ============================
+   🔄 Prisma Include Types
+============================= */
+
 export type WorkoutDayWithExercises = Prisma.WorkoutDayGetPayload<{
   include: {
     exercises: {
@@ -144,7 +228,8 @@ export type WorkoutDayWithExercises = Prisma.WorkoutDayGetPayload<{
           include: {
             sets: {
               include: {
-                dropSets: true; // 🔥 заменили subSets
+                subSets: true;
+                dropSets: true;
               };
             };
           };

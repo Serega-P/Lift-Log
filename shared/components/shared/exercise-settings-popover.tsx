@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger, Button } from '@/shared/components';
-import { Settings2, Edit, Trash2 } from 'lucide-react';
+import { Settings2, FileSliders, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
@@ -38,7 +38,7 @@ export function ExerciseSettingsPopover({ onDelete, onRename }: Props) {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.1 }}
               className="w-auto min-w-[240px] p-0 mr-7 rounded-3xl bg-bgSoft/30 border border-muted/10 shadow-xxl backdrop-blur-xl overflow-hidden"
               style={{
                 transformOrigin: 'top right',
@@ -51,7 +51,7 @@ export function ExerciseSettingsPopover({ onDelete, onRename }: Props) {
                 <button
                   className="flex items-center px-5 py-3 rounded-full text-white hover:bg-bgMuted transition w-full"
                   onClick={handleRename}>
-                  <Edit size={20} strokeWidth={2} className="mr-4" /> Rename
+                  <FileSliders size={20} strokeWidth={2} className="mr-4" /> Edit
                 </button>
 
                 <button

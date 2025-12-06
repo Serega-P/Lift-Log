@@ -1,37 +1,49 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ExerciseType, SetType } from '@/app/types/types';
+import { WorkoutExercise, SetType } from '@/app/types/types';
 import {
   Set,
   Title,
   SetNewRecordDrawer,
   ExerciseSettingsPopover,
-  RenameExerciseDrawer,
+  EditExerciseDrawer, // 🔥 новое название
   ConfirmDeleteDrawer,
 } from '@/shared/components';
 
 interface Props {
-  exercise: ExerciseType;
-  onUpdate: (updatedExercise: ExerciseType) => void;
+  exercise: WorkoutExercise;
+  onUpdate: (updatedExercise: WorkoutExercise) => void;
   onDelete: (id: number) => void;
 }
 
 export function Exercise({ exercise, onUpdate, onDelete }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(exercise);
+
   const [newExerciseName, setNewExerciseName] = useState('');
+  const [newMuscleGroup, setNewMuscleGroup] = useState('');
+
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+
   const [sets, setSets] = useState<SetType[]>(() =>
     (exercise.setGroup ?? [])
       .flatMap((group) => group.sets ?? [])
       .sort((a, b) => a.order - b.order),
   );
 
-  const handleRenameExercise = async () => {
+  /* ============================================
+      🔥 Обновление имени и muscleGroup
+  ============================================ */
+  const handleEditExerciseDefinition = async () => {
     const currentName = exerciseData.exerciseType?.name ?? '';
-    if (newExerciseName.trim() === '' || newExerciseName.trim() === currentName) {
+    const currentMG = exerciseData.exerciseType?.muscleGroup ?? '';
+
+    if (
+      newExerciseName.trim() === '' ||
+      (newExerciseName === currentName && newMuscleGroup === currentMG)
+    ) {
       setIsModalOpen(false);
       return;
     }
@@ -44,18 +56,21 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
       const res = await fetch(`/api/exercises/${exerciseId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newExerciseName }),
+        body: JSON.stringify({
+          name: newExerciseName,
+          muscleGroup: newMuscleGroup,
+        }),
       });
 
-      if (!res.ok) throw new Error('Failed to rename exercise');
+      if (!res.ok) throw new Error('Failed to update exercise');
 
-      const updatedExercise: ExerciseType = {
+      const updatedExercise: WorkoutExercise = {
         ...exerciseData,
         exerciseType: {
+          ...exerciseData.exerciseType!,
           id: exerciseId,
           name: newExerciseName,
-          userId: exerciseData.exerciseType?.userId ?? 0,
-          createdAt: exerciseData.exerciseType?.createdAt ?? new Date(),
+          muscleGroup: newMuscleGroup,
           updatedAt: new Date(),
         },
       };
@@ -64,15 +79,15 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
       onUpdate(updatedExercise);
       setIsModalOpen(false);
     } catch (error) {
-      console.error('❌ Ошибка при переименовании:', error);
-      alert('Не удалось переименовать упражнение');
+      console.error('❌ Ошибка при обновлении:', error);
+      alert('Не удалось обновить упражнение');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleUpdateExercise = (updatedSets: SetType[]) => {
-    const updatedExercise: ExerciseType = {
+    const updatedExercise: WorkoutExercise = {
       ...exerciseData,
       setGroup:
         updatedSets.length > 0
@@ -91,8 +106,9 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
     onUpdate(updatedExercise);
   };
 
-  const handleOpenRenameDrawer = () => {
+  const handleOpenEditDrawer = () => {
     setNewExerciseName(exerciseData.exerciseType?.name || '');
+    setNewMuscleGroup(exerciseData.exerciseType?.muscleGroup || '');
     setIsModalOpen(true);
   };
 
@@ -106,10 +122,12 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
             className="font-normal text-primary"
           />
         </div>
+
         <ExerciseSettingsPopover
           onDelete={() => setIsDeleteDrawerOpen(true)}
-          onRename={handleOpenRenameDrawer}
+          onRename={handleOpenEditDrawer}
         />
+
         <ConfirmDeleteDrawer
           onClose={() => setIsDeleteDrawerOpen(false)}
           isDeleting={undefined}
@@ -118,13 +136,14 @@ export function Exercise({ exercise, onUpdate, onDelete }: Props) {
         />
       </div>
 
-      <RenameExerciseDrawer
+      <EditExerciseDrawer
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        inputPlaceholder={exerciseData.exerciseType?.name}
-        inputValue={newExerciseName}
-        onInputChange={setNewExerciseName}
-        onSubmit={handleRenameExercise}
+        nameValue={newExerciseName}
+        onNameChange={setNewExerciseName}
+        muscleGroupValue={newMuscleGroup}
+        onMuscleGroupChange={setNewMuscleGroup}
+        onSubmit={handleEditExerciseDefinition}
         loading={isLoading}
       />
 

@@ -21,9 +21,17 @@ export function SetControls({ sequence, setSequence }: Props) {
         id: Date.now(),
         type: 'set',
         order: getNextOrder(),
+
         weight: null,
         reps: null,
+
+        isTriSet: false,
+        subSets: [],
         dropSets: [],
+        setGroupId: 0, // или реальный ID группы, если он есть
+
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]);
   };

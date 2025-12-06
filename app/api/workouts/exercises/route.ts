@@ -35,7 +35,7 @@ export async function GET() {
                 id: true,
                 exerciseId: true,
                 sets: {
-                  orderBy: { order: 'asc' }, // 🧠 оставляю сортировку по order как логичная
+                  orderBy: { order: 'asc' },
                   select: {
                     id: true,
                     type: true,
@@ -43,7 +43,7 @@ export async function GET() {
                     weight: true,
                     reps: true,
                     dropSets: {
-                      orderBy: { order: 'asc' }, // ✅ дропсеты сортируем
+                      orderBy: { order: 'asc' },
                       select: {
                         id: true,
                         order: true,
@@ -90,7 +90,7 @@ export async function GET() {
             exerciseId: group.exerciseId,
             sets: group.sets.map((set) => ({
               ...set,
-              dropSets: set.dropSets ?? [], // ✅ гарантировано массив
+              dropSets: set.dropSets ?? [],
             })),
             createdAt: group.createdAt,
             updatedAt: group.updatedAt,

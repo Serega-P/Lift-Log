@@ -28,31 +28,31 @@ interface Props {
   loading: boolean;
   onClose: () => void;
 
-  inputValue: string;
-  onInputChange: (value: string) => void;
+  nameValue: string;
+  onNameChange: (value: string) => void;
 
-  selectedGroup: string;
-  onSelectGroup: (value: string) => void;
+  muscleGroupValue: string;
+  onMuscleGroupChange: (value: string) => void;
 
   onSubmit: () => void;
 }
 
-export const CreateExerciseDrawer: React.FC<Props> = ({
+export const EditExerciseDrawer: React.FC<Props> = ({
   isOpen,
   loading,
   onClose,
-  onInputChange,
+  nameValue,
+  onNameChange,
+  muscleGroupValue,
+  onMuscleGroupChange,
   onSubmit,
-  inputValue,
-  selectedGroup,
-  onSelectGroup,
 }) => {
   useEffect(() => {
     if (!isOpen) {
-      onInputChange('');
-      onSelectGroup('');
+      onNameChange('');
+      onMuscleGroupChange('');
     }
-  }, [isOpen, onInputChange, onSelectGroup]);
+  }, [isOpen, onNameChange, onMuscleGroupChange]);
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
@@ -69,7 +69,7 @@ export const CreateExerciseDrawer: React.FC<Props> = ({
             size="default"
             className={`
               bg-none rounded-full h-12 text-lg font-normal relative overflow-hidden
-              ${inputValue === '' ? 'opacity-40 pointer-events-none' : 'hover:bg-accent'}
+              ${nameValue === '' ? 'opacity-40 pointer-events-none' : 'hover:bg-accent'}
             `}
             onClick={onSubmit}
             disabled={loading}>
@@ -79,54 +79,57 @@ export const CreateExerciseDrawer: React.FC<Props> = ({
               {loading && <Loader className="h-5 w-5 text-white animate-spin" />}
             </span>
 
-            <span className={loading ? 'opacity-0' : 'opacity-100'}>Add</span>
+            <span className={loading ? 'opacity-0' : 'opacity-100'}>Save</span>
           </Button>
         </DrawerHeader>
 
         <ScrollArea className="h-full w-full">
           <div>
-            <DrawerTitle className="text-2xl font-light">New Exercise</DrawerTitle>
+            <DrawerTitle className="text-2xl font-light">Edit Exercise</DrawerTitle>
             <DrawerDescription className="text-muted mt-1 text-base">
-              New exercise to your workout
+              Change name or muscle group
             </DrawerDescription>
           </div>
 
           <div className="flex flex-col items-center w-full px-4 py-8 space-y-6">
-            {/* INPUT */}
+            {/* NAME INPUT */}
             <Input
-              value={inputValue}
-              onChange={(e) => onInputChange(e.target.value)}
+              value={nameValue}
+              onChange={(e) => onNameChange(e.target.value)}
               placeholder="Exercise name"
               className="pl-4 py-3 rounded-[6px] bg-bgSoft placeholder:font-normal font-bold border-muted/25 max-w-[430px] w-full"
             />
 
-            {/* GROUP SELECT */}
+            {/* MUSCLE GROUP SELECT */}
             <div className="w-full max-w-[430px]">
               <p className="text-muted mb-2 text-sm">Muscle group (optional)</p>
 
               <div className="grid grid-cols-3 gap-2">
-                {/* Render each button group */}
                 {Object.keys(GROUP_COLORS).map((group) => (
                   <button
                     key={group}
-                    onClick={() => onSelectGroup(group)}
+                    onClick={() => onMuscleGroupChange(group)}
                     className={`
                       ${GROUP_COLORS[group]}
                       text-white py-2 px-3 rounded-lg text-sm capitalize
                       transition border-2
-                      ${selectedGroup === group ? 'border-accent' : 'border-transparent opacity-70'}
+                      ${
+                        muscleGroupValue === group
+                          ? 'border-accent'
+                          : 'border-transparent opacity-70'
+                      }
                     `}>
                     {group}
                   </button>
                 ))}
 
-                {/* "Not selected" button */}
+                {/* NOT SELECTED */}
                 <button
-                  onClick={() => onSelectGroup('')}
+                  onClick={() => onMuscleGroupChange('')}
                   className={`
                     bg-bgSoft text-white py-2 px-3 rounded-lg text-sm
                     transition border-2
-                    ${selectedGroup === '' ? 'border-accent' : 'border-transparent opacity-70'}
+                    ${muscleGroupValue === '' ? 'border-accent' : 'border-transparent opacity-70'}
                   `}>
                   Not selected
                 </button>

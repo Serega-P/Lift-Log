@@ -3,14 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader } from 'lucide-react';
-import { WorkoutType, ExerciseType, ExerciseCreateType } from '@/app/types/types';
+import { WorkoutType, WorkoutExercise, ExerciseDefinition } from '@/app/types/types';
+
 import { Container, WorkoutHeader, WorkoutExercises, WorkoutSaveDrawer } from '@/shared/components';
 
 export default function WorkoutDay({ params }: { params: { workoutId: number | string } }) {
   const { workoutId } = params;
+
   const [workout, setWorkout] = useState<WorkoutType | null>(null);
-  const [exercises, setExercises] = useState<ExerciseType[]>([]);
-  const [initialExercises, setInitialExercises] = useState<ExerciseType[]>([]);
+  const [exercises, setExercises] = useState<WorkoutExercise[]>([]);
+  const [initialExercises, setInitialExercises] = useState<WorkoutExercise[]>([]);
+
   const [isChanged, setIsChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -18,6 +21,10 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
 
   const router = useRouter();
 
+  console.log('exercises', exercises);
+  /* ================================
+     LOAD WORKOUT
+  ================================= */
   useEffect(() => {
     async function fetchWorkout() {
       try {
@@ -26,9 +33,12 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
 
         const data: WorkoutType = await res.json();
         setWorkout(data);
-        let loadedExercises: ExerciseType[] = [];
+
+        let loadedExercises: WorkoutExercise[] = [];
+
         if (data.days?.length) {
-          loadedExercises = data.days[data.days.length - 1].exercises ?? [];
+          const lastDay = data.days[data.days.length - 1];
+          loadedExercises = (lastDay.exercises as WorkoutExercise[]) ?? [];
         }
 
         setExercises(loadedExercises);
@@ -43,17 +53,26 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     fetchWorkout();
   }, [workoutId]);
 
+  /* ================================
+     DETECT CHANGES
+  ================================= */
   useEffect(() => {
     setIsChanged(JSON.stringify(exercises) !== JSON.stringify(initialExercises));
   }, [exercises, initialExercises]);
 
+  /* ================================
+     SAVE WORKOUT
+  ================================= */
   const saveWorkout = async () => {
     if (!isChanged) return;
+
     setIsSaving(true);
+
     const res = await fetch(`/api/workouts/${workoutId}`);
     const data: WorkoutType = await res.json();
 
     const today = new Date().setHours(0, 0, 0, 0);
+
     const existingWorkoutDay = data.days?.find(
       (day) => day.date && new Date(day.createdAt).setHours(0, 0, 0, 0) === today,
     );
@@ -66,6 +85,9 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     }
   };
 
+  /* ================================
+     CREATE NEW WORKOUT DAY
+  ================================= */
   const createNewWorkoutDay = async () => {
     setIsSaving(true);
     try {
@@ -74,8 +96,8 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           exercises: exercises.map((ex) => ({
-            name: ex.exerciseType?.name || 'Unnamed Exercise',
-            setGroup: ex.setGroup || [],
+            exerciseTypeId: ex.exerciseTypeId,
+            setGroup: ex.setGroup,
           })),
         }),
       });
@@ -90,8 +112,10 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     }
   };
 
+  /* ================================
+     UPDATE EXISTING DAY
+  ================================= */
   const updateExistingWorkoutDay = async () => {
-    if (!workoutId) return;
     setIsSaving(true);
 
     try {
@@ -100,8 +124,8 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           exercises: exercises.map((ex) => ({
-            name: ex.exerciseType?.name || 'Unnamed Exercise',
-            setGroup: ex.setGroup || [],
+            exerciseTypeId: ex.exerciseTypeId,
+            setGroup: ex.setGroup,
           })),
         }),
       });
@@ -116,50 +140,64 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
     }
   };
 
-  const updateExercise = (updatedExercise: ExerciseType) => {
+  /* ================================
+     UPDATE LOCAL EXERCISE
+  ================================= */
+  const updateExercise = (updatedExercise: WorkoutExercise) => {
     setExercises((prev) =>
       prev.map((exercise) => (exercise.id === updatedExercise.id ? updatedExercise : exercise)),
     );
   };
 
-  const handleCreateExercise = (exerciseName: string) => {
-    const newExercise: ExerciseCreateType = {
-      exerciseTypeId: Date.now(), // Временный ID, реальный будет создан на сервере
-      workoutDayId: 0, // Временное значение, будет установлено сервером
+  /* ================================
+     CREATE EXERCISE (LOCAL)
+  ================================= */
+  const handleCreateExercise = (exerciseName: string, muscleGroup: string) => {
+    const tempId = Date.now();
+
+    const newDefinition: ExerciseDefinition = {
+      id: tempId,
+      name: exerciseName,
+      muscleGroup,
+      userId: '0',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const newExercise: WorkoutExercise = {
+      id: tempId,
+      workoutDayId: 0,
+      exerciseTypeId: tempId,
+      exerciseType: newDefinition,
+
       setGroup: [
         {
-          id: 0, // Временный ID для фронтенда
-          exerciseId: 0, // Временное значение, будет установлено сервером
-          sets: [], // Пустой массив сетов
+          id: tempId,
+          exerciseId: tempId,
+          sets: [],
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-      ], // Явно указываем как SetGroupType[]
+      ],
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    setExercises((prev) => [
-      ...prev,
-      {
-        ...newExercise,
-        id: Date.now(), // Временный ID для Exercise
-        exerciseType: {
-          id: newExercise.exerciseTypeId,
-          name: exerciseName,
-          userId: 0, // Временное значение
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }, // Временный exerciseType
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as ExerciseType,
-    ]);
+    setExercises((prev) => [...prev, newExercise]);
   };
 
+  /* ================================
+     DELETE
+  ================================= */
   const handleDeleteExercise = (exerciseId: number) => {
     setExercises((prev) => prev.filter((exercise) => exercise.id !== exerciseId));
     setIsChanged(true);
   };
 
+  /* ================================
+     UPDATE WORKOUT META
+  ================================= */
   const handleUpdateWorkout = async (updates: { title?: string; color?: string }) => {
     if (!workout) return;
 
@@ -167,10 +205,7 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
       const response = await fetch(`/api/workouts/${workout.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: updates.title,
-          color: updates.color,
-        }),
+        body: JSON.stringify(updates),
       });
 
       if (!response.ok) {
@@ -179,25 +214,27 @@ export default function WorkoutDay({ params }: { params: { workoutId: number | s
 
       const updatedWorkout = await response.json();
 
-      setWorkout((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          title: updatedWorkout.title,
-          color: updatedWorkout.color,
-        };
-      });
+      setWorkout((prev) =>
+        prev
+          ? {
+              ...prev,
+              title: updatedWorkout.title,
+              color: updatedWorkout.color,
+            }
+          : prev,
+      );
     } catch (error) {
       console.error('Ошибка при обновлении тренировки:', error);
     }
   };
 
+  /* ================================
+     UI
+  ================================= */
   if (isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <div className="animate-spin">
-          <Loader size={36} />
-        </div>
+        <Loader size={36} className="animate-spin" />
       </div>
     );
   }

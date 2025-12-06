@@ -15,7 +15,7 @@ export async function PUT(request: Request, { params }: { params: { exerciseId: 
   const userId = Number(session.user.id);
   const exerciseId = Number(params.exerciseId);
 
-  const { name } = await request.json();
+  const { name, muscleGroup } = await request.json();
 
   if (!name || typeof name !== 'string' || name.trim() === '') {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -25,15 +25,17 @@ export async function PUT(request: Request, { params }: { params: { exerciseId: 
     const updated = await prisma.exerciseType.update({
       where: {
         id: exerciseId,
-        userId, // защита: обновим только если ID принадлежит юзеру
+        userId, // защита от чужих упражнений
       },
       data: {
         name: name.trim(),
+        muscleGroup: muscleGroup?.trim() || null,
         updatedAt: new Date(),
       },
       select: {
         id: true,
         name: true,
+        muscleGroup: true,
         updatedAt: true,
       },
     });

@@ -11,7 +11,7 @@ export { WorkoutSettingsPopover } from './workout-settings-popover';
 export { ExerciseSettingsPopover } from './exercise-settings-popover';
 export { WorkoutExercises } from './workout-exercises';
 export { WorkoutHeader } from './workout-header';
-export { RenameExerciseDrawer } from './RenameExerciseDrawer';
+export { EditExerciseDrawer } from './EditExerciseDrawer';
 export { AddExerciseDrawer } from './AddExerciseDrawer';
 export { WorkoutDateView } from './workout-date-view';
 export { NewWorkoutDrawer } from './NewWorkoutDrawer';

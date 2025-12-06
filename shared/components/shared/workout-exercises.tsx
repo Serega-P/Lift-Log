@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { ExerciseType } from '@/app/types/types';
+import { WorkoutExercise } from '@/app/types/types';
 import { Title, Exercise } from '@/shared/components';
 
 interface WorkoutExercisesProps {
-  exercises: ExerciseType[];
+  exercises: WorkoutExercise[];
   lastWorkoutDate?: Date | null | undefined;
   workoutTitle: string;
-  onUpdateExercise: (updatedExercise: ExerciseType) => void;
+  onUpdateExercise: (updatedExercise: WorkoutExercise) => void;
   onDeleteExercise: (exerciseId: number) => void;
 }
 
