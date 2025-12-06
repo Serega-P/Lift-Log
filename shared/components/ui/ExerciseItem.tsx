@@ -4,12 +4,12 @@ import { Plus } from 'lucide-react';
 import { ExerciseDefinition } from '@/app/types/types';
 
 const GROUP_COLORS: Record<string, string> = {
-  chest: 'bg-green-600',
-  back: 'bg-amber-600',
-  legs: 'bg-blue-600',
-  arms: 'bg-purple-600',
-  shoulders: 'bg-pink-600',
-  core: 'bg-teal-600',
+  chest: 'bg-green-500',
+  back: 'bg-amber-500',
+  legs: 'bg-blue-500',
+  arms: 'bg-purple-500',
+  shoulders: 'bg-pink-500',
+  core: 'bg-teal-500',
 };
 
 export function ExerciseItem({
@@ -22,7 +22,7 @@ export function ExerciseItem({
   const mg = exercise.muscleGroup || '';
 
   return (
-    <div className="bg-bgSoft rounded-2xl p-5 flex justify-between items-center">
+    <div className="bg-black/50 rounded-3xl p-5 flex justify-between items-center">
       <div>
         <div className="text-xl">{exercise?.name}</div>
 
