@@ -17,7 +17,7 @@ export function ExerciseItem({
   onAdd,
 }: {
   exercise: ExerciseDefinition;
-  onAdd: () => void;
+  onAdd: () => void | undefined;
 }) {
   const mg = exercise.muscleGroup || '';
 

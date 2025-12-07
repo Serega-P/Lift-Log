@@ -19,3 +19,4 @@ export { CreateExerciseDrawer } from './CreateExerciseDrawer';
 export { EditWorkoutDrawer } from './EditWorkoutDrawer';
 export { ConfirmDeleteDrawer } from './ConfirmDeleteDrawer';
 export { DropSetRow } from './DropSetRow';
+export { DrawerExerciseItem } from './DrawerExerciseItem';

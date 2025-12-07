@@ -32,7 +32,7 @@ export function MuscleGroupFilter({
             initial={{ opacity: 0, scale: 0.8, y: -6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: -6 }}
-            transition={{ duration: 0.12 }}
+            transition={{ duration: 0.1 }}
             className="
               absolute right-0 mt-2 w-56 rounded-3xl
               bg-bgSoft/30 border border-muted/10 
